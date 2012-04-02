@@ -4,7 +4,7 @@ Drop this script on your page and it will build you a beautiful widget that disp
 
 ## What does it look like?
 
-Coming soon. (Need to double check how to do this with markdown)
+![Widget Image](http://files.www.newmediacampaigns.com/blog/github-widget.png)
 
 ## How do I use it?
 
