@@ -34,7 +34,7 @@ $(function(){
 					        </div> \
 					    </div> \
 					    <div class="github-box-content"> \
-					        <p class="description">' + repo.description + ' &mdash; <a href="' + repo.url.replace('api.','') + '#readme">Read More</a></p> \
+					        <p class="description">' + repo.description + ' &mdash; <a href="' + repo.url.replace('api.','').replace('repos/','') + '#readme">Read More</a></p> \
 					        <p class="link"><a href="' + repo.homepage + '">' + repo.homepage + '</a></p> \
 					    </div> \
 					    <div class="github-box-download"> \

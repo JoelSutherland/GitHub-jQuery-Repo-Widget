@@ -12,7 +12,7 @@
         </div>
     </div>
     <div class="github-box-content">
-        <p class="description">{{ repo.description }}{% if repo.has_wiki %} &mdash; <a href="{{ repo.url|replace('api.','') }}#readme">Read More</a>{% endif %}</p>
+        <p class="description">{{ repo.description }}{% if repo.has_wiki %} &mdash; <a href="{{ repo.url|replace('api.','')|replace('repos/','') }}#readme">Read More</a>{% endif %}</p>
         <p class="link"><a href="{{ repo.homepage }}">{{ repo.homepage }}</a></p>
     </div>
     <div class="github-box-download">
