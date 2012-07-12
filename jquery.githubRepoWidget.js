@@ -18,7 +18,7 @@ $(function(){
 				var repo = results.data;
 
 				var date = new Date(repo.pushed_at);
-				var pushed_at = date.getMonth() + '-' + date.getDate() + '-' + date.getFullYear();
+				var pushed_at = (date.getMonth()+1) + '-' + date.getDate() + '-' + date.getFullYear();
 				
 				var $widget = $(' \
 					<div class="github-box repo">  \
