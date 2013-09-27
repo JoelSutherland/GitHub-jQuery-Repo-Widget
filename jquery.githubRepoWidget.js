@@ -77,8 +77,10 @@
 				$widget.find('.watchers').text(repo.watchers);
 				$widget.find('.forks').text(repo.forks);
 				$widget.find('.description span').text(repo.description);
-				$widget.find('.link').append($('<a />').attr('href', repo.homepage).text(repo.homepage));
 				$widget.find('.updated').html('Latest commit to the <strong>master</strong> branch on ' + pushed_at);
+
+				// Don't show "null" if the repo has no homepage URL.
+				if(repo.homepage != null) $widget.find('.link').append($('<a />').attr('href', repo.homepage).text(repo.homepage));
 			}
 		});
 
