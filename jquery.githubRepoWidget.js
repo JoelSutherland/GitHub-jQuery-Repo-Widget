@@ -41,13 +41,13 @@
 			'<div class="github-box repo">'
 			+'<div class="github-box-title">'
 			+'<h3>'
-			+'<a class="owner" href="' + vendorUrl + '">' + vendorName + '</a>'
+			+'<a class="owner" href="' + vendorUrl + '" title="' + vendorUrl + '">' + vendorName + '</a>'
 			+'/'
-			+'<a class="repo" href="' + repoUrl + '">' + repoName + '</a>'
+			+'<a class="repo" href="' + repoUrl + '" title="' + repoUrl + '">' + repoName + '</a>'
 			+'</h3>'
 			+'<div class="github-stats">'
-			+'<a class="watchers" href="' + repoUrl + '/watchers">?</a>'
-			+'<a class="forks" href="' + repoUrl + '/network/members">?</a>'
+			+'<a class="watchers" href="' + repoUrl + '/watchers" title="See watchers">?</a>'
+			+'<a class="forks" href="' + repoUrl + '/network/members" title="See forkers">?</a>'
 			+'</div>'
 			+'</div>'
 			+'<div class="github-box-content">'
@@ -56,7 +56,7 @@
 			+'</div>'
 			+'<div class="github-box-download">'
 			+'<p class="updated"></p>'
-			+'<a class="download" href="' + repoUrl + '/zipball/master">Download as zip</a>'
+			+'<a class="download" href="' + repoUrl + '/zipball/master" title="Get an archive of this repository">Download as zip</a>'
 			+'</div>'
 			+'</div>'
 		);
@@ -77,7 +77,7 @@
 				$widget.find('.watchers').text(repo.watchers);
 				$widget.find('.forks').text(repo.forks);
 				$widget.find('.description span').text(repo.description);
-				$widget.find('.updated').html('Latest commit to the <strong>master</strong> branch on ' + pushed_at);
+				$widget.find('.updated').html('Latest commit to the <strong>' + repo.default_branch + '</strong> branch on ' + pushed_at);
 
 				// Don't show "null" if the repo has no homepage URL.
 				if(repo.homepage != null) $widget.find('.link').append($('<a />').attr('href', repo.homepage).text(repo.homepage));
