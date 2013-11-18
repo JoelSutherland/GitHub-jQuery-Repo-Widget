@@ -9,23 +9,31 @@
 
 		if(i == 0) $('head').append(
 			'<style type="text/css">'
+			+'.github-box *{-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;}'
 			+'.github-box{font-family:helvetica,arial,sans-serif;font-size:13px;line-height:18px;background:#fafafa;border:1px solid #ddd;color:#666;border-radius:3px}'
 			+'.github-box a{color:#4183c4;border:0;text-decoration:none}'
 			+'.github-box .github-box-title{position:relative;border-bottom:1px solid #ddd;border-radius:3px 3px 0 0;background:#fcfcfc;background:-moz-linear-gradient(#fcfcfc,#ebebeb);background:-webkit-linear-gradient(#fcfcfc,#ebebeb);}'
-			+'.github-box .github-box-title h3{font-family:helvetica,arial,sans-serif;font-weight:normal;font-size:16px;color:gray;margin:0;padding:10px 10px 10px 30px;background:url('+box_title_png+') 7px center no-repeat}'
+			+'.github-box .github-box-title h3{word-wrap:break-word;font-family:helvetica,arial,sans-serif;font-weight:normal;font-size:16px;color:gray;margin:0;padding:10px 10px 10px 30px;background:url('+box_title_png+') 7px center no-repeat; width: auto;}'
 			+'.github-box .github-box-title h3 .repo{font-weight:bold}'
-			+'.github-box .github-box-title .github-stats{position:absolute;top:8px;right:10px;background:white;border:1px solid #ddd;border-radius:3px;font-size:11px;font-weight:bold;line-height:21px;height:21px}'
-			+'.github-box .github-box-title .github-stats a{display:inline-block;height:21px;color:#666;padding:0 5px 0 18px;background: url('+stats_png+') no-repeat}'
+			+'.github-box .github-box-title .github-stats{float:right;position:absolute;top:8px;right:10px;font-size:11px;font-weight:bold;line-height:21px;height:auto;min-height:21px}'
+			+'.github-box .github-box-title .github-stats a{display:inline-block;height:21px;color:#666;border:1px solid #ddd;border-radius:3px;padding:0 5px 0 18px;background: white url('+stats_png+') no-repeat}'
 			+'.github-box .github-box-title .github-stats .watchers{border-right:1px solid #ddd}'
 			+'.github-box .github-box-title .github-stats .forks{background-position:-4px -21px;padding-left:15px}'
 			+'.github-box .github-box-content{padding:10px;font-weight:300}'
 			+'.github-box .github-box-content p{margin:0}'
 			+'.github-box .github-box-content .link{font-weight:bold}'
-			+'.github-box .github-box-download{position:relative;border-top:1px solid #ddd;background:white;border-radius:0 0 3px 3px;padding:10px;height:24px}'
-			+'.github-box .github-box-download .updated{margin:0;font-size:11px;color:#666;line-height:24px;font-weight:300}'
+			+'.github-box .github-box-download{position:relative;border-top:1px solid #ddd;background:white;border-radius:0 0 3px 3px;padding:10px;height:auto;min-height:24px;}'
+			+'.github-box .github-box-download .updated{word-wrap:break-word;margin:0;font-size:11px;color:#666;line-height:24px;font-weight:300;width:auto}'
 			+'.github-box .github-box-download .updated strong{font-weight:bold;color:#000}'
-			+'.github-box .github-box-download .download{position:absolute;display:block;top:10px;right:10px;height:24px;line-height:24px;font-size:12px;color:#666;font-weight:bold;text-shadow:0 1px 0 rgba(255,255,255,0.9);padding:0 10px;border:1px solid #ddd;border-bottom-color:#bbb;border-radius:3px;background:#f5f5f5;background:-moz-linear-gradient(#f5f5f5,#e5e5e5);background:-webkit-linear-gradient(#f5f5f5,#e5e5e5);}'
+			+'.github-box .github-box-download .download{float:right;position:absolute;top:10px;right:10px;height:24px;line-height:24px;font-size:12px;color:#666;font-weight:bold;text-shadow:0 1px 0 rgba(255,255,255,0.9);padding:0 10px;border:1px solid #ddd;border-bottom-color:#bbb;border-radius:3px;background:#f5f5f5;background:-moz-linear-gradient(#f5f5f5,#e5e5e5);background:-webkit-linear-gradient(#f5f5f5,#e5e5e5);}'
 			+'.github-box .github-box-download .download:hover{color:#527894;border-color:#cfe3ed;border-bottom-color:#9fc7db;background:#f1f7fa;background:-moz-linear-gradient(#f1f7fa,#dbeaf1);background:-webkit-linear-gradient(#f1f7fa,#dbeaf1);}'
+			+'@media (max-width: 767px) {'
+			+'.github-box .github-box-title{height:auto;min-height:60px}'
+			+'.github-box .github-box-title h3 .repo{display:block}'
+			+'.github-box .github-box-title .github-stats a{display:block;clear:right;float:right;}'
+			+'.github-box .github-box-download{height:auto;min-height:46px;}'
+			+'.github-box .github-box-download .download{top:32px;}'
+			+'}'
 			+'</style>'
 		);
 		i++;
@@ -41,13 +49,13 @@
 			'<div class="github-box repo">'
 			+'<div class="github-box-title">'
 			+'<h3>'
-			+'<a class="owner" href="' + vendorUrl + '">' + vendorName + '</a>'
+			+'<a class="owner" href="' + vendorUrl + '" title="' + vendorUrl + '">' + vendorName + '</a>'
 			+'/'
-			+'<a class="repo" href="' + repoUrl + '">' + repoName + '</a>'
+			+'<a class="repo" href="' + repoUrl + '" title="' + repoUrl + '">' + repoName + '</a>'
 			+'</h3>'
 			+'<div class="github-stats">'
-			+'<a class="watchers" href="' + repoUrl + '/watchers">?</a>'
-			+'<a class="forks" href="' + repoUrl + '/network/members">?</a>'
+			+'<a class="watchers" href="' + repoUrl + '/watchers" title="See watchers">?</a>'
+			+'<a class="forks" href="' + repoUrl + '/network/members" title="See forkers">?</a>'
 			+'</div>'
 			+'</div>'
 			+'<div class="github-box-content">'
@@ -55,8 +63,8 @@
 			+'<p class="link"></p>'
 			+'</div>'
 			+'<div class="github-box-download">'
-			+'<p class="updated"></p>'
-			+'<a class="download" href="' + repoUrl + '/zipball/master">Download as zip</a>'
+			+'<div class="updated"></div>'
+			+'<a class="download" href="' + repoUrl + '/zipball/master" title="Get an archive of this repository">Download as zip</a>'
 			+'</div>'
 			+'</div>'
 		);
@@ -77,7 +85,7 @@
 				$widget.find('.watchers').text(repo.watchers);
 				$widget.find('.forks').text(repo.forks);
 				$widget.find('.description span').text(repo.description);
-				$widget.find('.updated').html('Latest commit to the <strong>master</strong> branch on ' + pushed_at);
+				$widget.find('.updated').html('Latest commit to the <strong>' + repo.default_branch + '</strong> branch on ' + pushed_at);
 
 				// Don't show "null" if the repo has no homepage URL.
 				if(repo.homepage != null) $widget.find('.link').append($('<a />').attr('href', repo.homepage).text(repo.homepage));
