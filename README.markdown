@@ -4,7 +4,7 @@ Drop this script on your page and it will build you a beautiful widget that disp
 
 ## What does it look like?
 
-![Widget Image](http://files.www.newmediacampaigns.com/blog/github-widget.png)
+![Widget Image](/demo/screenshot.png?raw=true "jQuery Repo Widget Screenshot")
 
 ## How do I use it?
 
