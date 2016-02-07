@@ -42,8 +42,8 @@
 			repo = $container.data('repo'),
 			vendorName = repo.split('/')[0],
 			repoName = repo.split('/')[1],
-			vendorUrl = "http://github.com/" + vendorName,
-			repoUrl = "http://github.com/" + vendorName + '/' + repoName;
+			vendorUrl = "https://github.com/" + vendorName,
+			repoUrl = "https://github.com/" + vendorName + '/' + repoName;
 
 		$widget = $(
 			'<div class="github-box repo">'
@@ -71,8 +71,12 @@
 
 		$widget.appendTo($container);
 
+	  	if(typeof apikey === "undefined") {
+			apikey = "";
+		}
+
 		$.ajax({
-			url: 'https://api.github.com/repos/' + repo,
+			url: 'https://api.github.com/repos/' + repo + apikey,
 			dataType: 'jsonp',
 			success: function(results) {
 				var repo = results.data, date, pushed_at = 'unknown';
