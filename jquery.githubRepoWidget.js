@@ -71,10 +71,9 @@
 
 		$widget.appendTo($container);
 
-		$.ajax({
-			url: 'https://api.github.com/repos/' + repo,
-			dataType: 'jsonp',
-			success: function(results) {
+		$.getJSON(
+            'https://api.github.com/repos/' + repo + '?callback=?',
+			function(results) {
 				var repo = results.data, date, pushed_at = 'unknown';
 
 				if (repo.pushed_at) {
@@ -90,7 +89,7 @@
 				// Don't show "null" if the repo has no homepage URL.
 				if(repo.homepage != null) $widget.find('.link').append($('<a />').attr('href', repo.homepage).text(repo.homepage));
 			}
-		});
+		);
 
 	});
 
