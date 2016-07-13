@@ -1,9 +1,9 @@
-{% retrieve repo from 'https://api.github.com/repos/' ~ source as json cache 60 %}   
+{% retrieve repo from 'https://api.github.com/repos/' ~ source as json cache 60 %}
 <div class="github-box repo">
     <div class="github-box-title">
         <h3>
             <a class="owner" href="{{ repo.owner.url|replace('api.','')|replace('users/','') }}" title="{{ repo.owner.url|replace('api.','')|replace('users/','') }}">{{ repo.owner.login }}</a>
-            / 
+            /
             <a class="repo" href="{{ repo.url|replace('api.','')|replace('repos/','') }}" title="{{ repo.url|replace('api.','')|replace('repos/','') }}">{{ repo.name }}</a>
         </h3>
         <div class="github-stats">
