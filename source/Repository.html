@@ -1,0 +1,52 @@
+<link rel="stylesheet" href="Repository.css" />
+
+<div class="github-box repo"
+     data-href="?data=https://api.github.com/repos/${view.repo}">
+
+    <div class="github-box-title">
+        <h3>
+            <a class="owner" target="_blank" href="${view.owner.html_url}"
+               title="GitHub Homepage of ${view.login}">
+                ${view.owner.login}
+            </a>
+            /
+            <a class="repo" target="_blank" href="${view.html_url}"
+               title="GitHub Homepage of ${view.full_name}">
+                ${view.name}
+            </a>
+        </h3>
+        <div class="github-stats">
+            <a class="watchers" title="See watchers"
+               href="https://github.com/${view.full_name}/watchers">
+                ${view.watchers}
+            </a>
+            <a class="forks" title="See forkers"
+               href="https://github.com/${view.full_name}/forks">
+                ${view.forks}
+            </a>
+        </div>
+    </div>
+    <div class="github-box-content">
+        <p class="description">
+            ${view.description}
+            &mdash;
+            <a style="display: ${view.has_wiki ? '' : 'none'}"
+                href="https://github.com/${view.full_name}#readme">
+                Read More
+            </a>
+        </p>
+        <p class="link">
+            <a target="_blank" href="${view.homepage}">${view.homepage}</a>
+        </p>
+    </div>
+    <div class="github-box-download">
+        <div class="updated">
+            Latest commit to the <strong>${view.default_branch}</strong> branch on
+            ${(new Date( view.pushed_at )).toLocaleString()}
+        </div>
+        <a class="download" title="Get an archive of this repository"
+           href="https://github.com/${view.full_name}/zipball/${view.default_branch}">
+            Download as zip
+        </a>
+    </div>
+</div>
