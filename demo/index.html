@@ -23,19 +23,18 @@
 
         require(['jquery', 'EasyWebApp'],  function ($) {
 
-            $( document ).ready(function () {
+            $.ajaxPrefilter('json',  function (option, _, XHR) {
 
-                $('#EWA_box').iWebApp().on({
-                    type:      'request',
-                    method:    'GET',
-                    src:       'api.github.com'
-                },  function (event, AJAX) {
-
-                    AJAX.transport.setRequestHeader(
+                if ((new URL( option.url )).hostname  ===  'api.github.com')
+                    XHR.setRequestHeader(
                         'Authorization',
                         'token 39ff883676bf43c5723e92701487a020ad1abfb2'
                     );
-                });
+            });
+
+            $( document ).ready(function () {
+
+                $('#EWA_box').iWebApp();
             });
         });
     </script>
