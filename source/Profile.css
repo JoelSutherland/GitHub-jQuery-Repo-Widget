@@ -1,0 +1,191 @@
+/** GitHub Profile Card - v2.0.1 **/
+/**
+ * Github widget styles
+ * ------------------------------------------------------------------
+ */
+.gh-profile-card {
+    width: 280px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: Helvetica;
+    background: #FAFAFA;
+    border-width: 1px 1px 2px;
+    border-style: solid;
+    border-color: #DDD;
+    overflow: hidden;
+}
+.gh-profile-card a {
+    text-decoration: none;
+    color: #444;
+}
+.gh-profile-card a:hover {
+    color: #4183C4;
+}
+.gh-profile-card .name {
+    display: block;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #222;
+}
+.gh-profile-card .error {
+    font-size: 0.8em;
+    color: #444;
+    padding: 10px;
+}
+.gh-profile-card .error span {
+    display: block;
+    border-bottom: 1px solid #DDD;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+}
+.gh-profile-card .error span.remain {
+    text-align: center;
+    font-weight: bold;
+}
+.gh-profile-card .profile {
+    background: #FFF;
+    overflow: hidden;
+    padding: 15px 10px;
+    padding-bottom: 0;
+    min-height: 135px;
+}
+.gh-profile-card .stats {
+    padding: 5px;
+}
+.gh-profile-card .languages {
+    position: relative;
+    clear: both;
+    margin: 0 -10px;
+    padding: 10px;
+    border-top: 1px solid #DEDEDE;
+    font-size: 0.8em;
+}
+.gh-profile-card .languages::before {
+    position: absolute;
+    top: -0.7em;
+    background: #FFF;
+    padding-right: 5px;
+    content: 'Top languages';
+    font-style: italic;
+    color: #555;
+}
+.gh-profile-card .languages li {
+    display: inline-block;
+    color: #444;
+    font-weight: bold;
+    margin-left: 10px;
+}
+.gh-profile-card .languages li::after {
+    content: '\2022';
+    margin-left: 10px;
+    color: #999;
+}
+.gh-profile-card .languages li:last-child::after {
+    content: '';
+}
+.gh-profile-card .followMe {
+    margin-top: 3px;
+}
+.gh-profile-card .follow-button {
+    font-size: 0.8em;
+    color: #333;
+    float: left;
+    padding: 0 10px;
+    line-height: 1.5em;
+    border: 1px solid #D5D5D5;
+    border-radius: 3px;
+    font-weight: bold;
+    background: #EAEAEA;
+    background-image: linear-gradient(#FAFAFA, #EAEAEA);
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.gh-profile-card .follow-button:hover {
+    color: inherit;
+    background: #DDD;
+    background-image: linear-gradient(#EEE, #DDD);
+}
+.gh-profile-card .followMe span {
+    position: relative;
+    background: #FFF;
+    margin-left: 8px;
+    padding: 0 5px;
+    color: #444;
+    font-size: 0.8em;
+    border: 1px solid;
+    border-color: #BBB;
+}
+.gh-profile-card .followMe span::before {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 5px;
+    height: 5px;
+    left: -4px;
+    top: 30%;
+    background: inherit;
+    border-left: 1px solid;
+    border-top: 1px solid;
+    border-color: inherit;
+    transform: rotate(-45deg);
+}
+.gh-profile-card .avatar {
+    width: 64px;
+    height: 64px;
+    float: left;
+    margin: 0 10px 15px 0;
+    margin-left: 0;
+    border-radius: 5px;
+    box-shadow: 0 0 2px 0 #DDD;
+}
+.gh-profile-card .repos {
+    clear: both;
+}
+.gh-profile-card .repos .header {
+    display: block;
+    width: 100%;
+    font-weight: bold;
+    background: #EAEAEA;
+    background-image: linear-gradient(#FAFAFA, #EAEAEA);
+    border: solid #D5D5D5;
+    border-width: 1px 0;
+    color: #555;
+    font-size: 0.8em;
+    padding: 5px 10px;
+}
+.gh-profile-card .repos a {
+    position: relative;
+    display: block;
+    padding: 7px 10px;
+    font-size: 0.9em;
+    border-top: 1px solid #DDD;
+}
+.gh-profile-card .repos a:first-of-type {
+    border: none;
+}
+.gh-profile-card .repos .repo-name {
+    max-width: 280px;
+    font-weight: bold;
+    text-overflow: ellipsis;
+}
+.gh-profile-card .repos .updated {
+    display: block;
+    font-size: 0.75em;
+    font-style: italic;
+    color: #777;
+}
+.gh-profile-card .repos .star {
+    position: absolute;
+    font-size: 0.9em;
+    right: 0.5em;
+    top: 1.1em;
+    color: #888;
+}
+.gh-profile-card .repos .star::after {
+    content: '\a0\2605';
+    font-size: 1.1em;
+    font-weight: bold;
+}

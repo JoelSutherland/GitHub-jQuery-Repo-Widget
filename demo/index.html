@@ -16,15 +16,27 @@
     <script src="https://cdn.bootcss.com/require.js/2.3.5/require.min.js"></script>
     <script>
         require.config({
-            baseUrl:    'https://git-dev.tk/script/',
-            paths:      {
-                jquery:        'https://cdn.bootcss.com/jquery/3.2.1/jquery.min'
+            paths:    {
+                jquery:    'https://cdn.bootcss.com/jquery/3.2.1/jquery.min'
             }
         });
 
         require(['jquery', 'EasyWebApp'],  function ($) {
 
-            $('#EWA_box').iWebApp();
+            $( document ).ready(function () {
+
+                $('#EWA_box').iWebApp().on({
+                    type:      'request',
+                    method:    'GET',
+                    src:       'api.github.com'
+                },  function (event, AJAX) {
+
+                    AJAX.transport.setRequestHeader(
+                        'Authorization',
+                        'token 39ff883676bf43c5723e92701487a020ad1abfb2'
+                    );
+                });
+            });
         });
     </script>
 </head><body>
@@ -32,11 +44,10 @@
 
     <div style="max-width: 600px">
 
-        <div data-href="../source/Repository.html?repo=JoelSutherland/GitHub-jQuery-Repo-Widget">
+        <div data-href="../source/Repository.html?repo=TechQuery/GitHub-Web-Widget">
         </div>
         <br>
-        <div data-href="../source/Repository.html?repo=JoelSutherland/LESS-Prefixer">
-        </div>
+        <div data-href="../source/Profile.html?user=torvalds"></div>
     </div>
     <div id="EWA_box"></div>
 </body></html>

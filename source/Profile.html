@@ -1,0 +1,86 @@
+<link rel="stylesheet" href="Profile.css" />
+<script>
+    require(['jquery', 'EasyWebApp'],  function ($, EWA) {
+
+        EWA.component(function (data) {
+
+            data.countLanguage = function (event, data) {
+
+                var view = this;
+
+                Promise.all(Array.from(data,  function (repo) {
+
+                    return  $.getJSON( repo.languages_url );
+
+                })).then(function () {
+
+                    var languages = { };
+
+                    $.each(arguments[0],  function () {
+
+                        for (var name in this) {
+
+                            languages[ name ] = languages[ name ]  ||  {
+                                name:     name,
+                                count:    0
+                            };
+
+                            languages[ name ].count += this[ name ];
+                        }
+                    });
+
+                    view.languages = Array.from(
+                        Object.keys( languages ),  function (name) {
+
+                            return  languages[ name ];
+                        }
+                    ).sort(function (A, B) {
+
+                        return  B.count - A.count;
+
+                    }).slice(0, 8);
+                });
+            };
+        });
+    });
+</script>
+<div class="gh-profile-card"
+     data-href="?data=https://api.github.com/users/${view.user}">
+    <div class="profile">
+        <img src="${view.avatar_url}" class="avatar" />
+
+        <a target="_blank" href="${view.html_url}" class="name">
+            <!--${view.name}-->
+        </a>
+        <div class="followMe">
+            <a target="_blank" href="${view.html_url}" class="follow-button">
+                Follow @<!--${view.login}-->
+            </a>
+            <span class="followers">
+                <!--${view.followers}-->
+            </span>
+        </div>
+        <ul class="languages" data-name="languages">
+            <li><!--${view.name}--></li>
+        </ul>
+    </div>
+    <div class="repos">
+        <span class="header">Last updated repositories</span>
+
+        <div is="ListView" data-href="?data=${view.repos_url}?sort=updated"
+             ondata="${scope.countLanguage}">
+
+            <a target="_blank" href="${view.html_url}" title="${view.description}">
+                <span class="repo-name">
+                    <!--${view.name}-->
+                </span>
+                <span class="updated">
+                    Updated: <!--${(new Date( view.updated_at )).toLocaleString()}-->
+                </span>
+                <span class="star">
+                    <!--${view.star_count}-->
+                </span>
+            </a>
+        </div>
+    </div>
+</div>
