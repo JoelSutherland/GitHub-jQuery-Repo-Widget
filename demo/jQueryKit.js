@@ -226,36 +226,87 @@ var object_ext_base = (function ($) {
 
     $ = $ || { };
 
-    $.likeArray = function (iObject) {
+    /**
+     * 类数组对象
+     *
+     * @typedef {Array|NodeList|HTMLCollection|jQuery|$} ArrayLike
+     */
 
-        if ((! iObject)  ||  (typeof iObject != 'object'))
+    /**
+     * 类数组对象 检测
+     *
+     * @author   TechQuery
+     *
+     * @memberof $
+     *
+     * @param    {object}  object
+     *
+     * @returns  {boolean}
+     *
+     * @example  // 字符串元素不可变，故不是类数组
+     *
+     *     $.likeArray(new String(''))    //  false
+     *
+     * @example  // 有 length 属性、但没有对应数量元素的，不是类数组
+     *
+     *     $.likeArray({0: 'a', length: 2})    //  false
+     *
+     * @example  // NodeList、HTMLCollection、jQuery 等是类数组
+     *
+     *     $.likeArray( document.head.childNodes )    //  true
+     *
+     * @example  // Node 及其子类不是类数组
+     *
+     *     $.likeArray( document.createTextNode('') )    //  false
+     */
+
+    $.likeArray = function (object) {
+
+        if ((! object)  ||  (typeof object !== 'object'))
             return false;
 
-        iObject = (typeof iObject.valueOf == 'function')  ?
-            iObject.valueOf() : iObject;
+        object = (typeof object.valueOf === 'function')  ?
+            object.valueOf() : object;
 
         return Boolean(
-            iObject  &&
-            (typeof iObject.length == 'number')  &&
-            (typeof iObject != 'string')
+            object  &&
+            (typeof object !== 'string')  &&
+            (typeof object.length === 'number')  &&  (
+                object.length  ?
+                    ((object.length - 1)  in  object)  :
+                    !(object instanceof Node)
+            )
         );
     };
 
-    $.makeSet = function () {
+    /**
+     * 生成集合对象
+     *
+     * @author   TechQuery
+     *
+     * @memberof $
+     *
+     * @param    {(...string|string[])} array      - Keys of Set
+     * @param    {function}             [callback] - Callback for items
+     *
+     * @returns  {object}               Set object (Not the one in ES 6)
+     */
+
+    $.makeSet = function (array, callback) {
 
         var iArgs = arguments,  iValue = true,  iSet = { };
 
-        if (this.likeArray( iArgs[1] )) {
+        if (this.likeArray( callback )) {
 
-            iValue = iArgs[0];
+            iValue = array;
 
-            iArgs = iArgs[1];
+            iArgs = callback;
 
-        } else if (this.likeArray( iArgs[0] )) {
+        } else if (this.likeArray( array )) {
 
-            iValue = iArgs[1];
+            iValue = callback;
 
-            iArgs = iArgs[0];
+            iArgs = array;
         }
 
         for (var i = 0;  i < iArgs.length;  i++)
@@ -267,45 +318,58 @@ var object_ext_base = (function ($) {
 
     var WindowType = $.makeSet('Window', 'DOMWindow', 'global');
 
-    $.Type = function (iVar) {
-        try {
-            var iType = Object.prototype.toString.call( iVar ).slice(8, -1);
+    /**
+     * 检测对象类名
+     *
+     * @author   TechQuery
+     *
+     * @memberof $
+     *
+     * @param    {*}       object
+     *
+     * @returns  {string}  Class Name of the first argument
+     */
 
-            var iName = iVar.constructor.name;
+    $.Type = function (object) {
+        try {
+            var iType = Object.prototype.toString.call( object ).slice(8, -1);
+
+            var iName = object.constructor.name;
 
             iName = (typeof iName == 'function')  ?
-                iName.call( iVar.constructor )  :  iName;
+                iName.call( object.constructor )  :  iName;
 
             if ((iType == 'Object')  &&  iName)  iType = iName;
         } catch (iError) {
             return 'Window';
         }
 
-        if (! iVar)
-            return  (isNaN(iVar)  &&  (iVar !== iVar))  ?  'NaN'  :  iType;
+        if (! object)
+            return  (isNaN(object)  &&  (object !== object))  ?  'NaN'  :  iType;
 
         if (WindowType[iType] || (
-            (iVar == iVar.document) && (iVar.document != iVar)    //  IE 9- Hack
+            (object == object.document)  &&  (object.document != object)
+            //  IE 9- Hack
         ))
             return 'Window';
 
-        if (iVar.location  &&  (iVar.location === (
-            iVar.defaultView || iVar.parentWindow || { }
+        if (object.location  &&  (object.location === (
+            object.defaultView || object.parentWindow || { }
         ).location))
             return 'Document';
 
         if (
             iType.match(/HTML\w+?Element$/) ||
-            (typeof iVar.tagName == 'string')
+            (typeof object.tagName == 'string')
         )
             return 'HTMLElement';
 
-        if (this.likeArray( iVar )) {
+        if (this.likeArray( object )) {
             iType = 'Array';
             try {
-                iVar.item();
+                object.item();
                 try {
-                    iVar.namedItem();
+                    object.namedItem();
 
                     return 'HTMLCollection';
 
@@ -319,24 +383,50 @@ var object_ext_base = (function ($) {
         return iType;
     };
 
-    $.isEqual = function isEqual(iLeft, iRight, iDepth) {
+    /**
+     * 值相等 检测
+     *
+     * @author TechQuery
+     *
+     * @memberof $
+     *
+     * @param  {*}       left
+     * @param  {*}       right
+     * @param  {number}  [depth=1]
+     *
+     * @return {boolean}
+     *
+     * @example  // 基本类型比较
+     *
+     *     $.isEqual(1, 1)    //  true
+     *
+     * @example  // 引用类型（浅）
+     *
+     *     $.isEqual({a: 1},  {a: 1})    // true
+     *
+     * @example  // 引用类型（深）
+     *
+     *     $.isEqual({a: 1, b: {c: 2}},  {a: 1, b: {c: 2}},  2)    // true
+     */
 
-        iDepth = iDepth || 1;
+    $.isEqual = function isEqual(left, right, depth) {
 
-        if (!  (iLeft && iRight))
-            return  (iLeft === iRight);
+        depth = depth || 1;
 
-        iLeft = iLeft.valueOf();  iRight = iRight.valueOf();
+        if (!  (left && right))
+            return  (left === right);
 
-        if ((typeof iLeft != 'object')  ||  (typeof iRight != 'object'))
-            return  (iLeft === iRight);
+        left = left.valueOf();  right = right.valueOf();
 
-        var Left_Key = Object.keys( iLeft ),
-            Right_Key = Object.keys( iRight );
+        if ((typeof left != 'object')  ||  (typeof right != 'object'))
+            return  (left === right);
+
+        var Left_Key = Object.keys( left ),
+            Right_Key = Object.keys( right );
 
         if (Left_Key.length != Right_Key.length)  return false;
 
-        Left_Key.sort();  Right_Key.sort();  --iDepth;
+        Left_Key.sort();  Right_Key.sort();  --depth;
 
         for (var i = 0, _Key_;  i < Left_Key.length;  i++) {
 
@@ -344,11 +434,11 @@ var object_ext_base = (function ($) {
 
             if (_Key_ != Right_Key[i])  return false;
 
-            if (! iDepth) {
-                if (iLeft[_Key_] !== iRight[_Key_])  return false;
+            if (! depth) {
+                if (left[_Key_] !== right[_Key_])  return false;
             } else {
                 if (! isEqual.call(
-                    this, iLeft[_Key_], iRight[_Key_], iDepth
+                    this, left[_Key_], right[_Key_], depth
                 ))
                     return false;
             }
@@ -381,6 +471,94 @@ var object_ext_base = (function ($) {
 
         return iResult;
     };
+
+    var depth = 0;
+    /**
+     * 对象树 递归遍历
+     *
+     * @author TechQuery <shiy007@qq.com>
+     *
+     * @memberof $
+     *
+     * @param {object}        node     - Object tree
+     * @param {string}        fork_key - Key of children list
+     * @param {MapTreeFilter} filter   - Map filter
+     *
+     * @return {Array}  Result list of Map filter
+     *
+     * @example  // DOM 树遍历
+     *
+     *     $.mapTree(
+     *         $('<a>A<b>B<!--C--></b></a>')[0],
+     *         'childNodes',
+     *         function (node, index, depth) {
+     *             return  depth + (
+     *                 (node.nodeType === 3)  ?  node.nodeValue  :  ''
+     *             );
+     *         }
+     *     ).join('')
+     *
+     *     //  '1A12B2'
+     */
+    $.mapTree = function mapTree(node, fork_key, filter) {
+
+        var children = node[fork_key], list = [ ];    depth++ ;
+
+        for (var i = 0, value;  children[i];  i++) {
+            /**
+             * 对象遍历过滤器
+             *
+             * @callback MapTreeFilter
+             *
+             * @param {object} child
+             * @param {number} index
+             * @param {number} depth
+             *
+             * @return {?object}  `Null` or `Undefined` to **Skip the Sub-Tree**,
+             *                    and Any other Type to Add into the Result Array.
+             */
+            value = filter.call(node, children[i], i, depth);
+
+            if (value != null) {
+
+                list.push( value );
+
+                if ( children[i][fork_key][0] )
+                    list.push.apply(
+                        list,  mapTree(children[i], fork_key, filter)
+                    );
+            }
+        }
+
+        depth-- ;
+
+        return list;
+    };
+
+    /**
+     * ES 6 迭代器协议
+     *
+     * @interface Iterator
+     *
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|Iterator Protocol}
+     */
+    /**
+     * @memberof Iterator
+     * @instance
+     * @function next
+     */
+
+    /**
+     * 生成迭代器
+     *
+     * @author   TechQuery
+     *
+     * @memberof $
+     *
+     * @param    {Array}    array
+     *
+     * @returns  {Iterator}
+     */
 
     $.makeIterator = function (array) {
 
@@ -436,30 +614,55 @@ var utility_ext_timer = (function ($) {
 
             return  (Date.now() - _Timer_[iName])  /  1000;
         },
-        throttle:    function (iSecond, iOrigin) {
+        /**
+         * 函数节流
+         *
+         * @author   TechQuery
+         *
+         * @memberof $
+         *
+         * @param    {number}   [second=0.25] - Minimum interval in second
+         * @param    {function} origin        - Original function
+         *
+         * @returns  {function} Wrapped function
+         */
+        throttle:    function (second, origin) {
 
-            if (! $.isNumeric( iSecond )) {
-                iOrigin = iSecond;
-                iSecond = 0;
+            if (! $.isNumeric( second )) {
+
+                origin = second;    second = 0;
             }
-            iSecond = (iSecond || 0.25)  *  1000;
+
+            second = (second || 0.25)  *  1000;
 
             var Last_Exec = 0;
 
             return  function () {
 
-                var iNow = Date.now();
+                var now = Date.now();
 
-                if (Last_Exec + iSecond  <=  iNow) {
-                    Last_Exec = iNow;
+                if (Last_Exec + second  <=  now) {
 
-                    return  iOrigin.apply(this, arguments);
+                    Last_Exec = now;
+
+                    return  origin.apply(this, arguments);
                 }
             };
         },
-        uuid:        function () {
+        /**
+         * 唯一标识符生成
+         *
+         * @author   TechQuery
+         *
+         * @memberof $
+         *
+         * @param    {string} prefix
+         *
+         * @returns  {string}
+         */
+        uuid:        function (prefix) {
 
-            return  (arguments[0] || 'uuid')  +  '_'  +
+            return  (prefix || 'uuid')  +  '_'  +
                 (Date.now() + Math.random()).toString(36)
                     .replace('.', '').toUpperCase();
         }
@@ -533,24 +736,78 @@ var CSS_ext_var = (function ($) {
 var utility_ext_string = (function ($) {
 
     return $.extend({
-        split:         function (iString, iSplit, iLimit, iJoin) {
+        /**
+         * 定字定数分割字符串
+         *
+         * @author TechQuery
+         *
+         * @memberof $
+         *
+         * @param {string}        string  - Raw Text
+         * @param {string|RegExp} [split] - Separator to split as
+         *                                  `String.prototype.split`
+         * @param {number}        [max]   - Max number of returned parts
+         * @param {string}        [join]  - String to join
+         *                                  (Default value is same as `split`)
+         * @return {string[]}
+         *
+         * @example  // 原型方法等效
+         *
+         *     $.split('abc', '')    // ['a', 'b', 'c']
+         *
+         * @example  // PHP str_split() 等效
+         *
+         *     $.split('abc', '', 2)    // ['a', 'bc']
+         *
+         * @example  // 连接字符串
+         *
+         *     $.split("a  b\tc",  /\s+/,  2,  ' ')    // ['a', 'b c']
+         */
+        split:         function (string, split, max, join) {
 
-            iString = iString.split(iSplit);
+            string = string.split( split );
 
-            if (iLimit) {
-                iString[iLimit - 1] = iString.slice(iLimit - 1).join(
-                    (typeof iJoin == 'string') ? iJoin : iSplit
+            if ( max ) {
+                string[max - 1] = string.slice(max - 1).join(
+                    (typeof join === 'string')  ?  join  :  split
                 );
-                iString.length = iLimit;
+                string.length = max;
             }
 
-            return iString;
+            return string;
         },
-        hyphenCase:    function () {
-            return  arguments[0].replace(/([a-z0-9])[\s_]?([A-Z])/g,  function () {
+        /**
+         * 连字符化字符串
+         *
+         * @author TechQuery
+         *
+         * @memberof $
+         *
+         * @param {string} raw - Non Hyphen-Case String
+         *
+         * @return {string}
+         *
+         * @example  // 符号间隔
+         *
+         *     $.hyphenCase('UPPER_CASE')    // 'upper-case'
+         *
+         * @example  // 驼峰法
+         *
+         *     $.hyphenCase('camelCase')    // 'camel-case'
+         *
+         * @example  // 混杂写法
+         *
+         *     $.hyphenCase('UPPER_CASEMix -camelCase')
+         *
+         *     // 'upper-case-mix-camel-case'
+         */
+        hyphenCase:    function (raw) {
 
-                return  arguments[1] + '-' + arguments[2].toLowerCase();
-            });
+            return raw.replace(
+                /[^A-Za-z0-9]+/g, '-'
+            ).replace(
+                /([A-Za-z0-9])([A-Z][a-z])/g, '$1-$2'
+            ).toLowerCase();
         },
         byteLength:    function () {
 
@@ -621,18 +878,21 @@ var utility_ext_string = (function ($) {
 
 /* ---------- DOM Text Content ---------- */
 
-    Object.defineProperty(DOM_Proto, 'textContent', {
+    Object.defineProperty(Node.prototype, 'textContent', {
         get:    function () {
 
-            return this.innerText;
-        },
-        set:    function (iText) {
+            return  $.mapTree(this,  'childNodes',  function (node) {
 
-            switch ( this.tagName.toLowerCase() ) {
-                case 'style':     return  this.styleSheet.cssText = iText;
-                case 'script':    return  this.text = iText;
-            }
-            this.innerText = iText;
+                return  (node.nodeType !== 1)  ?  node.nodeValue  :  '';
+
+            }).join('');
+        },
+        set:    function (text) {
+
+            if (this.nodeName.toLowerCase() === 'style')
+                this.styleSheet.cssText = text;
+            else
+                this[(this.nodeType === 1) ? 'innerText' : 'nodeValue'] = text;
         }
     });
 
@@ -912,6 +1172,19 @@ var utility_ext_string = (function ($) {
 
 var object_ext_Class = (function ($) {
 
+    /**
+     * 类式继承抽象类
+     *
+     * @author  TechQuery
+     *
+     * @class   Class
+     *
+     * @param   {object}   [abstract=Class] - Constructor of Abstract Class
+     * @param   {string[]} [method]         - Names of Abstract Methods
+     *
+     * @returns {Class}
+     */
+
     function Class(abstract, method) {
 
         abstract = abstract || Class;
@@ -941,12 +1214,25 @@ var object_ext_Class = (function ($) {
     }
 
     $.extend(Class, {
-        extend:        function (sub, static, proto) {
+        /**
+         * 继承出一个子类
+         *
+         * @author   TechQuery
+         *
+         * @memberof Class
+         *
+         * @param    {function} sub     - Constructor of Sub Class
+         * @param    {?object}  Static  - Static properties
+         * @param    {object}   [proto] - Instance properties
+         *
+         * @returns  {function} The Sub Class
+         */
+        extend:        function (sub, Static, proto) {
 
             for (var key in this)
                 if (this.hasOwnProperty( key ))  sub[ key ] = this[ key ];
 
-            $.extend(sub, static);
+            $.extend(sub, Static);
 
             sub.prototype = $.extend(
                 Object.create( this.prototype ),  sub.prototype,  proto
@@ -955,6 +1241,13 @@ var object_ext_Class = (function ($) {
 
             return sub;
         },
+        /**
+         * 枚举设置 是否可用
+         *
+         * @memberof Class
+         *
+         * @type     {boolean}
+         */
         enumerable:    (!! $.browser.modern)
     });
 
@@ -990,6 +1283,19 @@ var object_ext_Class = (function ($) {
         };
     }
 
+    /**
+     * 设置私有成员
+     *
+     * @memberof Class.prototype
+     * @function setPrivate
+     *
+     * @param    {string|object} key      Key or Key-Value
+     * @param    {*}             [value]
+     * @param    {object}        [config] More config
+     *
+     * @return   {*}             Value while set one or
+     *                           This object when set Key-Value
+     */
     var setPrivate = safeWrap(function (key, value, config) {
 
             key = (
@@ -1002,9 +1308,8 @@ var object_ext_Class = (function ($) {
             try {
                 Object.defineProperty(this, key, $.extend(
                     {
-                        value:           value,
-                        writable:        true,
-                        configurable:    true
+                        value:       value,
+                        writable:    true
                     },
                     config || { }
                 ));
@@ -1016,6 +1321,19 @@ var object_ext_Class = (function ($) {
 
     setPrivate.call(Class.prototype, 'setPrivate', setPrivate);
 
+    /**
+     * 设置公开成员
+     *
+     * @memberof Class.prototype
+     * @function setPublic
+     *
+     * @param    {string|object} key       Key or Key-Value
+     * @param    {object}        [Get_Set] Getter & Setter
+     * @param    {object}        [config]  More config
+     *
+     * @return   {object}        Get_Set while set one or
+     *                           This object when set Key-Value
+     */
     setPrivate.call(
         Class.prototype,  'setPublic',  safeWrap(function (key, Get_Set, config) {
 
@@ -1978,6 +2296,25 @@ var event_ext_base = (function ($, Observer) {
 
 (function ($) {
 
+    /**
+     * HTML 文档片段类
+     *
+     * @typedef {DocumentFragment} DocumentFragment
+     *
+     * @see     {@link https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment|Document Fragment}
+     */
+
+    /**
+     * 构造文档片段
+     *
+     * @memberof $
+     * @function buildFragment
+     *
+     * @param    {Node|ArrayLike}   node - Child Nodes
+     *
+     * @return   {DocumentFragment}
+     */
+
     $.buildFragment = $.buildFragment  ||  function (iNode) {
 
         iNode = $.makeArray( iNode );
@@ -1989,7 +2326,19 @@ var event_ext_base = (function ($, Observer) {
         return iFragment;
     };
 
-/* ---------- Insert by Index ---------- */
+    /**
+     * 任意索引位置 插入子节点
+     *
+     * @author TechQuery
+     *
+     * @memberof $.prototype
+     * @function insertTo
+     *
+     * @param    {jQueryAcceptable} $_Target
+     * @param    {number}           Index
+     *
+     * @returns  {$}           All the Elements inserted
+     */
 
     $.fn.insertTo = function ($_Target, Index) {
 
@@ -2007,7 +2356,28 @@ var event_ext_base = (function ($, Observer) {
         return  this.pushStack( $_This );
     };
 
-/* ---------- DOM Tree Iterator ---------- */
+    /**
+     * 迭代过滤器
+     *
+     * @callback IteratorFilter
+     *
+     * @this  Node
+     * @param {Node} node - Current Node
+     */
+
+    /**
+     * DOM 树遍历迭代器
+     *
+     * @author   TechQuery
+     *
+     * @memberof $.prototype
+     * @function treeWalker
+     *
+     * @param    {number}         [nodeType]
+     * @param    {IteratorFilter} filter
+     *
+     * @returns  {Iterator}       Iterator Object for walking on DOM tree
+     */
 
     $.fn.treeWalker = function (nodeType, filter) {
 
@@ -2040,8 +2410,7 @@ var event_ext_base = (function ($, Observer) {
             replace:    function (iNew) {
 
                 iNew = $.buildFragment(
-                    (iNew instanceof Element)  ?
-                        [ iNew ]  :  $.makeArray( iNew )
+                    $.likeArray( iNew )  ?  $.makeArray( iNew )  :  [ iNew ]
                 );
 
                 if (! iNew.childNodes[0])  return;
@@ -2079,30 +2448,28 @@ var event_ext_base = (function ($, Observer) {
 
         this.empty();
 
-        var $_Box = $('<div />');
-
-        $_Box[0].innerHTML = HTML;
+        var $_Box = $('<div />').prop('innerHTML', HTML);
 
         return  (! selector)  ?
             this.each(function () {
 
                 $_Box = $( $_Box[0].cloneNode( true ) );
 
-                var walker = $_Box.treeWalker(1,  function (iDOM) {
+                $.mapTree($_Box[0],  'children',  function (child) {
 
-                        if (iDOM.tagName.toLowerCase() != 'script')  return;
+                    if (child.tagName.toLowerCase() !== 'script')
+                        return child;
 
-                        var iAttr = { };
+                    var attribute = { };
 
-                        $.each(iDOM.attributes,  function () {
+                    $.each(child.attributes,  function () {
 
-                            iAttr[ this.nodeName ] = this.nodeValue;
-                        });
-
-                        return  $('<script />',  iAttr)[0];
+                        attribute[ this.nodeName ] = this.nodeValue;
                     });
 
-                while (! walker.next().done)  ;
+                    $('<script />',  attribute).prop('text', child.text)
+                        .replaceAll( child );
+                });
 
                 $_Box.children().insertTo( this );
             })  :
@@ -2115,6 +2482,28 @@ var event_ext_base = (function ($, Observer) {
 var AJAX_ext_URL = (function ($) {
 
     var BOM = self;
+
+    /**
+     * URL 查询参数对象化
+     *
+     * @author   TechQuery
+     *
+     * @memberof $
+     *
+     * @param    {string} [search] - Same format as `location.search` at least or
+     *                               just use its value while the parameter is
+     *                               empty
+     * @returns  {object} Plain Object for the Query String
+     *
+     * @example  // URL 查询字符串
+     *
+     *     $.paramJSON('?a=1&b=two&b=true')
+     *
+     *     //  {
+     *             a:    1,
+     *             b:    ['two', true]
+     *         }
+     */
 
     $.paramJSON = function (search) {
 
@@ -2188,15 +2577,27 @@ var AJAX_ext_URL = (function ($) {
     };
 
     return $.extend({
-        extendURL:    function (iURL) {
+        /**
+         * 更新 URL 查询参数
+         *
+         * @author   TechQuery
+         *
+         * @memberof $
+         *
+         * @param    {string}        URL   - the URL needs to be updated
+         * @param    {string|object} param - One or more `key1=value1&key2=value2`
+         *                                   or Key-Value Object
+         * @returns  {string}        the Updated URL
+         */
+        extendURL:    function (URL, param) {
 
-            if (! arguments[1])  return iURL;
+            if (! param)  return URL;
 
-            var iURL = $.split(iURL, '?', 2);
+            var URL = $.split(URL, '?', 2);
 
-            var iPath = iURL[0];    arguments[0] = iURL[1];
+            var path = URL[0];    arguments[0] = URL[1];
 
-            return  iPath  +  '?'  +  $.param($.extend.apply($,  Array.from(
+            return  path  +  '?'  +  $.param($.extend.apply($,  Array.from(
                 arguments,  function (_This_) {
 
                     _This_ = _This_.valueOf();
@@ -2211,20 +2612,90 @@ var AJAX_ext_URL = (function ($) {
                 arguments[0] || BOM.location.pathname
             ).match(/([^\?\#]+)(\?|\#)?/)[1].split('/').slice(-1)[0];
         },
-        filePath:     function () {
-            return (
-                arguments[0] || BOM.location.href
-            ).match(/([^\?\#]+)(\?|\#)?/)[1].split('/').slice(0, -1).join('/');
-        },
-        urlDomain:    function (iURL) {
+        /**
+         * 获取文件路径
+         *
+         * @author   TechQuery
+         *
+         * @memberof $
+         *
+         * @param    {string} [URL] - Relative or Absolute URL
+         *                            (Use `location.href` while the parameter is
+         *                            empty)
+         * @returns  {string}
+         *
+         * @example  // 传 相对路径 时返回其目录
+         *
+         *     $.filePath('/test/unit.html')  // '/test/'
+         *
+         * @example  // 传 查询字符串 时返回空字符串
+         *
+         *     $.filePath('?query=string')  // ''
+         *
+         * @example  // 传 URL（字符串）时返回其目录
+         *
+         *     $.filePath('http://localhost:8084/test/unit.html')
+         *
+         *     // 'http://localhost:8084/test/'
+         *
+         * @example  // 传 URL（对象）时返回其目录
+         *
+         *     $.filePath(new URL('http://localhost:8084/test/unit.html'))
+         *
+         *     // 'http://localhost:8084/test/'
+         */
+        filePath:     function (URL) {
 
-            return  (! iURL)  ?  BOM.location.origin  :
-                (iURL.match( /^(\w+:)?\/\/[^\/]+/ )  ||  '')[0];
+            return  (arguments.length ? URL : BOM.location).toString()
+                .split(/\?|\#/)[0]
+                .replace(/[^\/\\]*$/, '');
         },
-        isXDomain:    function () {
+        /**
+         * 获取 URL 的域（源）
+         *
+         * @author   TechQuery
+         *
+         * @memberof $
+         *
+         * @param    {string} [URL] - Absolute URL
+         *                            (Use `location.origin` while the parameter
+         *                            is empty)
+         * @returns  {string} Origin of the URL
+         *
+         * @example  // 给定 URL
+         *
+         *     $.urlDomain('http://localhost:8080/path?query=string')
+         *
+         *     // 'http://localhost:8080'
+         */
+        urlDomain:    function (URL) {
+
+            return  (! URL)  ?  BOM.location.origin  :
+                (URL.match( /^(\w+:)?\/\/[^\/]+/ )  ||  '')[0];
+        },
+        /**
+         * URL 跨域判断
+         *
+         * @author   TechQuery
+         *
+         * @memberof $
+         *
+         * @param    {string}  URL
+         *
+         * @returns  {boolean}
+         *
+         * @example  // 跨域 绝对路径
+         *
+         *     $.isXDomain('http://localhost/iQuery')  // true
+         *
+         * @example  // 同域 相对路径
+         *
+         *     $.isXDomain('/iQuery')  // false
+         */
+        isXDomain:    function (URL) {
             return (
                 BOM.location.origin !==
-                (new BOM.URL(arguments[0],  this.filePath() + '/')).origin
+                (new BOM.URL(URL, this.filePath())).origin
             );
         }
     });
@@ -2480,26 +2951,36 @@ var object_ext_advanced = (function ($) {
                     $.proxy.apply($,  $.merge([iProxy, this], arguments));
             };
         },
-        intersect:    function intersect() {
+        /**
+         * 对象交集
+         *
+         * @author   TechQuery
+         *
+         * @memberof $
+         *
+         * @param    {(object|array)} set
+         *
+         * @returns  {(object|array)} Intersect of parameters
+         */
+        intersect:    function intersect(set) {
 
-            if (arguments.length < 2)  return arguments[0];
+            if (arguments.length < 2)  return set;
 
-            var iArgs = Array.from( arguments );
+            var isArray = $.likeArray( set );
 
-            var iArray = $.likeArray( iArgs[0] );
+            set = Array.from( arguments );
 
-            iArgs[0] = $.map(iArgs.shift(),  function (iValue, iKey) {
-                if ( iArray ) {
-                    if (iArgs.indexOf.call(iArgs[0], iValue)  >  -1)
-                        return iValue;
+            set[0] = $.map(set.shift(),  function (value, key) {
+                if ( isArray ) {
+                    if (set.indexOf.call(set[0], value)  >  -1)
+                        return value;
                 } else if (
-                    (iArgs[0][iKey] !== undefined)  &&
-                    (iArgs[0][iKey] === iValue)
+                    (set[0][key] !== undefined)  &&  (set[0][key] === value)
                 )
-                    return iValue;
+                    return value;
             });
 
-            return  intersect.apply(this, iArgs);
+            return  intersect.apply(this, set);
         },
         patch:        function patch(target, source) {
 
@@ -2809,8 +3290,8 @@ var AJAX_ext_HTML_Request = (function ($) {
                 var link = { };
 
                 raw.replace(
-                    /\<(\S+?)\>; rel="(\w+)"(; title="(.*?)")?/g,
-                    function (_, URI, rel, _, title) {
+                    /\<(\S+?)\>; rel="(\w+)"(?:; title="(.*?)")?/g,
+                    function (_, URI, rel, title) {
 
                         link[ rel ] = {
                             uri:      URI,
@@ -2823,6 +3304,18 @@ var AJAX_ext_HTML_Request = (function ($) {
                 return link;
             }
         };
+
+    /**
+     * HTTP 报文头解析
+     *
+     * @author   TechQuery
+     *
+     * @memberof $
+     *
+     * @param    {string} raw - Raw Text of HTTP Headers
+     *
+     * @returns  {object} Object of HTTP Headers
+     */
 
     $.parseHeader = function (raw) {
 
@@ -3030,12 +3523,25 @@ var AJAX_ext_HTML_Request = (function ($) {
         return  Rule_Text.concat('').join("\n");
     }
 
-    $.cssRule = function (At_Wrapper, iRule) {
+    /**
+     * 全局 CSS 设置
+     *
+     * @author TechQuery
+     *
+     * @memberof $
+     *
+     * @param   {string}           At_Wrapper - At Rule
+     * @param   {object}           rule       - Selector as Key, Rule as Value
+     *
+     * @returns {HTMLStyleElement} Generated Style Element
+     */
+
+    $.cssRule = function (At_Wrapper, rule) {
 
         if (typeof At_Wrapper.valueOf() != 'string')
-            iRule = At_Wrapper,  At_Wrapper = null;
+            rule = At_Wrapper,  At_Wrapper = null;
 
-        var CSS_Text = CSS_Rule2Text( iRule );
+        var CSS_Text = CSS_Rule2Text( rule );
 
         return  $('<style />', {
             type:       'text/css',
@@ -3062,10 +3568,22 @@ var AJAX_ext_HTML_Request = (function ($) {
 
     var Global_Style = $.makeSet('#document', 'html', 'body');
 
+    /**
+     * 局部 CSS 读写
+     *
+     * @memberof $.prototype
+     * @function cssRule
+     *
+     * @param    {object}   [rule]     - Selector as Key, Rule as Value
+     * @param    {function} [callback] - Callback for every {@link HTMLElement}
+     *
+     * @return   {object|$} No parameter: CSS Rule Object\n
+     *                      One or two:   iQuery Object
+     */
 
-    $.fn.cssRule = function (iRule, iCallback) {
+    $.fn.cssRule = function (rule, callback) {
 
-        if (! $.isPlainObject( iRule )) {
+        if (! $.isPlainObject( rule )) {
 
             var $_This = this;
 
@@ -3078,7 +3596,7 @@ var AJAX_ext_HTML_Request = (function ($) {
                 ))
                     return;
 
-                if ((! iRule)  ||  (iRule && _Rule_.style[iRule]))
+                if ((! rule)  ||  (rule && _Rule_.style[rule]))
                     return _Rule_;
             });
         }
@@ -3087,8 +3605,8 @@ var AJAX_ext_HTML_Request = (function ($) {
 
             var _Rule_ = { };
 
-            for (var iSelector in iRule)
-                _Rule_[Scope_Selector(this.id, iSelector)] = iRule[ iSelector ];
+            for (var iSelector in rule)
+                _Rule_[Scope_Selector(this.id, iSelector)] = rule[ iSelector ];
 
             var $_Insert = $(
                     'style, link[rel="stylesheet"]',
@@ -3104,8 +3622,8 @@ var AJAX_ext_HTML_Request = (function ($) {
 
             _Rule_ = $( $.cssRule(_Rule_) )['insert' + end]( $_Insert )[0];
 
-            if (typeof iCallback === 'function')
-                iCallback.call(this,  _Rule_.sheet || _Rule_.styleSheet);
+            if (typeof callback === 'function')
+                callback.call(this,  _Rule_.sheet || _Rule_.styleSheet);
         });
 
         return this;
@@ -3266,61 +3784,88 @@ var AJAX_ext_HTML_Request = (function ($) {
 
     var BOM = self;
 
-/* ---------- Bit Operation for Big Number  v0.1 ---------- */
 
-    function Bit_Calculate(iType, iLeft, iRight) {
+    function Bit_Calculate(type, left, right) {
 
-        iLeft = parseInt(iLeft, 2);    iRight = parseInt(iRight, 2);
+        left = parseInt(left, 2);    right = parseInt(right, 2);
 
-        switch (iType) {
-            case '&':    return  iLeft & iRight;
-            case '|':    return  iLeft | iRight;
-            case '^':    return  iLeft ^ iRight;
-            case '~':    return  ~iLeft;
+        switch (type) {
+            case '&':    return  left & right;
+            case '|':    return  left | right;
+            case '^':    return  left ^ right;
+            case '~':    return  ~left;
         }
     }
 
-    $.bitOperate = function (iType, iLeft, iRight) {
+    /**
+     * 大数位操作
+     *
+     * @author   TechQuery
+     * @version  0.1
+     *
+     * @memberof $
+     *
+     * @param    {string}          type  - `&`, `|`, `^`
+     * @param    {(number|string)} left  - Number may be big
+     * @param    {(number|string)} right - Number may be big
+     *
+     * @returns  {(number|string)}
+     */
 
-        iLeft = (typeof iLeft === 'string')  ?  iLeft  :  iLeft.toString(2);
+    $.bitOperate = function (type, left, right) {
 
-        iRight = (typeof iRight === 'string')  ?  iRight  :  iRight.toString(2);
+        left = (typeof left === 'string')  ?  left  :  left.toString(2);
 
-        var iLength = Math.max(iLeft.length, iRight.length);
+        right = (typeof right === 'string')  ?  right  :  right.toString(2);
+
+        var iLength = Math.max(left.length, right.length);
 
         if (iLength < 32)
-            return  Bit_Calculate(iType, iLeft, iRight).toString(2);
+            return  Bit_Calculate(type, left, right).toString(2);
 
-        iLeft = iLeft.padStart(iLength, 0);
+        left = left.padStart(iLength, 0);
 
-        iRight = iRight.padStart(iLength, 0);
+        right = right.padStart(iLength, 0);
 
-        var iResult = '';
+        var result = '';
 
         for (var i = 0;  i < iLength;  i += 31)
-            iResult += Bit_Calculate(
-                iType,  iLeft.slice(i, i + 31),  iRight.slice(i, i + 31)
+            result += Bit_Calculate(
+                type,  left.slice(i, i + 31),  right.slice(i, i + 31)
             ).toString(2).padStart(
                 Math.min(31,  iLength - i),  0
             );
 
-        return iResult;
+        return result;
     };
 
-/* ---------- Local Storage Wrapper  v0.1 ---------- */
 
     var LS_Key = [ ];
 
-    $.storage = function (iName, iData) {
+    /**
+     * 本地存储 存取器
+     *
+     * @author   TechQuery
+     * @version  0.1
+     *
+     * @memberof $
+     *
+     * @param    {string} name
+     * @param    {*}      data
+     *
+     * @returns  {*}      Same as `data`
+     */
 
-        if (! (iData != null))  return  JSON.parse(BOM.localStorage[ iName ]);
+    $.storage = function (name, data) {
+
+        if (! (data != null))  return  JSON.parse(BOM.localStorage[ name ]);
 
         var iLast = 0,  iLength = Math.min(LS_Key.length, BOM.localStorage.length);
 
         do  try {
-            BOM.localStorage[ iName ] = JSON.stringify( iData );
+            BOM.localStorage[ name ] = JSON.stringify( data );
 
-            if (LS_Key.indexOf( iName )  ==  -1)  LS_Key.push( iName );
+            if (LS_Key.indexOf( name )  ===  -1)  LS_Key.push( name );
             break;
         } catch (iError) {
             if (LS_Key[ iLast ]) {
@@ -3331,7 +3876,7 @@ var AJAX_ext_HTML_Request = (function ($) {
                 iLast++ ;
         } while (iLast < iLength);
 
-        return iData;
+        return data;
     };
 
 /* ---------- Base64 to Blob  v0.1 ---------- */
@@ -3645,14 +4190,16 @@ var AJAX_ext_HTML_Request = (function ($) {
 
     function Value_Check() {
 
-        if ((! this.value)  &&  (this.getAttribute('required') != null))
+        var value = this.value || this.textContent;
+
+        if ((! value)  &&  (this.getAttribute('required') != null))
             return false;
 
-        var iRegEx = this.getAttribute('pattern');
+        var regexp = this.getAttribute('pattern');
 
-        if (iRegEx)  try {
+        if (regexp)  try {
 
-            return  RegExp( iRegEx ).test( this.value );
+            return  RegExp( regexp ).test( value );
 
         } catch (iError) { }
 
@@ -3660,19 +4207,32 @@ var AJAX_ext_HTML_Request = (function ($) {
             (this.tagName.toLowerCase() === 'input')  &&
             (this.getAttribute('type') === 'number')
         ) {
-            var iNumber = Number( this.value ),
-                iMin = Number( this.getAttribute('min') );
+            var number = +value,  min = +( this.getAttribute('min') );
+
             if (
-                isNaN( iNumber )  ||
-                (iNumber < iMin)  ||
-                (iNumber > Number(this.getAttribute('max') || Infinity))  ||
-                ((iNumber - iMin)  %  Number( this.getAttribute('step') ))
+                isNaN( number )  ||
+                (number < min)  ||
+                (number > +(this.getAttribute('max') || Infinity))  ||
+                ((number - min)  %  this.getAttribute('step'))
             )
                 return false;
         }
 
         return true;
     }
+
+    /**
+     * 表单（项）校验
+     *
+     * @author   TechQuery
+     *
+     * @memberof $.prototype
+     * @function validate
+     *
+     * @returns  {boolean}
+     *
+     * @see {@link https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Form_validation|Form Validation}
+     */
 
     $.fn.validate = function () {
 

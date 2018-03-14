@@ -4,6 +4,7 @@
  * ------------------------------------------------------------------
  */
 .gh-profile-card {
+    margin: auto;
     width: 280px;
     border-radius: 5px;
     font-size: 16px;

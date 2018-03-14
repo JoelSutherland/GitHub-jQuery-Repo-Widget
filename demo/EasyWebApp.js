@@ -15,8 +15,33 @@
 
 var base_Observer = (function ($) {
 
-    function Observer($_View, all_event) {
+    /**
+     * 多条件观察者
+     *
+     * @author  TechQuery
+     *
+     * @class   Observer
+     *
+     * @param   {jQueryAcceptable} $_View      - Container DOM of Observer
+     * @param   {boolean}          [all_event] - Register all kinds of
+     *                                           event handlers in HTML code
+     *
+     * @returns {Observer}         Return the last one if a Observer instance
+     *                             has been created on this element
+     */
 
+    function Observer($_View, all_event) {
+        /**
+         * 容器元素的 jQuery 包装
+         *
+         * @name     $_View
+         * @type     {jQuery}
+         *
+         * @memberof Observer
+         * @instance
+         *
+         * @readonly
+         */
         this.$_View = ($_View instanceof $)  ?  $_View  :  $( $_View );
 
         this.setPrivate('handle',  { });
@@ -81,7 +106,19 @@ var base_Observer = (function ($) {
 
         return  $.extend(iClass, {
             Bind_Event:       { },
-            registerEvent:    function () {
+            /**
+             * 注册子类事件类型
+             *
+             * @author    TechQuery
+             *
+             * @memberof  Observer
+             * @protected
+             *
+             * @param     {...string} name - Event Names
+             *
+             * @returns   {function}  Sub Class of Observer
+             */
+            registerEvent:    function (name) {
 
                 $.extend(iClass.Bind_Event,  $.makeSet.apply($, arguments));
 
@@ -99,6 +136,18 @@ var base_Observer = (function ($) {
 
                 return this;
             },
+            /**
+             * 从一个元素节点开始向上查找实例，并返回首个发现的实例
+             *
+             * @author   TechQuery
+             *
+             * @memberof Observer
+             *
+             * @param    {jQueryAcceptable} $_DOM        Search up from this Element
+             * @param    {boolean}          Check_Parent
+             *
+             * @returns  {Observer}         Observer instance
+             */
             instanceOf:       function ($_DOM, Check_Parent) {
 
                 var _Instance_,  element = $( $_DOM )[0];
@@ -116,45 +165,58 @@ var base_Observer = (function ($) {
     }
 
     return  basicMethod($.Class.extend(Observer, {
-        extend:      function (iConstructor, iStatic, iPrototype) {
+        /**
+         * 继承出一个观察者子类
+         *
+         * @author   TechQuery
+         *
+         * @memberof Observer
+         *
+         * @param    {function} constructor - Constructor of the Sub Class
+         * @param    {?object}  Static      - Static properties
+         * @param    {object}   [prototype] - Instance properties
+         *
+         * @returns  {function} The Sub Class
+         */
+        extend:      function (constructor, Static, prototype) {
 
             return basicMethod($.Class.extend.call(
-                this,  iConstructor,  iStatic,  iPrototype
+                this,  constructor,  Static,  prototype
             ));
         },
-        getEvent:    function (iEvent) {
+        getEvent:    function (event) {
 
             return $.extend(
                 { },
-                (typeof iEvent == 'string')  ?  {type: iEvent}  :  iEvent,
+                (typeof event == 'string')  ?  {type: event}  :  event,
                 arguments[1]
             );
         },
-        match:       function (iEvent, iHandle) {
+        match:       function (event, iHandle) {
             var iRegExp;
 
             for (var iKey in iHandle) {
 
-                iRegExp = iEvent[iKey] instanceof RegExp;
+                iRegExp = event[iKey] instanceof RegExp;
 
                 switch ($.Type( iHandle[iKey] )) {
                     case 'RegExp':
                         if ( iRegExp ) {
-                            if (iEvent[iKey].toString() != iHandle[iKey].toString())
+                            if (event[iKey].toString() != iHandle[iKey].toString())
                                 return;
                             break;
                         }
                     case 'String':    {
-                        if (! (iEvent[iKey] || '')[iRegExp ? 'test' : 'match'](
+                        if (! (event[iKey] || '')[iRegExp ? 'test' : 'match'](
                             iHandle[iKey]
                         ))
                             return;
                         break;
                     }
                     case 'Function':
-                        if (typeof iEvent[iKey] != 'function')  break;
+                        if (typeof event[iKey] != 'function')  break;
                     default:
-                        if (iEvent[iKey] !== iHandle[iKey])  return;
+                        if (event[iKey] !== iHandle[iKey])  return;
                 }
             }
 
@@ -165,40 +227,76 @@ var base_Observer = (function ($) {
 
             return  '[object ' + this.constructor.name + ']';
         },
-        valueOf:     function (iEvent, iKey) {
+        /**
+         * 查询事件
+         *
+         * @author   TechQuery
+         *
+         * @memberof Observer.prototype
+         *
+         * @param    {string}          [event] - Event Name
+         * @param    {string}          [key]   - Key of Event property
+         *
+         * @returns  {object|object[]} Event Handlers
+         */
+        valueOf:     function (event, key) {
 
-            if (! iEvent)  return  this.__handle__;
+            if (! event)  return  this.__handle__;
 
-            return  (! iKey)  ?  this.__handle__[iEvent]  :
-                $.map(this.__handle__[iEvent],  function () {
+            return  (! key)  ?  this.__handle__[event]  :
+                $.map(this.__handle__[event],  function () {
 
-                    return  arguments[0][ iKey ];
+                    return  arguments[0][ key ];
                 });
         },
-        on:          function (iEvent, iCallback) {
+        /**
+         * 注册一个事件回调
+         *
+         * @author   TechQuery
+         *
+         * @memberof Observer.prototype
+         *
+         * @param    {string|object} event    - An Event Name or Event Object
+         * @param    {function}      callback
+         *
+         * @returns  {Observer}      Current Observer
+         */
+        on:          function (event, callback) {
 
-            iEvent = Observer.getEvent(iEvent,  {handler: iCallback});
+            event = Observer.getEvent(event,  {handler: callback});
 
-            var iHandle = this.__handle__[iEvent.type] =
-                    this.__handle__[iEvent.type]  ||  [ ];
+            var iHandle = this.__handle__[event.type] =
+                    this.__handle__[event.type]  ||  [ ];
 
             for (var i = 0;  iHandle[i];  i++)
-                if ($.isEqual(iHandle[i], iEvent))  return this;
+                if ($.isEqual(iHandle[i], event))  return this;
 
-            iHandle.push( iEvent );
+            iHandle.push( event );
 
             return this;
         },
-        emit:        function (iEvent, iData) {
+        /**
+         * 触发一个事件
+         *
+         * @author   TechQuery
+         *
+         * @memberof Observer.prototype
+         *
+         * @param    {string|object} event  - An Event Name or Event Object
+         * @param    {*}             [data] - Additional Data for callbacks
+         *
+         * @returns  {*}             Data returned by last callback
+         */
+        emit:        function (event, iData) {
 
-            iEvent = Observer.getEvent( iEvent );
+            event = Observer.getEvent( event );
 
-            return  (this.__handle__[iEvent.type] || [ ]).reduce(
+            return  (this.__handle__[event.type] || [ ]).reduce(
                 (function (_Data_, iHandle) {
 
-                    if (! Observer.match(iEvent, iHandle))  return _Data_;
+                    if (! Observer.match(event, iHandle))  return _Data_;
 
-                    var iResult = iHandle.handler.call(this, iEvent, _Data_);
+                    var iResult = iHandle.handler.call(this, event, _Data_);
 
                     return  (iResult != null)  ?  iResult  :  _Data_;
 
@@ -206,26 +304,50 @@ var base_Observer = (function ($) {
                 iData
             );
         },
-        off:         function (iEvent, iCallback) {
+        /**
+         * 注销事件回调
+         *
+         * @author   TechQuery
+         *
+         * @memberof Observer.prototype
+         *
+         * @param    {string|object}  event      An Event Name or Event Object
+         * @param    {function}       [callback]
+         *
+         * @returns  {Observer}       Current Observer
+         */
+        off:         function (event, callback) {
 
-            iEvent = Observer.getEvent(iEvent,  {handler: iCallback});
+            event = Observer.getEvent(event,  {handler: callback});
 
-            this.__handle__[iEvent.type] = $.map(
-                this.__handle__[iEvent.type],  function (iHandle) {
+            this.__handle__[event.type] = $.map(
+                this.__handle__[event.type],  function (iHandle) {
 
-                    return  Observer.match(iEvent, iHandle)  ?  null  :  iHandle;
+                    return  Observer.match(event, iHandle)  ?  null  :  iHandle;
                 }
             );
 
             return this;
         },
+        /**
+         * 注册一个事件回调（一次性）
+         *
+         * @author   TechQuery
+         *
+         * @memberof Observer.prototype
+         *
+         * @param    {string|object}    event      An Event Name or Event Object
+         * @param    {function}         [callback]
+         *
+         * @returns  {Observer|Promise} Current Observer or Promise
+         */
         one:         function () {
 
             var _This_ = this,  iArgs = $.makeArray( arguments );
 
-            var iCallback = iArgs.slice(-1)[0];
+            var callback = iArgs.slice(-1)[0];
 
-            iCallback = (typeof iCallback == 'function')  &&  iArgs.pop();
+            callback = (typeof callback === 'function')  &&  iArgs.pop();
 
             var iPromise = new Promise(function (iResolve) {
 
@@ -233,13 +355,13 @@ var base_Observer = (function ($) {
 
                         _This_.off.apply(_This_,  iArgs.concat( once ));
 
-                        if ( iCallback )  return  iCallback.apply(this, arguments);
+                        if ( callback )  return  callback.apply(this, arguments);
 
                         iResolve( arguments[1] );
                     }));
                 });
 
-            return  iCallback ? this : iPromise;
+            return  callback ? this : iPromise;
         }
     }));
 })(jquery);
@@ -247,23 +369,42 @@ var base_Observer = (function ($) {
 
 var view_RenderNode = (function ($) {
 
-    function RenderNode(iNode) {
+    /**
+     * 渲染节点
+     *
+     * @author TechQuery
+     *
+     * @class  RenderNode
+     *
+     * @param  {Node} node - A Node within a template
+     */
+
+    function RenderNode(node) {
 
         $.extend(this, {
-            ownerNode:       iNode,
-            name:            iNode.nodeName,
-            raw:             iNode.nodeValue,
-            ownerElement:    iNode.parentNode || iNode.ownerElement,
+            ownerNode:       node,
+            raw:             node.nodeValue || node.value,
+            ownerElement:    node.parentNode || node.ownerElement,
             type:            0,
             value:           null
-        }).scan();
+        }).update();
+
+        this.scan();
     }
 
     RenderNode.expression = /\$\{([\s\S]+?)\}/g;
 
-    RenderNode.reference = /(view|scope)\.(\w+)/g;
+    RenderNode.reference = /(\w+)(\.|\[(?:'|")|\()(\w+)?/g;
 
-    RenderNode.Template_Type = $.makeSet(2, 3, 8);
+    RenderNode.rawName = /^(data\-|on)\w+/;
+
+    RenderNode.Reference_Mask = {
+        view:     1,
+        this:     4,
+        scope:    8
+    };
+
+    RenderNode.Template_Type = $.makeSet('Attr', 'Text', 'Comment');
 
     function Eval(view, scope, expression) {  'use strict';
         try {
@@ -279,61 +420,92 @@ var view_RenderNode = (function ($) {
         }
     }
 
-    $.extend(RenderNode.prototype, {
-        splice:      Array.prototype.splice,
-        indexOf:     Array.prototype.indexOf,
-        push:        Array.prototype.push,
-        scan:        function () {
+    $.extend(RenderNode.prototype = [ ],  {
+        constructor:    RenderNode,
+        update:         function () {
 
-            var _This_ = this,  node = this.ownerNode;
+            var node = this.ownerNode;
+
+            if (! node)  return;
+
+            var name = node.name;
+
+            this.DOMType = $.Type( node );
+
+            if (this.DOMType !== 'Attr')  return;
+
+            var propKey = $.propFix[ name ]  ||  (
+                    (name in node.ownerElement)  &&  name
+                );
+
+            if ( propKey )
+                this.name = propKey,  this.DOMType = 'Prop';
+            else
+                this.name = name;
+        },
+        add:            function (key) {
+
+            if (key  &&  (this.indexOf( key )  <  0))
+                this.push( key );
+        },
+        clear:          function () {
+
+            var node = this.ownerNode,
+                value = this.raw.replace(RenderNode.expression, '');
+
+            switch ( this.DOMType ) {
+                case 'Text':       ;
+                case 'Comment':    return  (node.nodeValue = value);
+                case 'Attr':       ;
+                case 'Prop':
+                    if (! (
+                        (node.value = value)  ||
+                        node.name.match( RenderNode.rawName )
+                    )) {
+                        this.ownerElement.removeAttribute( node.name );
+
+                        this.ownerNode = null;
+                    }
+            }
+        },
+        scan:           function () {
+
+            var _This_ = this;
 
             this.splice(0, Infinity);    this.type = 0;
 
-            node.nodeValue = this.raw.replace(
+            this.raw = this.raw.replace(
                 RenderNode.expression,  function (_, expression) {
 
                     if (/\w+\s*\([\s\S]*?\)/.test( expression ))
                         _This_.type = _This_.type | 2;
 
                     expression.replace(
-                        RenderNode.reference,  function (_, scope, key) {
+                        RenderNode.reference,  function (_, scope, symbol, key) {
 
-                            _This_.type = _This_.type | (
-                                (scope === 'view')  ?  1  :  4
-                            );
+                            var global = self[ scope ];
 
-                            if (_This_.indexOf( key )  <  0)
-                                _This_.push( key );
+                            if ( global )
+                                return  _This_.type = _This_.type | 16;
+
+                            if (symbol[0] === '(')  return;
+
+                            _This_.type = _This_.type |
+                                RenderNode.Reference_Mask[ scope ];
+
+                            if (scope !== 'this')  _This_.add( key );
                         }
                     );
 
-                    return '';
+                    return  '${' + expression.trim() + '}';
                 }
             );
 
-            if ( this[0] )  switch ( node.nodeType ) {
-                case 8:    {
-                    this.ownerElement.replaceChild(
-                        node = document.createTextNode( node.nodeValue ),
-                        this.ownerNode
-                    );
-                    this.ownerNode = node,  this.name = node.nodeName;
-
-                    break;
-                }
-                case 2:
-                    if (
-                        (! node.nodeValue)  &&  (
-                            ($.propFix[node.nodeName] || node.nodeName)  in
-                            this.ownerElement
-                        )
-                    )
-                        this.ownerElement.removeAttribute( node.nodeName );
-            }
-
-            return this;
+            if ( this[0] )  this.clear();
         },
-        eval:        function (context, scope) {
+        eval:           function (context, scope) {
+
+            if (this.value === null)  this.update();
 
             var refer,  _This_ = this.ownerElement;
 
@@ -349,42 +521,49 @@ var view_RenderNode = (function ($) {
 
             return  (this.raw == text)  ?  refer  :  text;
         },
-        render:      function (iContext, iScope) {
+        render:         function (context, scope) {
 
-            var iValue = this.eval(iContext, iScope),
-                iNode = this.ownerNode,
-                iParent = this.ownerElement;
+            var value = this.eval(context, scope),
+                node = this.ownerNode,
+                parent = this.ownerElement;
 
-            if (iValue === this.value)  return;
+            if (value === this.value)  return;
 
-            this.value = iValue;
+            this.value = value;
 
-            switch ( iNode.nodeType ) {
-                case 3:    {
-                    if (! (iNode.previousSibling || iNode.nextSibling))
-                        return  iParent.innerHTML = iValue;
+            switch ( this.DOMType ) {
+                case 'Text':    {
+                    if (node.previousSibling || node.nextSibling)
+                        node.nodeValue = value;
+                    else
+                        parent.innerHTML = value;
 
                     break;
                 }
-                case 2:    if (
-                    (this.name != 'style')  &&  (this.name in iParent)
-                ) {
-                    iParent[ this.name ] = (iValue instanceof Function)  ?
-                        iValue.bind( iContext )  :  iValue;
+                case 'Prop':    if (this.name !== 'style') {
 
-                    return;
+                    parent[ this.name ] = (value instanceof Function)  ?
+                        value.bind( context )  :  value;
 
-                } else if (! iNode.ownerElement) {
-                    if ( iValue )
-                        iParent.setAttribute(this.name, iValue);
-
-                    return;
+                    break;
                 }
+                case 'Attr':
+                    if ( node )
+                        node.value = value;
+                    else
+                        parent.setAttribute(this.name, value);
             }
-
-            iNode.nodeValue = iValue;
         },
-        toString:    function () {
+        /**
+         * 生成文本值
+         *
+         * @author   TechQuery
+         *
+         * @memberof RenderNode.prototype
+         *
+         * @returns  {string} Text Value of this template
+         */
+        toString:       function () {
 
             return  this.value + '';
         }
@@ -396,6 +575,20 @@ var view_RenderNode = (function ($) {
 
 
 var InnerLink = (function ($, Observer) {
+
+    /**
+     * 应用内链接
+     *
+     * @author  TechQuery
+     *
+     * @class   InnerLink
+     * @extends Observer
+     *
+     * @param   {jQueryAcceptable} $_View - HTMLElement of Inner Link
+     *
+     * @returns {InnerLink}        Return the last one if a InnerLink instance
+     *                             has been created on this element
+     */
 
     function InnerLink($_View) {
 
@@ -468,6 +661,15 @@ var InnerLink = (function ($, Observer) {
 
             return this;
         },
+        /**
+         * 生成 URI
+         *
+         * @author   TechQuery
+         *
+         * @memberof InnerLink.prototype
+         *
+         * @returns  {string} URI of this Inner Link
+         */
         toString:    function () {
 
             var iData = [$.param( this.data )];
@@ -482,9 +684,9 @@ var InnerLink = (function ($, Observer) {
         },
         loadData:    function () {
 
-            var Get_URL, header;
+            var header;
 
-            var iOption = {
+            var option = {
                     method:         this.method,
                     url:            this.src,
                     beforeSend:     arguments[0],
@@ -494,49 +696,45 @@ var InnerLink = (function ($, Observer) {
                         (this.src.match(/\?/g) || '')[1]  ?  'jsonp'  :  'json',
                     complete:       function (XHR) {
 
-                        if (this.method === 'GET')  Get_URL = this.url;
-
                         header = $.parseHeader( XHR.getAllResponseHeaders() );
                     }
                 };
 
-            if ( this.$_View[0].tagName.match(/^(a|area)$/i) ) {
+            switch ( this.$_View[0].tagName.toLowerCase() ) {
+                case 'form':
+                    option.data = $.paramJSON('?' + this.$_View.serialize());
+                    break;
+                case 'area':    ;
+                case 'a':       {
+                    option.data = $.extend({ }, this.$_View[0].dataset);
 
-                iOption.data = $.extend({ }, this.$_View[0].dataset);
-
-                delete iOption.data.method;
-                delete iOption.data.autofocus;
-
-            } else if (! this.$_View.find('input[type="file"]')[0]) {
-
-                iOption.data = $.paramJSON('?' + this.$_View.serialize());
-
-            } else if (iOption.type != 'GET') {
-
-                iOption.data = new self.FormData( this.$_View[0] );
-
-                iOption.contentType = iOption.processData = false;
-            }
-
-            if ( this.contentType.match(/^application\/json/) ) {
-
-                iOption.data = JSON.stringify( iOption.data );
-
-                iOption.processData = false;
-            }
-
-            return  Promise.resolve( $.ajax( iOption ) ).then(
-                function (data) {
-
-                    data = {head: header,  body: data};
-
-                    return  Get_URL  ?  $.storage(Get_URL, data)  :  data;
-                },
-                function () {
-
-                    if ( Get_URL )  return  $.storage( Get_URL );
+                    delete option.data.method;
+                    delete option.data.autofocus;
                 }
-            );
+            }
+
+            switch ( this.contentType.split(';')[0] ) {
+
+                case 'multipart/form-data':
+
+                    $.extend(option, {
+                        data:           new self.FormData( this.$_View[0] ),
+                        contentType:    false,
+                        processData:    false
+                    });
+                    break;
+                case 'application/json': {
+
+                    option.data = JSON.stringify( option.data );
+
+                    option.processData = false;
+                }
+            }
+
+            return  Promise.resolve( $.ajax( option ) ).then(function (data) {
+
+                return  {head: header,  body: data};
+            });
         },
         load:        function (onRequest) {
 
@@ -569,6 +767,19 @@ var InnerLink = (function ($, Observer) {
 
 var base_DataScope = (function ($) {
 
+    /**
+     * 数据作用域
+     *
+     * @author  TechQuery
+     *
+     * @class   DataScope
+     * @extends Array
+     *
+     * @param   {object|object[]|DataScope} parent - Parent Scope
+     *
+     * @returns {DataScope}                 New Scope inherit from its Parent Scope
+     */
+
     function DataScope(parent) {
 
         return  (parent instanceof DataScope)  ?  Object.create( parent )  :  this;
@@ -583,7 +794,11 @@ var base_DataScope = (function ($) {
             var diff = { };
 
             for (var key in data)
-                if ((! this.hasOwnProperty( key ))  ||  (this[key] !== data[key]))
+                if (
+                    (data[ key ]  !=  null)  ||
+                    (! this.hasOwnProperty( key ))  ||
+                    (this[key] !== data[key])
+                )
                     this[ key ] = diff[ key ] = data[ key ];
 
             return diff;
@@ -613,17 +828,46 @@ var base_DataScope = (function ($) {
 
 var view_View = (function ($, Observer, DataScope, RenderNode) {
 
-    function View($_View, scope) {
+    /**
+     * 视图抽象类
+     *
+     * @author  TechQuery
+     *
+     * @class   View
+     * @extends Observer
+     *
+     * @param   {jQueryAcceptable} $_View  - Container DOM of View
+     * @param   {object}           [scope] - Data object as a scope
+     * @param   {(string|URL)}     [base]
+     *
+     * @returns {View}                 Return the last one if a View instance
+     *                                 has been created on this element
+     */
+
+    function View($_View, scope, base) {
 
         var _This_ = Observer.call(
                 $.Class.call(this, View, ['render']),  $_View,  true
             );
 
+        _This_.setPrivate('base',  base || View.baseOf( _This_.$_View[0] ));
+
         return  (_This_ !== this)  ?
             _This_ :
             this.setPrivate({
                 id:          '',
-                name:        this.$_View[0].name || this.$_View[0].dataset.name,
+                name:        this.$_View[0].dataset.name,
+                /**
+                 * 视图数据作用域
+                 *
+                 * @name      __data__
+                 * @type      {DataScope}
+                 *
+                 * @memberof  View
+                 * @instance
+                 *
+                 * @protected
+                 */
                 data:        new DataScope( scope ),
                 parse:       0,
                 child:       [ ],
@@ -634,31 +878,53 @@ var view_View = (function ($, Observer, DataScope, RenderNode) {
     var Sub_Class = [ ];
 
     return  Observer.extend(View, {
-        getSub:    function (iDOM) {
+        baseOf:    function (box) {
 
-            var is_View = iDOM.getAttribute('is');
+            if (box.dataset.href  &&  (box.dataset.href[0] !== '?'))
+                return  $.filePath( box.dataset.href );
+        },
+        getSub:    function ($_View, scope, base) {
+
+            $_View = $( $_View );
+
+            var is_View = $_View.attr('is');
 
             for (var i = Sub_Class.length - 1;  Sub_Class[i];  i--)
                 if (
                     is_View ?
                         (is_View === Sub_Class[i].name)  :
-                        Sub_Class[i].is( iDOM )
+                        Sub_Class[i].is( $_View[0] )
                 )
                     return  new Sub_Class[i](
-                        iDOM,
-                        (this.instanceOf( iDOM.parentNode )  ||  '').__data__
+                        $_View,
+                        scope  ||
+                            (this.instanceOf( $_View.parent() )  ||  '').__data__,
+                        base
                     );
         },
-        extend:    function (constructor, static, prototype) {
+        /**
+         * 继承出一个视图子类
+         *
+         * @author   TechQuery
+         *
+         * @memberof View
+         *
+         * @param    {function} constructor - Constructor of the Sub Class
+         * @param    {?object}  Static      - Static properties
+         * @param    {object}   [prototype] - Instance properties
+         *
+         * @returns  {function} The Sub Class
+         */
+        extend:    function (constructor, Static, prototype) {
 
             Sub_Class.push( constructor );
 
-            static = static  ||  { };
+            Static = Static  ||  { };
 
-            static.is = static.is || $.noop;
+            Static.is = Static.is || $.noop;
 
             return $.Class.extend.call(
-                this,  constructor,  static,  prototype
+                this,  constructor,  Static,  prototype
             ).signSelector();
         }
     }, {
@@ -680,6 +946,17 @@ var view_View = (function ($, Observer, DataScope, RenderNode) {
                         iData[$.camelCase( this.attributeName.slice(5) )] = iNew;
                 });
 
+                /**
+                 * 自定义属性 更新事件
+                 *
+                 * @event    View#update
+                 *
+                 * @type     {object}
+                 *
+                 * @property {string}      type   - Event Name
+                 * @property {HTMLElement} target - View container
+                 */
+
                 if (_This_.__parse__  &&  (! $.isEmptyObject( iData )))
                     _This_.render( iData ).emit({
                         type:      'update',
@@ -698,6 +975,17 @@ var view_View = (function ($, Observer, DataScope, RenderNode) {
                 )
             });
         },
+        /**
+         * 挂载视图
+         *
+         * @author   TechQuery
+         *
+         * @memberof View.prototype
+         *
+         * @fires    View#attach
+         *
+         * @returns  {View} Current View
+         */
         attach:        function () {
 
             if (! this.$_View[0].id)
@@ -709,6 +997,17 @@ var view_View = (function ($, Observer, DataScope, RenderNode) {
 
             if ( this.$_View[0].dataset.href )  this.attrWatch();
 
+            /**
+             * 视图挂载完成事件
+             *
+             * @event    View#attach
+             *
+             * @type     {object}
+             *
+             * @property {string}      type   - Event Name
+             * @property {HTMLElement} target - View container
+             */
+
             this.emit({
                 type:      'attach',
                 target:    this.$_View.append( this.$_Content )[0]
@@ -716,6 +1015,15 @@ var view_View = (function ($, Observer, DataScope, RenderNode) {
 
             return this;
         },
+        /**
+         * 卸载视图
+         *
+         * @author   TechQuery
+         *
+         * @memberof View.prototype
+         *
+         * @returns  {View} Current View
+         */
         detach:        function () {
 
             if ( this.$_View[0].id.match(/^View_\w+/) )  this.$_View[0].id = '';
@@ -732,19 +1040,41 @@ var view_View = (function ($, Observer, DataScope, RenderNode) {
 
             return this;
         },
-        scan:          function (iParser) {
+        /**
+         * HTML 树解析器
+         *
+         * @callback View~parser
+         *
+         * @this  View
+         * @param {HTMLElement|View} node - A Renderable Object
+         */
+        /**
+         * HTML 树扫描器
+         *
+         * @author    TechQuery
+         *
+         * @memberof  View.prototype
+         * @protected
+         *
+         * @param     {View~parser} parser - A callback to process HTMLElement
+         *
+         * @returns   {View}        Current View
+         */
+        scan:          function (parser) {
 
             var Sub_View = [ ];
 
-            var iSearcher = this.$_View.treeWalker(1,  (function (iDOM) {
+            var iSearcher = this.$_View.treeWalker((function (node) {
 
                     var iView;
 
-                    if (this.$_View[0] !== iDOM) {
+                    if ((this.$_View[0] !== node)  &&  (node.nodeType === 1)) {
 
-                        if ( iDOM.dataset.href ) {
+                        if ( node.dataset.href ) {
 
-                            iView = View.getSub( iDOM );
+                            parser.call(this, node);
+
+                            iView = View.getSub( node );
 
                             if (this.__child__.indexOf( iView )  <  0)
                                 this.__child__.push( iView );
@@ -752,58 +1082,112 @@ var view_View = (function ($, Observer, DataScope, RenderNode) {
                             return null;
 
                         } else if (
-                            iDOM.dataset.name  ||
-                            (iView = View.instanceOf(iDOM, false))
+                            node.dataset.name  ||
+                            (iView = View.instanceOf(node, false))
                         ) {
-                            iView = iView  ||  View.getSub( iDOM );
+                            parser.call(this, node);
 
-                            Sub_View.push(
-                                (iView.parse  &&  (! iView.__parse__))  ?
-                                    iView.parse()  :  iView
-                            );
+                            if (! iView)
+                                iView = View.getSub(node,  null,  this.__base__);
+
+                            Sub_View.push(iView.parse ? iView.parse() : iView);
 
                             return null;
 
                         } else if (
-                            (iDOM.parentNode == document.head)  &&
-                            (iDOM.tagName.toLowerCase() != 'title')
+                            (node.parentNode == document.head)  &&
+                            (node.tagName.toLowerCase() != 'title')
                         )
                             return null;
                     }
 
-                    return  iParser.call(this, iDOM);
+                    return  parser.call(this, node);
 
                 }).bind( this ));
 
             while (! iSearcher.next().done)  ;
 
-            for (var i = 0;  this.__child__[i];  i++)
-                iParser.call(this,  this.__child__[i].$_View[0]);
-
             for (var i = 0;  Sub_View[i];  i++)
-                iParser.call(this, Sub_View[i]);
+                parser.call(this, Sub_View[i]);
 
             this.__parse__ = $.now();
 
             return this;
         },
+        /**
+         * 视图对象 属性监视
+         *
+         * @author TechQuery
+         *
+         * @memberof View.prototype
+         *
+         * @param {string} key       - Property Key
+         * @param {object} [get_set] - Getter & Setter
+         *
+         * @returns {View}  Current View
+         *
+         * @throws {ReferenceError}  When Prototype key or Array index
+         *                           is overwritten
+         */
         watch:         function (key, get_set) {
+            if (
+                (key  in  Object.getPrototypeOf( this ))  ||
+                ((typeof this.length === 'number')  &&  $.isNumeric( key ))
+            )
+                throw ReferenceError(
+                    'Inner Property "' + key + '" can\'t be overwritten.'
+                );
 
-            if (! (key in Object.getPrototypeOf( this )))
-                this.setPublic(key, get_set, {
-                    get:    function () {
+            this.setPublic(key, get_set, {
+                get:    function () {
 
-                        return  this.__data__[key];
-                    },
-                    set:    this.render.bind(this, key)
-                });
+                    return  this.__data__[key];
+                },
+                set:    this.render.bind(this, key)
+            });
 
             return this;
         },
+        /**
+         * 获取视图上的数据
+         *
+         * @author   TechQuery
+         *
+         * @memberof View.prototype
+         *
+         * @returns  {object} Data of this View in plain object
+         */
         valueOf:       function () {
 
             return  this.__data__.valueOf();
         },
+        /**
+         * 清空视图
+         *
+         * @author TechQuery
+         *
+         * @return {View}  Current View
+         */
+        clear:         function () {
+
+            var data = this.valueOf(), _data_ = { };
+
+            for (var key in data)
+                if (! (data[key] instanceof Function))  _data_[key] = '';
+
+            return  this.render(_data_);
+        },
+        /**
+         * 获取子组件
+         *
+         * @author   TechQuery
+         *
+         * @memberof View.prototype
+         *
+         * @param    {string}  [$_Filter] - jQuery Selector
+         *
+         * @returns  {View[]}  Array of Child Component
+         */
         childOf:       function ($_Filter) {
 
             var children = this.__child__ || this;
@@ -823,47 +1207,86 @@ var view_View = (function ($, Observer, DataScope, RenderNode) {
 var view_DOMkit = (function ($, RenderNode, InnerLink) {
 
     var Invalid_Style = $.makeSet('inherit', 'initial'),
-        URL_DOM = $.extend(
-            $.makeSet(0,  ['script', 'img', 'iframe', 'audio', 'video']),
-            $.makeSet('href',  ['link', 'a', 'area']),
-            {form: 'action',  '[data-href]': 'data-href'}
-        ),
         URL_Prefix = $.makeSet('?', '#');
 
+    function mapStyle(style, filter) {
+
+        var context = this, key_value = { };
+
+        $.each(style,  function () {
+
+            var value = style.getPropertyValue( this ), _value_,
+                priority = style.getPropertyPriority( this );
+
+            if ( filter ) {
+
+                if (null  !=  (_value_ = filter.call(
+                    context,  value,  this + '',  priority,  style
+                )))
+                    value = _value_;
+                else
+                    return;
+            }
+
+            if ( priority )  value += ' !' + priority;
+
+            if (! (value in Invalid_Style))  key_value[ this ] = value;
+        });
+
+        return  key_value;
+    }
+
+    function pathToRoot(base, path) {
+
+        return (
+            !(path[0] in URL_Prefix)  &&  path.replace(RenderNode.expression, '')
+        )  &&
+            decodeURI(
+                new URL(path,  new URL(base, self.location))
+            ).replace(
+                $.filePath(), ''
+            );
+    }
+
+    function fixCSSURL(base, value) {
+
+        return  value.replace(
+            /\s?url\(\s*(?:'|")(\S+)(?:'|")\)/g,
+            function (_, path) {
+
+                return  'url("'  +  (pathToRoot(base, path) || path)  +  '")';
+            }
+        );
+    }
 
     return {
-        cssRule:      function cssRule(sheet) {
+        cssRule:      function cssRule(sheet, mapFilter) {
+
+            mapFilter = (mapFilter instanceof Function)  &&  mapFilter;
 
             var rule = { };
 
             $.each(sheet.cssRules,  function () {
 
                 if ( this.cssRules )
-                    return (
-                        rule[ this.cssText.split( /\s*\{/ )[0] ] = cssRule( this )
-                    );
-
-                var _rule_ = rule[this.selectorText || this.keyText] = { };
-
-                for (var i = 0, value, priority;  this.style[i];  i++) {
-
-                    value = this.style.getPropertyValue( this.style[i] );
-
-                    if (priority = this.style.getPropertyPriority( this.style[i] ))
-                        value += ' !' + priority;
-
-                    if (! (value in Invalid_Style))
-                        _rule_[ this.style[i] ] = value;
-                }
+                    rule[ this.cssText.split( /\s*\{/ )[0] ] =
+                        cssRule(this, mapFilter);
+                else
+                    rule[this.selectorText || this.keyText] =
+                        mapStyle.call(sheet, this.style, mapFilter);
             });
 
             return rule;
         },
-        fixStyle:     function ($_Root, iDOM) {
+        fixStyle:     function ($_Root, iDOM, base) {
 
             if ( iDOM.classList.contains('iQuery_CSS-Rule') )  return iDOM;
 
-            var rule = this.cssRule( iDOM.sheet );    iDOM = [ ];
+            var rule = this.cssRule(
+                    iDOM.sheet,  base && fixCSSURL.bind(null, base)
+                );
+
+            iDOM = [ ];
 
             $.each(rule,  function (selector) {
 
@@ -900,7 +1323,29 @@ var view_DOMkit = (function ($, RenderNode, InnerLink) {
 
             return iDOM;
         },
+        loadCSS:      function ($_View, linkDOM, base) {
+
+            var path = pathToRoot(base, linkDOM.getAttribute('href')),
+                _this_ = this,
+                $_Style = $('<style disabled />');
+
+            $.get( path ).then(function (CSS) {
+
+                $_Style[0].textContent = CSS;
+
+                $_Style.replaceWith( _this_.fixStyle($_View, $_Style[0], path) );
+
+            },  function () {
+
+                linkDOM.href = path;
+
+                $_Style.replaceWith( linkDOM );
+            });
+
+            return $_Style[0];
+        },
         fixScript:    function (iDOM) {
+
             var iAttr = { };
 
             $.each(iDOM.attributes,  function () {
@@ -908,118 +1353,87 @@ var view_DOMkit = (function ($, RenderNode, InnerLink) {
                 iAttr[ this.nodeName ] = this.nodeValue;
             });
 
-            iDOM = $('<script />', iAttr).prop('text', iDOM.text)[0];
-
-            return iDOM;
+            return  $('<script />', iAttr).prop('text', iDOM.text)[0];
         },
-        fixURL:       function (iDOM, iKey, iBase) {
+        fixURL:       function (base) {
 
-            var iURL = iDOM.getAttribute( iKey )  ||  '';
+            var key, URI, $_This = $( this );
 
-            var expression = iURL.match( RenderNode.expression );
+            if (this.style.cssText.indexOf('url(') > 0)
+                $_This.css( mapStyle(this.style,  fixCSSURL.bind(null, base)) );
 
-            if (
-                !(iURL[0] in URL_Prefix)  &&
-                (iURL  !==  (expression || [ ]).join(''))
-            ) {
-                var root = $.filePath() + '/';
+            switch ( this.tagName.toLowerCase() ) {
+                case 'a':         ;
+                case 'area':      key = 'href';
+                case 'form':      key = key || 'action';
+                case 'img':       ;
+                case 'iframe':    ;
+                case 'audio':     ;
+                case 'video':     ;
+                case 'script':    key = key || 'src';
+                default:          {
+                    key = key || 'data-href';
 
-                iURL = (
-                    new URL(iURL,  new URL(iBase || '', root))  +  ''
-                ).replace(root, '');
+                    if (! (URI = this.getAttribute( key )))  break;
 
-                iDOM.setAttribute(
-                    iKey,  iURL = expression ? decodeURI( iURL ) : iURL
-                );
-            }
+                    if (
+                        ('target' in this)  &&
+                        (this.target !== '_self')  &&
+                        $.isXDomain( URI )
+                    )
+                        return  this.target = '_blank';
 
-            return iURL;
-        },
-        prefetch:     function (iURL) {
-            if (! (
-                (iURL[0] in URL_Prefix)  ||
-                iURL.match( RenderNode.expression )  ||
-                $('head link[href="' + iURL + '"]')[0]
-            ))
-                $('<link />', {
-                    rel:     (($.browser.msie < 11)  ||  $.browser.ios)  ?
-                        'next'  :  'prefetch',
-                    href:    iURL
-                }).appendTo( document.head );
-        },
-        parseSlot:    function (root, $_Root) {
+                    if (URI = pathToRoot(base, URI))
+                        this.setAttribute(key, URI);
 
-            $_Root.find('slot[name]').each(function () {
-
-                $('[slot="' + this.getAttribute('name') + '"]',  root)
-                    .replaceAll( this );
-            });
-
-            $_Root.find('slot').each(function () {
-
-                if (! arguments[0])
-                    this.parentNode.replaceChild(
-                        $.buildFragment( root.childNodes ),  this
-                    );
-                else
-                    this.parentNode.removeChild( this );
-            });
-        },
-        build:        function (root, base, HTML) {
-
-            var $_Root = HTML  ?
-                    $('<div />').prop('innerHTML', HTML)  :  $( root ),
-                _This_ = this;
-
-            if ( base.href )
-                base = base.href;
-            else if (base  =  $( root ).parents(
-                '[data-href]:view:not([data-href^="?"])'
-            )[0])
-                base = base.dataset.href;
-
-
-            $_Root.find(Object.keys( URL_DOM ) + '').not('head *').each(function () {
-
-                var URL = _This_.fixURL(
-                        this,
-                        URL_DOM[ this.tagName.toLowerCase() ]  ||  (
-                            ('src' in this)  ?  'src'  :  'data-href'
-                        ),
-                        base
-                    );
-
-                if (
-                    $( this ).is( InnerLink.HTML_Link )  &&
-                    ((this.target || '_self')  ===  '_self')
-                ) {
-                    if ($.urlDomain(this.href || this.action)  !==  $.urlDomain())
-                        this.target = '_blank';
-
-                    if ((this.target || '_self')  ===  '_self')
-                        _This_.prefetch( URL );
+                    if ($_This.is(
+                        InnerLink.HTML_Link + ', ' + InnerLink.Self_Link
+                    ))
+                        new InnerLink( this );
                 }
-
-                if ($( this ).is(InnerLink.HTML_Link + ', ' + InnerLink.Self_Link))
-                    new InnerLink( this );
-            });
-
-
-            if ( HTML ) {
-                if ( root.childNodes[0] )  this.parseSlot(root, $_Root);
-
-                root.appendChild( $.buildFragment( $_Root.contents() ) );
             }
-        }
+        },
+        URL_DOM:      [
+            'a', 'area', 'form', 'img', 'iframe', 'audio', 'video', 'script',
+            '[style]', '[data-href]'
+        ].join(', ')
     };
 })(jquery, view_RenderNode, InnerLink);
 
 
 var view_HTMLView = (function ($, View, DOMkit, RenderNode) {
 
-    function HTMLView($_View, iScope) {
+    /**
+     * 普通视图类（对应 JSON 对象）
+     *
+     * @author  TechQuery
+     *
+     * @class   HTMLView
+     * @extends View
+     *
+     * @param   {jQueryAcceptable} $_View  - Container DOM of HTMLView
+     * @param   {object}           [scope] - Data object as a scope
+     * @param   {(string|URL)}     [base]
+     *
+     * @returns {HTMLView}             Return the last one if a HTMLView instance
+     *                                 has been created on this element
+     */
 
-        var _This_ = View.call(this, $_View, iScope);
+    function HTMLView($_View, scope, base) {
+
+        var _This_ = View.call(this, $_View, scope, base);
+        /**
+         * 本视图的插卡元素
+         *
+         * @name $_Slot
+         * @type {jQuery}
+         *
+         * @memberof HTMLView
+         * @instance
+         *
+         * @readonly
+         */
+        this.$_Slot = $();
 
         return  (_This_ !== this)  ?
             _This_ :
@@ -1049,74 +1463,161 @@ var view_HTMLView = (function ($, View, DOMkit, RenderNode) {
         }
     }, {
         indexOf:       Array.prototype.indexOf,
-        signIn:        function (iNode) {
+        signIn:        function (node) {
 
-            for (var i = 0;  this[i];  i++)  if (this[i] == iNode)  return;
+            for (var i = 0;  this[i];  i++)  if (this[i] == node)  return;
 
-            this[this.length++] = iNode;
+            this[this.length++] = node;
 
-            var iName = (iNode instanceof RenderNode)  ?  iNode  :  [
-                    iNode.__name__  ||  iNode.name
-                ];
+            var name = (node instanceof RenderNode)  ?
+                    node  :  [node.__name__];
 
-            for (var j = 0;  iName[j];  j++)
-                this.watch( iName[j] ).__map__[iName[j]] =
-                    (this.__map__[iName[j]] || 0)  +  Math.pow(2, i);
+            for (var j = 0;  name[j];  j++)  try {
+
+                this.watch( name[j] ).__map__[name[j]] =
+                    (this.__map__[name[j]] || 0)  +  Math.pow(2, i);
+
+            } catch (error) {
+
+                console.warn( error );
+            }
         },
-        parsePlain:    function (iDOM) {
+        parsePlain:    function (node) {
 
-            Array.from(
-                Array.prototype.concat.apply(
-                    $.makeArray( iDOM.attributes ),  iDOM.childNodes
-                ),
-                function (node) {
-                    if (
-                        node.nodeValue  &&
-                        (node.nodeType in RenderNode.Template_Type)
-                    ) {
-                        node = new RenderNode( node );
+            if (! (node.nodeValue || node.value))  return;
 
-                        if ( node[0] )  this.signIn( node );
+            var render = new RenderNode( node );
+
+            if (! render.type)  return;
+
+            this.signIn( render );
+
+            if (node.nodeType === 8) {
+
+                render.ownerNode = node =
+                    document.createTextNode( node.nodeValue );
+
+                render.DOMType = 'Text';
+            }
+
+            return node;
+        },
+        parseNode:     function (type, node) {
+
+            if ((node instanceof View)  &&  (this.indexOf( node )  <  0))
+                return  this.signIn( node );
+
+            switch ($.Type( node )) {
+                case 'Text':           ;
+                case 'Comment':
+                    return  this.parsePlain( node );
+                case 'HTMLElement':
+                    if (type in HTMLView.rawSelector)
+                        return null;
+                    else
+                        Array.from(
+                            $.makeArray( node.attributes ),
+                            this.parsePlain,
+                            this
+                        );
+            }
+        },
+        parseVM:       function () {
+
+            return  this.scan(function (node) {
+
+                var $_View = this.$_View,
+                    type = (node.nodeName || '').toLowerCase();
+
+                if ((node instanceof Node)  &&  (node !== $_View[0]))
+                    switch ( type ) {
+                        case 'style':
+                            return  DOMkit.fixStyle($_View, node);
+                        case 'link':
+                            return  DOMkit.loadCSS($_View, node, this.__base__);
+                        case 'script':
+                            return  DOMkit.fixScript( node );
                     }
-                },
-                this
+
+                return  this.parseNode(type, node);
+            });
+        },
+        fixLink:       function () {
+
+            if (! this.__base__)  return;
+
+            var $_Link = this.$_View.find('*');
+
+            if (! this.$_View[0].parentElement)  $_Link = $_Link.addBack();
+
+            $_Link.filter( DOMkit.URL_DOM ).not('head > *').each(
+                $.proxy(DOMkit.fixURL, null, this.__base__)
             );
+        },
+        parseSlot:     function () {
+
+            var _this_ = this, $_Slot = $();
+
+            this.$_View.find('slot').replaceWith(function () {
+
+                var slot = this.getAttribute('name');
+
+                slot = _this_.$_Slot.filter(
+                    slot  ?
+                        ('[slot="' + slot + '"]')  :
+                        function () {
+                            return  this.getAttribute &&
+                                (! this.getAttribute('slot'));
+                        }
+                );
+
+                return  slot[0]  ?
+                    ($.merge($_Slot, slot)  &&  slot)  :  $( this ).contents();
+            });
+
+            this.$_Slot = $_Slot;
+        },
+        parseHTML:     function (template) {
+
+            var fresh;
+
+            if (template = (template || '').trim()) {
+
+                if ( this.$_View[0].innerHTML.trim() )
+                    this.$_Slot = this.$_View.contents().detach();
+
+                if (fresh  =  (! this.$_View[0].innerHTML.trim()))
+                    this.$_View[0].innerHTML = template;
+            }
+
+            this.$_View.children('template').replaceWith(function () {
+
+                return  $( this ).contents();
+            });
+
+            if ( fresh ) {
+
+                this.fixLink();
+
+                this.parseSlot();
+            }
 
             return this;
         },
-        parse:         function () {
+        /**
+         * HTML 模板解析
+         *
+         * @author TechQuery
+         *
+         * @memberof HTMLView.prototype
+         *
+         * @param {string} [template] - A HTML String of the Component's template
+         *                              with HTMLSlotElement
+         * @return {HTMLView}  Current HTMLView
+         */
+        parse:         function (template) {
 
-            return  this.scan(function (iNode) {
-
-                var $_View = this.$_View,
-                    tag = (iNode.tagName || '').toLowerCase();
-
-                if ((iNode instanceof Element)  &&  (iNode !== $_View[0]))
-                    switch ( tag ) {
-                        case 'link':      {
-                            if (('rel' in iNode)  &&  (iNode.rel != 'stylesheet'))
-                                break;
-
-                            iNode.onload = function () {
-
-                                $( this ).replaceWith(
-                                    DOMkit.fixStyle($_View, this)
-                                );
-                            };
-                            return;
-                        }
-                        case 'style':     return  DOMkit.fixStyle($_View, iNode);
-                        case 'script':    return  DOMkit.fixScript( iNode );
-                    }
-
-                if (iNode instanceof View) {
-
-                    if (this.indexOf( iNode )  <  0)
-                        this.parsePlain( iNode.$_View[0] ).signIn( iNode );
-
-                } else if ( !(tag in HTMLView.rawSelector))
-                    this.parsePlain( iNode );
-            });
+            return  this.parseHTML( template ).parseVM();
         },
         nodeOf:        function (data, exclude, forEach) {
 
@@ -1134,8 +1635,12 @@ var view_HTMLView = (function ($, View, DOMkit, RenderNode) {
 
                     node = _This_[ node ];
 
-                    if ((node !== exclude)  &&  (
+                    if ((
                         (bit > 0)  ||  ((node || '').type > 1)
+                    ) && (
+                        !(node instanceof RenderNode)  ||
+                        (node.name !== 'value')  ||
+                        (node.ownerElement !== exclude)
                     )) {
                         forEach  &&  forEach.call(_This_, node);
 
@@ -1144,27 +1649,39 @@ var view_HTMLView = (function ($, View, DOMkit, RenderNode) {
                 }
             );
         },
-        render:        function (iData, value) {
+        /**
+         * 渲染视图
+         *
+         * @author   TechQuery
+         *
+         * @memberof HTMLView.prototype
+         *
+         * @param    {string|object} data    - Property Key or Data Object
+         * @param    {*}             [value] - Property Value
+         *
+         * @returns  {HTMLView}      Current HTMLView
+         */
+        render:        function (data, value) {
 
             var _Data_ = { },  exclude;
 
-            if (iData instanceof Element) {
+            if (data instanceof Element) {
 
-                exclude = iData;
+                exclude = data;
 
-                iData = exclude.getAttribute('name');
+                data = exclude.getAttribute('name');
 
                 value = HTMLView.getValue( exclude );
             }
 
-            if (typeof iData.valueOf() === 'string') {
+            if (typeof data.valueOf() === 'string') {
 
-                _Data_[iData] = value;    iData = _Data_;
+                _Data_[data] = value;    data = _Data_;
             }
 
             _Data_ = this.__data__;
 
-            this.nodeOf(_Data_.commit( iData ),  exclude,  function (node) {
+            this.nodeOf(_Data_.commit( data ),  exclude,  function (node) {
 
                 if (node instanceof RenderNode)
                     node.render(this, _Data_);
@@ -1173,8 +1690,7 @@ var view_HTMLView = (function ($, View, DOMkit, RenderNode) {
                     node.render(_Data_[node.__name__]);
 
                     _Data_[node.__name__] = node.__data__;
-                } else
-                    node.innerHTML = _Data_[ node.getAttribute('name') ];
+                }
             });
 
             return this;
@@ -1183,13 +1699,16 @@ var view_HTMLView = (function ($, View, DOMkit, RenderNode) {
 
 //  Render data from user input
 
-    $('html').on('input change',  ':field',  $.throttle(function () {
+    function reRender() {
 
-        var iView = HTMLView.instanceOf( this );
+        var view = HTMLView.instanceOf( this );
 
-        if (iView  &&  $( this ).validate())  iView.render( this );
+        if ( view )  view.render( this );
+    }
 
-    })).on('reset',  'form',  function () {
+    $('html').on('change', ':field', reRender).on(
+        'input',  ':field',  $.throttle( reRender )
+    ).on('reset',  'form',  function () {
 
         var data = $.paramJSON('?'  +  $( this ).serialize());
 
@@ -1203,24 +1722,51 @@ var view_HTMLView = (function ($, View, DOMkit, RenderNode) {
 })(jquery, view_View, view_DOMkit, view_RenderNode);
 
 
-var view_ListView = (function ($, View, HTMLView, InnerLink) {
+var view_ListView = (function ($, View, InnerLink) {
 
-    function ListView($_View, iScope) {
+    /**
+     * 迭代视图类（对应 JSON 数组）
+     *
+     * @description 默认匹配：设置了 `data-name` 属性的 `ul, ol, tbody, select, datalist` 元素
+     *
+     * @author  TechQuery
+     *
+     * @class   ListView
+     * @extends View
+     *
+     * @param   {jQueryAcceptable} $_View  - Container DOM of ListView
+     * @param   {object}           [scope] - Data object as a scope
+     * @param   {(string|URL)}     [base]
+     *
+     * @returns {ListView}         Return the last one if a ListView instance
+     *                             has been created on this element
+     */
 
-        var _This_ = View.call(this, $_View, iScope);
+    function ListView($_View, scope, base) {
 
-        if (_This_ !== this)  return _This_;
+        var _This_ = View.call(this, $_View, scope, base);
 
-        this.setPrivate({
-            HTML:     this.$_View.html(),
-            parse:    $.now()
-        }).clear();
+        return  (_This_ !== this)  ?
+            _This_  :
+            this.setPrivate({
+                HTML:     this.$_View.html(),
+                parse:    $.now()
+            }).clear();
     }
 
     View.extend(ListView, {
         is:    $.expr[':'].list
     }, {
         splice:     Array.prototype.splice,
+        /**
+         * 清空视图
+         *
+         * @author   TechQuery
+         *
+         * @memberof ListView.prototype
+         *
+         * @returns  {ListView} Current ListView
+         */
         clear:      function () {
 
             this.$_View.empty();
@@ -1229,9 +1775,22 @@ var view_ListView = (function ($, View, HTMLView, InnerLink) {
 
             return this;
         },
-        insert:     function (iData, Index, iDelay) {
+        /**
+         * 插入一项
+         *
+         * @author   TechQuery
+         *
+         * @memberof ListView.prototype
+         *
+         * @param    {object}   data      - Data of one Item
+         * @param    {number}   [index=0] - Index of Insert Point
+         * @param    {boolean}  [delay]   - Create one HTMLView, and not insert
+         *
+         * @returns  {HTMLView} Newly created Item
+         */
+        insert:     function (data, index, delay) {
 
-            var Item = (new HTMLView(this.__HTML__, this.__data__)).parse();
+            var Item = View.getSub(this.__HTML__, this.__data__).parse();
 
             Item.$_View.find( InnerLink.HTML_Link ).addBack( InnerLink.HTML_Link )
                 .each(function () {
@@ -1239,16 +1798,28 @@ var view_ListView = (function ($, View, HTMLView, InnerLink) {
                     new InnerLink( this );
                 });
 
-            iData.__index__ = Index = Index || 0;
+            data.__index__ = index = index || 0;
 
-            this.splice(Index,  0,  Item.render( iData ));
+            this.splice(index,  0,  Item.render( data ));
 
-            this.__data__.splice(Index,  0,  Item.__data__);
+            this.__data__.splice(index,  0,  Item.__data__);
 
-            if (! iDelay)  Item.$_View.insertTo(this.$_View, Index);
+            if (! delay)  Item.$_View.insertTo(this.$_View, index);
 
             return Item;
         },
+        /**
+         * 渲染视图
+         *
+         * @author   TechQuery
+         *
+         * @memberof ListView.prototype
+         *
+         * @param    {object[]} list    - ArrayLike Object of Data Object
+         * @param    {number}   [index] - Insert offset
+         *
+         * @returns  {ListView} Current ListView
+         */
         render:     function (list, index) {
 
             if (! (index != null))  this.clear();
@@ -1264,6 +1835,17 @@ var view_ListView = (function ($, View, HTMLView, InnerLink) {
 
             return this;
         },
+        /**
+         * 根据 HTML 节点查询索引
+         *
+         * @author   TechQuery
+         *
+         * @memberof ListView.prototype
+         *
+         * @param    {jQueryAcceptable} $_Item - An HTMLElement in one of the List
+         *
+         * @returns  {number}           Index of $_Item
+         */
         indexOf:    function ($_Item) {
 
             $_Item = ($_Item instanceof $)  ?  $_Item  :  $( $_Item );
@@ -1273,19 +1855,42 @@ var view_ListView = (function ($, View, HTMLView, InnerLink) {
                     $_Item  :  $_Item.parentsUntil( this.$_View )
             ).slice( -1 ).index();
         },
-        remove:     function (Index) {
+        /**
+         * 删除一项
+         *
+         * @author   TechQuery
+         *
+         * @memberof ListView.prototype
+         *
+         * @param    {number}   index - Index of Remove Point
+         *
+         * @returns  {HTMLView} Newly removed Item
+         */
+        remove:     function (index) {
 
             var Item = this.splice(
-                    $.isNumeric( Index )  ?  Index  :  this.indexOf( Index ),  1
+                    $.isNumeric( index )  ?  index  :  this.indexOf( index ),  1
                 )[0];
 
             Item.$_View.remove();
 
             return Item;
         },
-        sort:       function () {
+        /**
+         * 列表排序
+         *
+         * @author   TechQuery
+         *
+         * @memberof ListView.prototype
+         *
+         * @param    {function} callback - Same as the callback of
+         *                                 Array.prototype.sort()
+         *
+         * @returns  {ListView} Current ListView
+         */
+        sort:       function (callback) {
 
-            Array.prototype.sort.call(this, arguments[0]);
+            Array.prototype.sort.call(this, callback);
 
             this.$_View.append($.map(this,  function (Item) {
 
@@ -1298,21 +1903,37 @@ var view_ListView = (function ($, View, HTMLView, InnerLink) {
         },
         valueOf:    function () {
 
-            return  $.map(this,  function () {
+            return  $.each(this.__data__.valueOf(),  function () {
 
-                return arguments[0].valueOf();
+                delete  this.__index__;
             });
         }
     });
 
     return ListView;
 
-})(jquery, view_View, view_HTMLView, InnerLink);
+})(jquery, view_View, InnerLink);
 
 
 var view_TreeView = (function ($, ListView) {
 
-    function TreeView($_View, scope) {
+    /**
+     * 树形视图类（对应 JSON 数组 + 对象）
+     *
+     * @author  TechQuery
+     *
+     * @class   TreeView
+     * @extends ListView
+     *
+     * @param   {jQueryAcceptable} $_View  - Container DOM of TreeView
+     * @param   {object}           [scope] - Data object as a scope
+     * @param   {(string|URL)}     [base]
+     *
+     * @returns {TreeView}             Return the last one if a TreeView instance
+     *                                 has been created on this element
+     */
+
+    function TreeView($_View, scope, base) {
 
         $_View = $( $_View );
 
@@ -1322,12 +1943,23 @@ var view_TreeView = (function ($, ListView) {
 
         $_View.children().append(this.__self__ = this.__self__.outerHTML);
 
-        var _This_ = ListView.call(this, $_View, scope);
+        var _This_ = ListView.call(this, $_View, scope, base);
 
         if (_This_ !== this)  return _This_;
     }
 
-//  Tree Data Convert (Flat to 3D)
+    /**
+     * 平铺数据 转换为 立体数据
+     *
+     * @author   TechQuery
+     *
+     * @memberof TreeView
+     *
+     * @param    {object[]} list               Flat Data of a Tree
+     * @param    {string}   [child_key='list'] Key of a Tree Branch in HTML Template
+     *
+     * @returns  {object[]} 3D Data of a Tree
+     */
 
     TreeView.fromFlat = function (list, child_key) {
 
@@ -1359,6 +1991,19 @@ var view_TreeView = (function ($, ListView) {
 
 var WebApp = (function ($, Observer, View, HTMLView, ListView, TreeView, DOMkit, InnerLink) {
 
+    /**
+     * Web 应用（单例）构造函数
+     *
+     * @author  TechQuery
+     *
+     * @class   WebApp
+     * @extends Observer
+     *
+     * @param   {jQueryAcceptable}  Page_Box    Container DOM for Inner Page
+     * @param   {(string|URL)}      [API_Root]  The Root Path of Back-end API
+     *                                          formatted as Absolute URL
+     */
+
     function WebApp(Page_Box, API_Root) {
 
         if (this instanceof $)
@@ -1368,8 +2013,18 @@ var WebApp = (function ($, Observer, View, HTMLView, ListView, TreeView, DOMkit,
 
         if (_This_ !== this)  return _This_;
 
-        Observer.call(this, Page_Box).pageRoot = new URL($.filePath() + '/');
-
+        Observer.call(this, Page_Box).pageRoot = new URL( $.filePath() );
+        /**
+         * 后端 API 根路径
+         *
+         * @name     apiRoot
+         * @type     {URL}
+         *
+         * @memberof WebApp
+         * @instance
+         *
+         * @readonly
+         */
         this.apiRoot = new URL(API_Root || '',  this.pageRoot);
 
         this.length = 0;
@@ -1395,8 +2050,21 @@ var WebApp = (function ($, Observer, View, HTMLView, ListView, TreeView, DOMkit,
         splice:           Array.prototype.splice,
         getCID:           function () {
 
-            return  (arguments[0] + '').replace(this.pageRoot, '').split('#')[0];
+            return  (arguments[0] + '')
+                .replace(this.pageRoot, '')
+                .replace($.filePath( document.baseURI ),  '')
+                .split('#')[0];
         },
+        /**
+         * 明文显示当前 SPA 内页的路由 URI
+         *
+         * @author    TechQuery
+         *
+         * @memberof  WebApp.prototype
+         *
+         * @returns   {string}  The full route URI of current Inner Page
+         *                      in plain text
+         */
         getRoute:         function () {
             try {
                 return self.atob(
@@ -1404,21 +2072,35 @@ var WebApp = (function ($, Observer, View, HTMLView, ListView, TreeView, DOMkit,
                 );
             } catch (error) { }
         },
-        _emit:            function (iType, iLink, iData) {
+        _emit:            function (type, link, data) {
 
-            var $_Target = ((iLink.target === 'page')  ?  this  :  iLink).$_View;
+            var $_Target = ((link.target === 'page')  ?  this  :  link).$_View;
 
-            var observer = (iType in iLink.__handle__)  ?
-                    iLink  :  View.instanceOf($_Target, false);
+            var observer = (type in link.__handle__)  ?
+                    link  :  View.instanceOf($_Target, false);
 
-            iLink = $.extend(iLink.valueOf(), {
-                type:      iType,
+            /**
+             * 基于链接路由的事件对象
+             *
+             * @typedef  {object}      RouterEvent
+             *
+             * @property {string}      type              Event Name
+             * @property {HTMLElement} target            Related Element
+             * @property {string}      [href]            HTML URI
+             * @property {string}      [src]             JSON URI
+             * @property {string}      [method="GET"]    HTTP Method of JSON URI
+             * @property {string}      [contentType]     MIME Type of request
+             * @property {string}      [charset="UTF-8"] CharSet of request
+             */
+
+            link = $.extend(link.valueOf(), {
+                type:      type,
                 target:    $_Target[0]
             });
 
-            iData = this.emit(iLink, iData)  ||  iData;
+            data = this.emit(link, data)  ||  data;
 
-            return  observer  ?  (observer.emit(iLink, iData)  ||  iData)  :  iData;
+            return  observer  ?  (observer.emit(link, data)  ||  data)  :  data;
         },
         emitRoute:        function (link) {
 
@@ -1428,93 +2110,113 @@ var WebApp = (function ($, Observer, View, HTMLView, ListView, TreeView, DOMkit,
 
             var path = $.filePath( page )  ||  page,  $_Item;
 
-            if (
-                ($_Item = linkOf.call($_Nav, route))[0]  ||
-                ($_Item = linkOf.call($_Nav, page))[0]  ||
-                ($_Item = linkOf.call($_Nav, path, true))[0]
-            )
-                this._emit('route', link, $_Item);
+            ($_Item = linkOf.call($_Nav, route))[0]  ||
+            ($_Item = linkOf.call($_Nav, page))[0]  ||
+            ($_Item = linkOf.call($_Nav, path, true));
+
+            /**
+             * 路由切换事件
+             *
+             * @event WebApp#route
+             *
+             * @type  {RouterEvent}
+             */
+
+            this._emit('route', link, $_Item);
         },
         switchTo:         function (Index) {
 
             if (this.lastPage == Index)  return;
 
-            var iPage = View.instanceOf(this.$_View, false);
+            var page = View.instanceOf(this.$_View, false);
 
-            if ( iPage )  iPage.detach();
+            if ( page )  page.detach();
 
-            if (this.lastPage > -1)  this[ this.lastPage ].view = iPage;
+            if (this.lastPage > -1)  this[ this.lastPage ].view = page;
 
-            if (iPage = (this[ Index ]  ||  '').view) {
+            if (page = (this[ Index ]  ||  '').view) {
 
-                iPage.attach();
+                page.attach();
 
                 this.emitRoute( this[ Index ] );
 
-                return iPage;
+                return page;
             }
         },
-        setRoute:         function (iLink) {
+        setRoute:         function (link) {
 
             this.switchTo();
 
-            if (this[ this.lastPage ]  !=  (iLink + '')) {
+            if (this[ this.lastPage ]  !=  (link + '')) {
 
                 if (++this.lastPage != this.length)
                     this.splice(this.lastPage, Infinity);
 
                 self.history[
-                    ((this.getRoute() == iLink) ? 'replace' : 'push')  +  'State'
+                    ((this.getRoute() == link) ? 'replace' : 'push')  +  'State'
                 ](
                     {index: this.length},
-                    document.title = iLink.title,
-                    '#!'  +  self.btoa( this.getCID( iLink ) )
+                    document.title = link.title,
+                    this.pageRoot  +  '#!'  +  self.btoa( this.getCID( link ) )
                 );
 
-                this.emitRoute( this[ this.length++ ] = iLink );
+                this.emitRoute( this[ this.length++ ] = link );
             }
 
             return this;
         },
-        loadView:         function (iLink, iHTML) {
+        loadView:         function (link, HTML) {
 
-            var iTarget = (
-                    (iLink.target === 'page')  ?  this.setRoute( iLink )  :  iLink
+            var target = (
+                    (link.target === 'page')  ?  this.setRoute( link )  :  link
                 ).$_View[0];
 
-            if (iHTML = this._emit('template', iLink, iHTML))
-                DOMkit.build(iTarget, iLink, iHTML);
+            /**
+             * 视图模板 加载成功事件
+             *
+             * @event WebApp#template
+             *
+             * @type  {RouterEvent}
+             */
 
-            var iView = View.getSub( iTarget );
+            HTML = this._emit('template', link, HTML);
 
-            if ( iView.parse )  iView.parse();
+            var view = View.getSub(target, null, link.href);
 
-            if (! $('script:not(head > *)', iTarget)[0])
-                iLink.emit('load');
+            if ( view.parse )  view.parse( HTML );
 
-            return iView;
+            view.$_View.addClass('parsed');
+
+            if (! $('script:not(head > *)', target)[0])
+                link.emit('load');
+
+            return view;
         },
         loadChild:        function (view) {
+
+            view.$_View.addClass('rendered');
 
             return Promise.all($.map(
                 view.childOf(':visible'),  this.load.bind( this )
             )).then(function () {
 
+                view.$_View.addClass('loaded');
+
                 return view;
             });
         },
-        loadComponent:    function (iLink, iHTML, iData) {
+        loadComponent:    function (link, HTML, data) {
 
-            var JS_Load = iLink.one('load'),  iView = this.loadView(iLink, iHTML);
+            var JS_Load = link.one('load'),  view = this.loadView(link, HTML);
 
-            return  JS_Load.then(function (iFactory) {
+            return  JS_Load.then(function (factory) {
 
-                iData = $.extend(
-                    iData,  iLink.data,  iLink.$_View[0].dataset,  iData
+                data = $.extend(
+                    data,  link.data,  link.$_View[0].dataset,  data
                 );
 
-                return iView.render(
-                    iFactory  ?  (iFactory.call(iView, iData)  ||  iData)  :  iData
+                return view.render(
+                    factory  ?  (factory.call(view, data)  ||  data)  :  data
                 );
             }).then( this.loadChild.bind( this ) );
         },
@@ -1532,21 +2234,46 @@ var WebApp = (function ($, Observer, View, HTMLView, ListView, TreeView, DOMkit,
                 return  this.one({type: 'ready',  target: this.$_View[0]});
             }
         },
-        load:             function (iLink) {
+        /**
+         * 加载一个链接/视图的 DOM 元素或 SPA 对象
+         *
+         * @author    TechQuery
+         *
+         * @memberof  WebApp.prototype
+         *
+         * @param     {HTMLElement|View}  link - an HTML Element or SPA Object of
+         *                                       a Link or View
+         * @returns   {Promise}
+         *
+         * @fires     WebApp#request
+         * @fires     WebApp#data
+         * @fires     WebApp#ready
+         */
+        load:             function (link) {
 
-            if (! (iLink instanceof InnerLink))
-                iLink = new InnerLink(
-                    (iLink instanceof Observer)  ?  iLink.$_View[0]  :  iLink
+            if (! (link instanceof InnerLink))
+                link = new InnerLink(
+                    (link instanceof Observer)  ?  link.$_View[0]  :  link
                 );
+
+            link.$_View.removeClass('parsed rendered loaded');
 
             var _This_ = this;
 
-            return  iLink.load(function () {
+            return  link.load(function () {
 
                 if ((this.dataType || '').slice(0, 4)  ===  'json')
                     this.url = (new URL(this.url, _This_.apiRoot))  +  '';
 
-                _This_._emit('request', iLink, {
+                /**
+                 * AJAX 请求发起事件
+                 *
+                 * @event WebApp#request
+                 *
+                 * @type  {RouterEvent}
+                 */
+
+                _This_._emit('request', link, {
                     option:       this,
                     transport:    arguments[0]
                 });
@@ -1555,17 +2282,25 @@ var WebApp = (function ($, Observer, View, HTMLView, ListView, TreeView, DOMkit,
 
             }).then(function () {
 
-                var iData = arguments[0][1];
+                var data = arguments[0][1];
 
-                if (iData != null) {
+                if (data != null) {
 
-                    iLink.header = iData.head;
+                    link.header = data.head;
 
-                    iData = _This_._emit('data', iLink, iData.body);
+                    /**
+                     * 链接 / 视图 数据加载成功事件
+                     *
+                     * @event WebApp#data
+                     *
+                     * @type  {RouterEvent}
+                     */
+
+                    data = _This_._emit('data', link, data.body);
                 }
 
-                if (iLink.target !== 'data')
-                    return  _This_.loadComponent(iLink, arguments[0][0], iData);
+                if (link.target !== 'data')
+                    return  _This_.loadComponent(link, arguments[0][0], data);
 
             }).then(function (view) {
 
@@ -1573,26 +2308,48 @@ var WebApp = (function ($, Observer, View, HTMLView, ListView, TreeView, DOMkit,
 
                 var promise = view.one('ready');
 
-                _This_._emit('ready', iLink, view);
+                /**
+                 * 视图加载完成事件
+                 *
+                 * @event WebApp#ready
+                 *
+                 * @type  {RouterEvent}
+                 */
 
-                if (iLink.target === 'page')
+                _This_._emit('ready', link, view);
+
+                if (link.target === 'page')
                     promise = _This_.autoFocus() || promise;
 
                 return promise;
             });
         },
-        loadPage:         function (iURI) {
+        /**
+         * 按 浏览历史索引 或 路由 URI 加载内页
+         *
+         * @author    TechQuery
+         *
+         * @memberof  WebApp.prototype
+         *
+         * @param     {number|string} [URI=0] - a History Index or Route URI
+         * @returns   {Promise}
+         *
+         * @listens   WebApp#ready
+         */
+        loadPage:         function (URI) {
 
-            iURI = iURI || 0;
+            URI = URI || 0;
 
-            if (isNaN( iURI ))
-                return  this.load( $('<a href="' + iURI + '" />')[0] );
+            if (isNaN( URI ))
+                return  this.load( $('<a href="' + URI + '" />')[0] );
 
-            var link = this[this.lastPage + iURI];
+            var link = this[+URI + this.lastPage];
 
             if ( link )  delete link.view;
 
-            self.history.go( iURI );
+            if (! URI)  return  this.load( link );
+
+            self.history.go( URI );
 
             return  this.one({type: 'ready',  target: this.$_View[0]});
         },
@@ -1600,13 +2357,13 @@ var WebApp = (function ($, Observer, View, HTMLView, ListView, TreeView, DOMkit,
 
             var _This_ = this;
 
-            $('html').on('click submit',  InnerLink.HTML_Link,  function (iEvent) {
+            $('html').on('click submit',  InnerLink.HTML_Link,  function (event) {
                 if (
-                    ((this.tagName !== 'FORM')  ||  (iEvent.type === 'submit'))  &&
+                    ((this.tagName !== 'FORM')  ||  (event.type === 'submit'))  &&
                     ((this.target || '_self')  ===  '_self')  &&
                     _This_.getCID(this.href || this.action)
                 ) {
-                    iEvent.preventDefault();
+                    event.preventDefault();
 
                     _This_.load( this );
                 }
@@ -1640,12 +2397,36 @@ var WebApp = (function ($, Observer, View, HTMLView, ListView, TreeView, DOMkit,
 
             return this;
         },
-        boot:             function () {
+        prefetch:         function (view) {
 
-            DOMkit.build(document.body, '');
+            var list = Object.keys($.makeSet.apply($, $.map(
+                    view.$_View.find( InnerLink.HTML_Link ),
+                    function (link) {
+
+                        link = (link.getAttribute('href') || '').split( /\?|\#/ )[0];
+
+                        return  (link  &&  (! $.isXDomain(link)))  ?  link  :  null;
+                    }
+                )));
+
+            /**
+             * 页面预加载事件
+             *
+             * @event WebApp#prefetch
+             */
+            if ( list[0] )  this.emit('prefetch', list);
+
+            return this;
+        },
+        boot:             function () {
 
             var root = (new HTMLView('html')).parse().render( $.paramJSON() ),
                 _This_ = this;
+
+            this.prefetch( root ).on('ready',  function () {
+
+                this.prefetch( arguments[1] );
+            });
 
             return  this[root.$_View[0].dataset.href ? 'load' : 'loadChild'](
                 root
@@ -1661,57 +2442,136 @@ var WebApp = (function ($, Observer, View, HTMLView, ListView, TreeView, DOMkit,
 })(jquery, base_Observer, view_View, view_HTMLView, view_ListView, view_TreeView, view_DOMkit, InnerLink);
 
 
-//
-//                    >>>  EasyWebApp.js  <<<
-//
-//
-//      [Version]    v4.0  (2017-10-17)  stable
-//
-//      [Require]    iQuery  ||  jQuery with jQueryKit
-//
-//      [Usage]      A Light-weight SPA Engine with
-//                   jQuery Compatible API.
-//
-//
-//              (C)2015-2017    shiy2008@gmail.com
-//
-
+/**
+ * EasyWebApp.js - A Light-weight SPA Engine based on jQuery Compatible API
+ *
+ * @module    {function} WebApp
+ *
+ * @version   4.0 (2018-01-24) stable
+ *
+ * @requires  jquery
+ * @see       {@link http://jquery.com/ jQuery}
+ * @requires  jQueryKit
+ * @see       {@link https://techquery.github.io/iQuery.js iQuery}
+ *
+ * @copyright TechQuery <shiy2008@gmail.com> 2015-2018
+ */
 
 return  (function ($, WebApp, InnerLink) {
 
+    /**
+     * 承诺对象
+     *
+     * @typedef {Promise} Promise
+     *
+     * @see     {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise|Promise}
+     */
+
+    /**
+     * URL 对象
+     *
+     * @typedef {URL} URL
+     *
+     * @see     {@link https://developer.mozilla.org/en-US/docs/Web/API/URL|URL}
+     */
+
+    /**
+     * DOM 树节点抽象类
+     *
+     * @typedef {Node} Node
+     *
+     * @see     {@link https://developer.mozilla.org/en-US/docs/Web/API/Node|Node}
+     */
+
+    /**
+     * HTML 元素标签抽象类
+     *
+     * @typedef {HTMLElement} HTMLElement
+     *
+     * @see     {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement|HTMLElement}
+     */
+
 /* ---------- AMD based Component API ---------- */
 
-    var _require_ = self.require,  _link_;
+    var _require_ = self.require,  _script_;
 
-    self.require = $.extend(function () {
+    /**
+     * 增强的 require()
+     *
+     * @global
+     * @function require
+     *
+     * @param {string[]} dependency
+     * @param {function} [factory]
+     * @param {function} [fallback]
+     *
+     * @return {Promise}
+     *
+     * @see {@link https://github.com/amdjs/amdjs-api/wiki/require#requirearray-function-}
+     */
 
-        if (! document.currentScript)  return _require_.apply(this, arguments);
+    self.require = $.extend(function (dependency, factory, fallback) {
 
-        var iArgs = arguments,  iWebApp = new WebApp();
+        var script = document.currentScript;
 
-        var view = WebApp.View.instanceOf( document.currentScript );
+        return  new Promise(function (resolve, reject) {
+
+            var parameter = [
+                    dependency,
+                    (factory instanceof Function)  ?  factory  :  resolve,
+                    (fallback instanceof Function)  ?  fallback  :  reject
+                ];
+
+            if (! script)  return _require_.apply(null, parameter);
+
+            _require_.call(this,  parameter[0],  function () {
+
+                _script_ = script;
+
+                return  parameter[1].apply(this, arguments);
+
+            },  parameter[2]);
+        });
+    },  _require_);
+
+    /**
+     * 组件工厂声明
+     *
+     * @author    TechQuery
+     *
+     * @memberof  WebApp
+     *
+     * @param     {function}  factory - The factory function of current
+     *                                  component & its data
+     * @returns   {function}  WebApp constructor
+     */
+
+    WebApp.component = function (factory) {
+
+        var iWebApp = new this(), view = this.View.instanceOf(_script_);
 
         var link = (view.$_View[0] === iWebApp.$_View[0])  ?
                 iWebApp[ iWebApp.lastPage ]  :
                 InnerLink.instanceOf( view.$_View );
 
-        _require_.call(this,  iArgs[0],  function () {
-
-            _link_ = link;
-
-            return  iArgs[1].apply(this, arguments);
-        });
-    },  _require_);
-
-
-    WebApp.component = function (iFactory) {
-
-        if (_link_)  _link_.emit('load', iFactory);
+        if ( link )  link.emit('load', factory);
 
         return this;
     };
 
     $.extend(WebApp.prototype, {
+        /**
+         * 更新路由 URI 的参数数据
+         *
+         * @author    TechQuery
+         *
+         * @memberof  WebApp.prototype
+         *
+         * @param     {string|object}          key      String or
+         *                                              Key-Value Object
+         * @param     {number|boolean|string}  [value]
+         * @returns   {WebApp}
+         */
         setURLData:    function (key, value) {
 
             var URL = this.getRoute().split(/&?data=/);
@@ -1730,7 +2590,7 @@ return  (function ($, WebApp, InnerLink) {
                         data:     key
                     },
                     document.title,
-                    '#!' + self.btoa(
+                    this.pageRoot + '#!' + self.btoa(
                         $.extendURL(URL[0], key)  +  (
                             URL[1]  ?  ('&data=' + URL[1])  :  ''
                         )
@@ -1743,6 +2603,42 @@ return  (function ($, WebApp, InnerLink) {
 
 /* ---------- jQuery based Helper API ---------- */
 
+    /**
+     * jQuery 对象
+     *
+     * @typedef {jQuery} jQuery
+     *
+     * @see     {@link https://api.jquery.com/jQuery|jQuery}
+     */
+
+    /**
+     * jQuery 构造函数 第一参数接受的数据类型
+     *
+     * @typedef {(string|HTMLElement|HTMLElement[]|jQuery)} jQueryAcceptable
+     *
+     * @see     {@link https://api.jquery.com/jQuery|jQuery Acceptable}
+     */
+
+    /**
+     * jQuery 插件命名空间
+     *
+     * @external "jQuery.fn"
+     *
+     * @see      {@link http://learn.jquery.com/plugins/|jQuery Plugins}
+     */
+
+    /**
+     * 在 jQuery 对象首个元素上创建/获取视图对象
+     *
+     * @author    TechQuery
+     *
+     * @function  external:"jQuery.fn".view
+     *
+     * @param     {string}  [Class_Name] - String for creating,
+     *                                     or empty for getting
+     * @returns   {View}
+     */
+
     $.fn.view = function (Class_Name) {
 
         if (! this[0])  return;
@@ -1751,6 +2647,18 @@ return  (function ($, WebApp, InnerLink) {
             (new WebApp[Class_Name](this[0], arguments[1]))  :
             WebApp.View.instanceOf(this[0], false);
     };
+
+    /**
+     * 在 jQuery 对象首个元素上创建/获取 Web 应用对象
+     *
+     * @author   TechQuery
+     *
+     * @function external:"jQuery.fn".iWebApp
+     *
+     * @param    {(string|URL)}  [API_Root] - The Root Path of Back-end API
+     *                                        formatted as Absolute URL
+     * @returns  {WebApp}
+     */
 
     return  $.fn.iWebApp = WebApp;
 

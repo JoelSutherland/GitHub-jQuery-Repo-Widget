@@ -6,7 +6,7 @@
 
 ## What does it look like?
 
-[![Repository ScreenShot](demo/screenshot.png?raw=true "EWA Repository Widget Screenshot")](https://techquery.github.io/GitHub-Web-Widget/)
+[![Repository ScreenShot](demo/Repository.png?raw=true "EWA Repository Widget Screenshot")](https://techquery.github.io/GitHub-Web-Widget/)
 
 [![Profile ScreenShot](demo/Profile.png?raw=true "EWA Profile Widget Screenshot")](https://techquery.github.io/GitHub-Web-Widget/)
 
