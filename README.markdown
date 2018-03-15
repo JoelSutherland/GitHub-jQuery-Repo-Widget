@@ -1,19 +1,35 @@
-# GitHub jQuery Repo Widget
+# GitHub Web Widget
 
-Drop this script on your page and it will build you a beautiful widget that displays the status of your GitHub repo.
+**Web Component** set for GitHub based on [EasyWebApp](https://github.com/TechQuery/EasyWebApp)
+
+
 
 ## What does it look like?
 
-![Widget Image](/demo/screenshot.png?raw=true "jQuery Repo Widget Screenshot")
+[![Repository ScreenShot](demo/Repository.png?raw=true "EWA Repository Widget Screenshot")](https://techquery.github.io/GitHub-Web-Widget/)
+
+[![Profile ScreenShot](demo/Profile.png?raw=true "EWA Profile Widget Screenshot")](https://techquery.github.io/GitHub-Web-Widget/)
+
+
 
 ## How do I use it?
 
 Everwhere you want a widget to be placed, add the following markup:
+```HTML
+<div data-href="path/to/Repository.html?repo=yourID/repoName"></div>
 
-	<div class="github-widget" data-repo="JoelSutherland/GitHub-jQuery-Repo-Widget"></div>
-
-Then include the javascript file somewhere after you've include jQuery:
-
-	<script type="text/javascript" src="jquery.githubRepoWidget.min.js"></script>
+<div data-href="path/to/Profile.html?user=yourID"></div>
+```
+(More codes about initialization of EWA project, please read [demo/index.html](demo/index.html))
 
 That's it! All of the styling is included and image assets are pulled from GitHub.
+
+
+
+## Acknowledgements
+
+All HTML & CSS codes of this repository come from following open source projects:
+
+ - http://www.newmediacampaigns.com/blog/a-beautiful-jquery-github-widget
+
+ - http://github-profile.com/

@@ -1,0 +1,45 @@
+<link rel="stylesheet" href="Profile.css" />
+
+<script src="Profile.js"></script>
+
+<div class="gh-profile-card"
+     data-href="?data=https://api.github.com/users/${view.user}">
+    <div class="profile">
+        <img src="${view.avatar_url}" class="avatar" />
+
+        <a target="_blank" href="${view.html_url}" class="name">
+            <!--${view.name}-->
+        </a>
+        <div class="followMe">
+            <a target="_blank" href="${view.html_url}" class="follow-button">
+                Follow @<!--${view.login}-->
+            </a>
+            <span class="followers">
+                <!--${view.followers}-->
+            </span>
+        </div>
+        <ul class="languages" data-name="languages">
+            <li><!--${view.name}--></li>
+        </ul>
+    </div>
+    <div class="repos">
+        <span class="header">Most popular original repositories</span>
+
+        <div is="ListView" data-href="?data=${view.repos_url}?sort=updated"
+             ondata="${scope.countLanguage}">
+
+            <a target="_blank" href="${view.html_url}" title="${view.description}">
+                <span class="repo-name">
+                    <!--${view.name}-->
+                </span>
+                <span class="updated">
+                    Updated:
+                    <!--${(new Date( view.updated_at )).toLocaleString()}-->
+                </span>
+                <span class="star">
+                    <!--${view.star_count}-->
+                </span>
+            </a>
+        </div>
+    </div>
+</div>
