@@ -1,0 +1,37 @@
+{
+  "name": "github-web-widget",
+  "version": "2.0.0",
+  "description": "Web Component set for GitHub based on WebCell",
+  "keywords": [
+    "web-component",
+    "github",
+    "web-cell"
+  ],
+  "author": "shiy2008@gmail.com",
+  "license": "AGPL-3.0",
+  "homepage": "https://github.com/TechQuery/GitHub-Web-Widget#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TechQuery/GitHub-Web-Widget.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TechQuery/GitHub-Web-Widget/issues"
+  },
+  "main": "index.js",
+  "directories": {
+    "lib": "source/"
+  },
+  "scripts": {
+    "build": "web-cell pack",
+    "start": "web-cell preview",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.26.0",
+    "web-cell": "^0.9.4",
+    "whatwg-fetch": "^2.0.4"
+  },
+  "devDependencies": {
+    "web-cell-cli": "^0.4.2"
+  }
+}

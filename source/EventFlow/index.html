@@ -1,0 +1,47 @@
+<template>
+    <ul data-array="events"><li>
+        <a target="_blank" href="https://github.com/${view.actor.login}"
+            title="${view.actor.login}">
+
+            <img src="${view.actor.avatar_url}" />
+
+            <div>${view.actor.display_login}</div>
+        </a>
+        <div>
+            <h3>
+                <a target="_blank" href="https://github.com/${view.repo.name}">
+                    ${view.repo.name}
+                </a>
+            </h3>
+            <span title="${(new Date( view.created_at )).toLocaleString()}">
+                ${view.createdTime}
+            </span>
+
+            ${host.methodMap[ view.payload.action ]}
+
+            ${host.eventMap[ view.type.replace('Event', '') ]}
+
+            <span data-object="payload">
+                <a target="_blank" href="${host.detailURLOf( view )}">
+                    ${
+                        (view.ref || view.master_branch)  ||
+                        (view.issue || view.pull_request || '').title  ||
+                        (view.release || '').name  ||
+                        (view.member || '').login
+                    }
+                </a>
+                <ol data-array="pages" style="display: ${scope.pages ? '' : 'none'}">
+                    <li>
+                        ${scope.method[ view.action ]}
+
+                        <a target="_blank" href="${view.html_url}"
+                            title="${view.summary || view.sha}">
+
+                            ${view.title}
+                        </a>
+                    </li>
+                </ol>
+            </span>
+        </div>
+    </li></ul>
+</template>

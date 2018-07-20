@@ -1,4 +1,5 @@
 ### OS & software files
+
 .DS_Store
 .AppleDouble
 .LSOverride
@@ -11,3 +12,9 @@ Icon
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+
+
+# Node.JS & NPM
+
+node_modules/
+package-lock.json

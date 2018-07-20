@@ -1,6 +1,6 @@
 # GitHub Web Widget
 
-**Web Component** set for GitHub based on [EasyWebApp](https://github.com/TechQuery/EasyWebApp)
+**Web Component** set for GitHub based on [WebCell](https://web-cell.tk/)
 
 
 

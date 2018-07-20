@@ -1,0 +1,21 @@
+ul[data-array] {
+    list-style:    none;
+    margin:        0;
+    padding:       0;
+}
+ul[data-array] > li {
+    display:    table;
+    width:      100%;
+}
+ul[data-array] > li > * {
+    display:           table-cell;
+    vertical-align:    middle;
+    padding:           0.5em;
+}
+ul[data-array] > li > *:first-child {
+    text-align:    center;
+}
+
+img {
+    max-width:    5em;
+}
