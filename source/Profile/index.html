@@ -1,0 +1,39 @@
+<template>
+    <div class="gh-profile-card">
+        <div class="profile">
+            <img src="${view.avatar_url}" class="avatar" />
+
+            <a target="_blank" href="${view.html_url}" class="name">
+                ${view.name}
+            </a>
+            <div class="followMe">
+                <a target="_blank" href="${view.html_url}" class="follow-button">
+                    Follow @${view.login}
+                </a>
+                <span class="followers">
+                    ${view.followers}
+                </span>
+            </div>
+            <ul class="languages" data-array="languages">
+                <li>${view.name}</li>
+            </ul>
+        </div>
+        <div class="repos">
+            <span class="header">Most popular original repositories</span>
+
+            <div data-array="repositories">
+                <a target="_blank" href="${view.html_url}" title="${view.description}">
+                    <span class="repo-name">
+                        ${view.name}
+                    </span>
+                    <span class="updated">
+                        Updated: ${(new Date( view.updated_at )).toLocaleString()}
+                    </span>
+                    <span class="star">
+                        ${view.star_count}
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+</template>

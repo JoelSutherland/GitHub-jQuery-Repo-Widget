@@ -4,11 +4,24 @@ import template from './index.html';
 
 import style from './index.css';
 
+const intersection = new WeakMap();
+
 
 
 export default  class GithubEventFlow extends HTMLElement {
 
-    constructor() {  super().buildDOM(template, style).nextPage = 1;  }
+    constructor() {
+
+        super().buildDOM(template, style);
+
+        this.nextPage = 1;
+
+        intersection.set(this,  new IntersectionObserver(entry => {
+
+            for (let item of entry)
+                if ( item.isIntersecting )  return this.connectedCallback();
+        }));
+    }
 
     get URL() {
 
@@ -33,7 +46,20 @@ export default  class GithubEventFlow extends HTMLElement {
 
     async connectedCallback() {
 
-        this.view.events.render(await this.getData());
+        const observer = intersection.get( this ), events = this.view.events;
+
+        const content = events.content;
+
+        if ( content.lastElementChild )
+            observer.unobserve( content.lastElementChild );
+
+        const list = await this.getData();
+
+        if (! list[0])  return;
+
+        events.render( list );
+
+        observer.observe( content.lastElementChild );
     }
 
     attributeChangedCallback(name, oldValue) {
@@ -49,7 +75,7 @@ export default  class GithubEventFlow extends HTMLElement {
             response.headers.get('Link')
         );
 
-        this.nextPage = (next || '')[1];
+        this.nextPage = next  ?  +next[1]  :  (this.nextPage + 1);
 
         return  await response.json();
     }

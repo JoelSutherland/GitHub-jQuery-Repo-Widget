@@ -75,7 +75,7 @@ var _module_ = {
             Object.defineProperty(exports, "__esModule", {
                 value: true
             });
-            exports.default = "ul[data-array] {\n    list-style:    none;\n    margin:        0;\n    padding:       0;\n}\nul[data-array] > li {\n    display:    table;\n    width:      100%;\n}\nul[data-array] > li > * {\n    display:           table-cell;\n    vertical-align:    middle;\n    padding:           0.5em;\n}\nul[data-array] > li > *:first-child {\n    text-align:    center;\n}\n\nimg {\n    max-width:    5em;\n}\n";
+            exports.default = "ul[data-array] {\n    list-style:    none;\n    margin:        0;\n    padding:       0;\n}\nul[data-array] > li {\n    display:    table;\n    width:      100%;\n}\nul[data-array] > li > * {\n    display:           table-cell;\n    table-layout:      fixed;\n    vertical-align:    middle;\n    padding:           0.5em;\n}\nul[data-array] > li > *:first-child {\n    text-align:    center;\n    width:         10em;\n}\n\nimg {\n    max-width:    5em;\n}\n";
         }
     },
     './index.html': {
@@ -85,7 +85,7 @@ var _module_ = {
             Object.defineProperty(exports, "__esModule", {
                 value: true
             });
-            exports.default = "<template>\n    <ul data-array=\"events\"><li>\n        <a target=\"_blank\" href=\"https://github.com/${view.actor.login}\" title=\"${view.actor.login}\">\n\n            <img src=\"${view.actor.avatar_url}\">\n\n            <div>${view.actor.display_login}</div>\n        </a>\n        <div>\n            <h3>\n                <a target=\"_blank\" href=\"https://github.com/${view.repo.name}\">\n                    ${view.repo.name}\n                </a>\n            </h3>\n            <span title=\"${(new Date( view.created_at )).toLocaleString()}\">\n                ${view.createdTime}\n            </span>\n\n            ${host.methodMap[ view.payload.action ]}\n\n            ${host.eventMap[ view.type.replace('Event', '') ]}\n\n            <span data-object=\"payload\">\n                <a target=\"_blank\" href=\"${host.detailURLOf( view )}\">\n                    ${\n                        (view.ref || view.master_branch)  ||\n                        (view.issue || view.pull_request || '').title  ||\n                        (view.release || '').name  ||\n                        (view.member || '').login\n                    }\n                </a>\n                <ol data-array=\"pages\" style=\"display: ${scope.pages ? '' : 'none'}\">\n                    <li>\n                        ${scope.method[ view.action ]}\n\n                        <a target=\"_blank\" href=\"${view.html_url}\" title=\"${view.summary || view.sha}\">\n\n                            ${view.title}\n                        </a>\n                    </li>\n                </ol>\n            </span>\n        </div>\n    </li></ul>\n</template>\n";
+            exports.default = "<template>\n    <ul data-array=\"events\"><li>\n        <a target=\"_blank\" href=\"https://github.com/${view.actor.login}\" title=\"${view.actor.login}\">\n\n            <img src=\"${view.actor.avatar_url}\">\n\n            <div>${view.actor.display_login}</div>\n        </a>\n        <div>\n            <h4>\n                <a target=\"_blank\" href=\"https://github.com/${view.repo.name}\">\n                    ${view.repo.name}\n                </a>\n            </h4>\n            <span title=\"${(new Date( view.created_at )).toLocaleString()}\">\n                ${view.createdTime}\n            </span>\n\n            ${host.methodMap[ view.payload.action ]}\n\n            ${host.eventMap[ view.type.replace('Event', '') ]}\n\n            <span data-object=\"payload\">\n                <a target=\"_blank\" href=\"${host.detailURLOf( view )}\">\n                    ${\n                        (view.ref || view.master_branch)  ||\n                        (view.issue || view.pull_request || '').title  ||\n                        (view.release || '').name  ||\n                        (view.member || '').login\n                    }\n                </a>\n                <ol data-array=\"pages\" style=\"display: ${scope.pages ? '' : 'none'}\">\n                    <li>\n                        ${scope.method[ view.action ]}\n\n                        <a target=\"_blank\" href=\"${view.html_url}\" title=\"${view.summary || view.sha}\">\n\n                            ${view.title}\n                        </a>\n                    </li>\n                </ol>\n            </span>\n        </div>\n    </li></ul>\n</template>\n";
         }
     },
     './index': {
@@ -110,6 +110,8 @@ var _module_ = {
                 return obj && obj.__esModule ? obj : { default: obj };
             }
 
+            var intersection = new WeakMap();
+
             var GithubEventFlow = function (_HTMLElement) {
                 _inherits(GithubEventFlow, _HTMLElement);
 
@@ -118,7 +120,36 @@ var _module_ = {
 
                     _classCallCheck(this, GithubEventFlow);
 
-                    (_this = _possibleConstructorReturn(this, (GithubEventFlow.__proto__ || Object.getPrototypeOf(GithubEventFlow)).call(this)), _this).buildDOM(_index2.default, _index4.default).nextPage = 1;
+                    (_this = _possibleConstructorReturn(this, (GithubEventFlow.__proto__ || Object.getPrototypeOf(GithubEventFlow)).call(this)), _this).buildDOM(_index2.default, _index4.default);
+
+                    _this.nextPage = 1;
+
+                    intersection.set(_this, new IntersectionObserver(function (entry) {
+                        var _iteratorNormalCompletion = true;
+                        var _didIteratorError = false;
+                        var _iteratorError = undefined;
+
+                        try {
+
+                            for (var _iterator = entry[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                                var item = _step.value;
+                                if (item.isIntersecting) return _this.connectedCallback();
+                            }
+                        } catch (err) {
+                            _didIteratorError = true;
+                            _iteratorError = err;
+                        } finally {
+                            try {
+                                if (!_iteratorNormalCompletion && _iterator.return) {
+                                    _iterator.return();
+                                }
+                            } finally {
+                                if (_didIteratorError) {
+                                    throw _iteratorError;
+                                }
+                            }
+                        }
+                    }));
                     return _this;
                 }
 
@@ -126,20 +157,37 @@ var _module_ = {
                     key: 'connectedCallback',
                     value: function () {
                         var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+                            var observer, events, content, list;
                             return regeneratorRuntime.wrap(function _callee$(_context) {
                                 while (1) {
                                     switch (_context.prev = _context.next) {
                                         case 0:
-                                            _context.t0 = this.view.events;
-                                            _context.next = 3;
+                                            observer = intersection.get(this), events = this.view.events;
+                                            content = events.content;
+
+
+                                            if (content.lastElementChild) observer.unobserve(content.lastElementChild);
+
+                                            _context.next = 5;
                                             return this.getData();
 
-                                        case 3:
-                                            _context.t1 = _context.sent;
-
-                                            _context.t0.render.call(_context.t0, _context.t1);
-
                                         case 5:
+                                            list = _context.sent;
+
+                                            if (list[0]) {
+                                                _context.next = 8;
+                                                break;
+                                            }
+
+                                            return _context.abrupt('return');
+
+                                        case 8:
+
+                                            events.render(list);
+
+                                            observer.observe(content.lastElementChild);
+
+                                        case 10:
                                         case 'end':
                                             return _context.stop();
                                     }
@@ -176,7 +224,7 @@ var _module_ = {
                                             next = /page=(\d+)>; rel="next"/.exec(response.headers.get('Link'));
 
 
-                                            this.nextPage = (next || '')[1];
+                                            this.nextPage = next ? +next[1] : this.nextPage + 1;
 
                                             _context2.next = 7;
                                             return response.json();
