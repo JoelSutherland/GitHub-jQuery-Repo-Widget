@@ -6,21 +6,15 @@
 
 ## What does it look like?
 
-[![Repository ScreenShot](demo/Repository.png?raw=true "EWA Repository Widget Screenshot")](https://techquery.github.io/GitHub-Web-Widget/)
+[![Repository ScreenShot](test/Repository.png?raw=true "EWA Repository Widget Screenshot")](https://techquery.github.io/GitHub-Web-Widget/)
 
-[![Profile ScreenShot](demo/Profile.png?raw=true "EWA Profile Widget Screenshot")](https://techquery.github.io/GitHub-Web-Widget/)
+[![Profile ScreenShot](test/Profile.png?raw=true "EWA Profile Widget Screenshot")](https://techquery.github.io/GitHub-Web-Widget/)
 
 
 
 ## How do I use it?
 
-Everwhere you want a widget to be placed, add the following markup:
-```HTML
-<div data-href="path/to/Repository.html?repo=yourID/repoName"></div>
-
-<div data-href="path/to/Profile.html?user=yourID"></div>
-```
-(More codes about initialization of EWA project, please read [demo/index.html](demo/index.html))
+Follow examples in [test/index.html](test/index.html).
 
 That's it! All of the styling is included and image assets are pulled from GitHub.
 

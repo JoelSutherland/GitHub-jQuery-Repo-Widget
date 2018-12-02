@@ -4,11 +4,11 @@
 (function (factory) {
 
     if ((typeof define === 'function')  &&  define.amd)
-        define('Profile', ["web-cell","github-element"], factory);
+        define('Repository', ["web-cell","github-element"], factory);
     else if (typeof module === 'object')
         return  module.exports = factory.call(global,require('web-cell'),require('github-element'));
     else
-        return  this['Profile'] = factory.call(self,this['web-cell'],this['github-element']);
+        return  this['Repository'] = factory.call(self,this['web-cell'],this['github-element']);
 
 })(function (web_cell,github_element) {
 
@@ -638,7 +638,7 @@ function _getPrototypeOf(o) {
 }
 
 var _module_ = {
-    './index.css': {
+    './watch-fork.png': {
         base: '.',
         dependency: [],
         factory: function factory(require, exports, module) {
@@ -647,7 +647,33 @@ var _module_ = {
             });
             exports.default = void 0;
             var _default =
-                '/** GitHub Profile Card - v2.0.1 **/\n/**\r\n * Github widget styles\r\n * ------------------------------------------------------------------\r\n */\n.gh-profile-card {\n    margin: auto;\n    width: 280px;\n    border-radius: 5px;\n    font-size: 16px;\n    font-family: Helvetica;\n    background: #fafafa;\n    border-width: 1px 1px 2px;\n    border-style: solid;\n    border-color: #ddd;\n    overflow: hidden;\n}\n.gh-profile-card a {\n    text-decoration: none;\n    color: #444;\n}\n.gh-profile-card a:hover {\n    color: #4183c4;\n}\n.gh-profile-card .name {\n    display: block;\n    font-size: 1.2em;\n    font-weight: bold;\n    color: #222;\n}\n.gh-profile-card .error {\n    font-size: 0.8em;\n    color: #444;\n    padding: 10px;\n}\n.gh-profile-card .error span {\n    display: block;\n    border-bottom: 1px solid #ddd;\n    padding-bottom: 5px;\n    margin-bottom: 5px;\n}\n.gh-profile-card .error span.remain {\n    text-align: center;\n    font-weight: bold;\n}\n.gh-profile-card .profile {\n    background: #fff;\n    overflow: hidden;\n    padding: 15px 10px;\n    padding-bottom: 0;\n}\n.gh-profile-card .stats {\n    padding: 5px;\n}\n.gh-profile-card .languages {\n    position: relative;\n    clear: both;\n    margin: 0 -10px;\n    padding: 10px;\n    border-top: 1px solid #dedede;\n    font-size: 0.8em;\n}\n.gh-profile-card .languages::before {\n    position: absolute;\n    top: -0.7em;\n    background: #fff;\n    padding-right: 5px;\n    content: "Top languages";\n    font-style: italic;\n    color: #555;\n}\n.gh-profile-card .languages li {\n    display: inline-block;\n    color: #444;\n    font-weight: bold;\n    margin-left: 10px;\n}\n.gh-profile-card .languages li::after {\n    content: "\\2022";\n    margin-left: 10px;\n    color: #999;\n}\n.gh-profile-card .languages li:last-child::after {\n    content: "";\n}\n.gh-profile-card .followMe {\n    margin-top: 3px;\n}\n.gh-profile-card .follow-button {\n    font-size: 0.8em;\n    color: #333;\n    float: left;\n    padding: 0 10px;\n    line-height: 1.5em;\n    border: 1px solid #d5d5d5;\n    border-radius: 3px;\n    font-weight: bold;\n    background: #eaeaea;\n    background-image: linear-gradient(#fafafa, #eaeaea);\n    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);\n    -moz-user-select: none;\n    -webkit-user-select: none;\n    -ms-user-select: none;\n    user-select: none;\n}\n.gh-profile-card .follow-button:hover {\n    color: inherit;\n    background: #ddd;\n    background-image: linear-gradient(#eee, #ddd);\n}\n.gh-profile-card .followMe span {\n    position: relative;\n    background: #fff;\n    margin-left: 8px;\n    padding: 0 5px;\n    color: #444;\n    font-size: 0.8em;\n    border: 1px solid;\n    border-color: #bbb;\n}\n.gh-profile-card .followMe span::before {\n    content: "";\n    position: absolute;\n    display: block;\n    width: 5px;\n    height: 5px;\n    left: -4px;\n    top: 30%;\n    background: inherit;\n    border-left: 1px solid;\n    border-top: 1px solid;\n    border-color: inherit;\n    transform: rotate(-45deg);\n}\n.gh-profile-card .avatar {\n    width: 64px;\n    height: 64px;\n    float: left;\n    margin: 0 10px 15px 0;\n    margin-left: 0;\n    border-radius: 5px;\n    box-shadow: 0 0 2px 0 #ddd;\n}\n.gh-profile-card .repos {\n    clear: both;\n}\n.gh-profile-card .repos .header {\n    display: block;\n    width: 100%;\n    font-weight: bold;\n    background: #eaeaea;\n    background-image: linear-gradient(#fafafa, #eaeaea);\n    border: solid #d5d5d5;\n    border-width: 1px 0;\n    color: #555;\n    font-size: 0.8em;\n    padding: 5px 10px;\n}\n.gh-profile-card .repos a {\n    position: relative;\n    display: block;\n    padding: 7px 10px;\n    font-size: 0.9em;\n    border-top: 1px solid #ddd;\n}\n.gh-profile-card .repos a:first-of-type {\n    border: none;\n}\n.gh-profile-card .repos .repo-name {\n    max-width: 280px;\n    font-weight: bold;\n    text-overflow: ellipsis;\n}\n.gh-profile-card .repos .updated {\n    display: block;\n    font-size: 0.75em;\n    font-style: italic;\n    color: #777;\n}\n.gh-profile-card .repos .star {\n    position: absolute;\n    font-size: 0.9em;\n    right: 0.5em;\n    top: 1.1em;\n    color: #888;\n}\n.gh-profile-card .repos .star::after {\n    content: "\\a0\\2605";\n    font-size: 1.1em;\n    font-weight: bold;\n}\n';
+                'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAqCAMAAACEJ4viAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYxIDY0LjE0MDk0OSwgMjAxMC8xMi8wNy0xMDo1NzowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNS4xIE1hY2ludG9zaCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpEQjIyNkJEQkM0NjYxMUUxOEFDQzk3ODcxRDkzRjhCRSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpEQjIyNkJEQ0M0NjYxMUUxOEFDQzk3ODcxRDkzRjhCRSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkRCMjI2QkQ5QzQ2NjExRTE4QUNDOTc4NzFEOTNGOEJFIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkRCMjI2QkRBQzQ2NjExRTE4QUNDOTc4NzFEOTNGOEJFIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+h1kA9gAAAK5QTFRF+fn5sbGx8fHx09PTmpqa2dnZ/f3919fX9PT00NDQ1dXVpKSk+vr6+/v7vb298vLyycnJ8/PztLS0zc3N6enp/v7+q6ur2NjY9/f3srKy/Pz8p6en7u7uoaGhnJyc4eHhtbW1pqam6Ojo9fX17e3toqKirKys1NTUzs7Ox8fHwcHBwMDA5eXlnZ2dpaWl0dHR9vb25ubm4uLi3d3dqqqqwsLCv7+/oKCgmZmZ////8yEsbwAAAMBJREFUeNrE0tcOgjAUBuDSliUoMhTEvfdef9//xUQjgaLX0Ium/ZLT/+SkRPxZpGykvuf5VMJogy5jY9yjDHcWFhqlcRuHc4o6B1QK0BDg+hcZgNDh3NWTwzItH/bRrhvT+g3zSxZkNGCZpoWGIbU0a3Y6zV5VA6keyeDxiw62P0gUqEW0FbDim4nVikFJbU2zZXybUEaxhCqOQqyh5/G0wpWICUwthyqwD4InOMuXJ7/gs7WkoPdVg1vykF8CDACEFanKO3aSYwAAAABJRU5ErkJggg==';
+            exports.default = _default;
+        }
+    },
+    './repository.png': {
+        base: '.',
+        dependency: [],
+        factory: function factory(require, exports, module) {
+            Object.defineProperty(exports, '__esModule', {
+                value: true
+            });
+            exports.default = void 0;
+            var _default =
+                'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAXCAMAAAAx3e/WAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYxIDY0LjE0MDk0OSwgMjAxMC8xMi8wNy0xMDo1NzowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNS4xIE1hY2ludG9zaCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpEQjIyNkJERkM0NjYxMUUxOEFDQzk3ODcxRDkzRjhCRSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpEQjIyNkJFMEM0NjYxMUUxOEFDQzk3ODcxRDkzRjhCRSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkRCMjI2QkREQzQ2NjExRTE4QUNDOTc4NzFEOTNGOEJFIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkRCMjI2QkRFQzQ2NjExRTE4QUNDOTc4NzFEOTNGOEJFIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+dka2KgAAAEVQTFRFxMTEyMjI0tLSvb29vr6+zc3Ny8vLxcXFz8/P6enp3t7ex8fH0dHR1NTUw8PDwMDAzs7OvLy8wcHBu7u7v7+/zMzM////budQFwAAABd0Uk5T/////////////////////////////wDmQOZeAAAAcklEQVR42tSQSQ7DMAwD6chOukWs5eX/Ty2coo0T9wOdEzEgdRBuzNmnDofgja52JDyz5TCqUp0O6kfrb4bzSXkRiTviEZZ6JKLMJ5VQ2v8iGbtbfEwXmjFMG0VwdQo10hQNxYqtLMv9O6xvpZ/QeAkwAKjwHiJLaJc3AAAAAElFTkSuQmCC';
+            exports.default = _default;
+        }
+    },
+    './index.less': {
+        base: '.',
+        dependency: [],
+        factory: function factory(require, exports, module) {
+            Object.defineProperty(exports, '__esModule', {
+                value: true
+            });
+            exports.default = void 0;
+            var _default =
+                ".github-box {\n  font-family: helvetica, arial, sans-serif;\n  font-size: 13px;\n  line-height: 18px;\n  background: #fafafa;\n  border: 1px solid #ddd;\n  color: #666;\n  border-radius: 3px;\n}\n.github-box a {\n  color: #4183c4;\n  border: none;\n}\n.github-box .github-box-title {\n  position: relative;\n  border-bottom: 1px solid #ddd;\n  border-radius: 3px 3px 0 0;\n  background: #fcfcfc;\n  background: -moz-linear-gradient(#fcfcfc, #ebebeb);\n  background: -webkit-linear-gradient(#fcfcfc, #ebebeb);\n  -ms-filter: \"progid:DXImageTransform.Microsoft.gradient(startColorstr='#fcfcfc',endColorstr='#ebebeb')\";\n}\n.github-box .github-box-title h3 {\n  font-family: helvetica, arial, sans-serif;\n  font-weight: normal;\n  font-size: 16px;\n  color: gray;\n  margin: 0;\n  padding: 10px 10px 10px 30px;\n  background-position: 7px center;\n  background-repeat: no-repeat;\n}\n.github-box .github-box-title h3 .repo {\n  font-weight: bold;\n}\n.github-box .github-box-title .github-stats {\n  position: absolute;\n  top: 8px;\n  right: 10px;\n  background: white;\n  border: 1px solid #ddd;\n  border-radius: 3px;\n  font-size: 11px;\n  font-weight: bold;\n  line-height: 21px;\n  height: 21px;\n}\n.github-box .github-box-title .github-stats a {\n  display: inline-block;\n  height: 21px;\n  color: #666;\n  padding: 0 5px 0 18px;\n  background-repeat: no-repeat;\n}\n.github-box .github-box-title .github-stats .watchers {\n  border-right: 1px solid #ddd;\n}\n.github-box .github-box-title .github-stats .forks {\n  background-position: -4px -21px;\n  padding-left: 15px;\n}\n.github-box .github-box-content {\n  padding: 10px;\n  font-weight: 300;\n}\n.github-box .github-box-content p {\n  margin: 0;\n}\n.github-box .github-box-content .link {\n  font-weight: bold;\n}\n.github-box .github-box-download {\n  position: relative;\n  border-top: 1px solid #ddd;\n  background: white;\n  border-radius: 0 0 3px 3px;\n  padding: 10px;\n  height: 24px;\n}\n.github-box .github-box-download .updated {\n  margin: 0;\n  font-size: 11px;\n  color: #666;\n  line-height: 24px;\n  font-weight: 300;\n}\n.github-box .github-box-download .updated strong {\n  font-weight: bold;\n  color: #000;\n}\n.github-box .github-box-download .download {\n  position: absolute;\n  display: block;\n  top: 10px;\n  right: 10px;\n  height: 24px;\n  line-height: 24px;\n  font-size: 12px;\n  color: #666;\n  font-weight: bold;\n  text-decoration: none;\n  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);\n  padding: 0 10px;\n  border: 1px solid #ddd;\n  border-bottom-color: #bbb;\n  border-radius: 3px;\n  background: #f5f5f5;\n  background: -moz-linear-gradient(#f5f5f5, #e5e5e5);\n  background: -webkit-linear-gradient(#f5f5f5, #e5e5e5);\n  -ms-filter: \"progid:DXImageTransform.Microsoft.gradient(startColorstr='#f5f5f5',endColorstr='#e5e5e5')\";\n}\n.github-box .github-box-download .download:hover {\n  color: #527894;\n  border-color: #cfe3ed;\n  border-bottom-color: #9fc7db;\n  background: #f1f7fa;\n  background: -moz-linear-gradient(#f1f7fa, #dbeaf1);\n  background: -webkit-linear-gradient(#f1f7fa, #dbeaf1);\n  -ms-filter: \"progid:DXImageTransform.Microsoft.gradient(startColorstr='#f1f7fa',endColorstr='#dbeaf1')\";\n}\n";
             exports.default = _default;
         }
     },
@@ -660,7 +686,7 @@ var _module_ = {
             });
             exports.default = void 0;
             var _default =
-                '<template>\n    <div class="gh-profile-card">\n        <div class="profile">\n            <img src="${view.avatar_url}" class="avatar">\n\n            <a target="_blank" href="${view.html_url}" class="name">\n                ${view.name}\n            </a>\n            <div class="followMe">\n                <a target="_blank" href="${view.html_url}" class="follow-button">\n                    Follow @${view.login}\n                </a>\n                <span class="followers"> ${view.followers} </span>\n            </div>\n            <ul class="languages" data-array="languages">\n                <template>\n                    <li>${view.name}</li>\n                </template>\n            </ul>\n        </div>\n        <div class="repos">\n            <span class="header">Most popular original repositories</span>\n\n            <div data-array="repositories">\n                <template>\n                    <a target="_blank" href="${view.html_url}" title="${view.description}">\n                        <span class="repo-name"> ${view.name} </span>\n                        <span class="updated">\n                            Updated: ${(new Date( view.updated_at\n                            )).toLocaleString()}\n                        </span>\n                        <span class="star"> ${view.stargazers_count} </span>\n                    </a>\n                </template>\n            </div>\n        </div>\n    </div>\n</template>\n';
+                '<template>\n    <div class="github-box repo">\n        <div class="github-box-title">\n            <h3 style="background-image: url(${host.constructor.repository})">\n                <a class="owner" target="_blank" href="${view.owner.html_url}" title="GitHub Homepage of ${view.login}">\n                    ${view.owner.login}\n                </a>\n                /\n                <a class="repo" target="_blank" href="${view.html_url}" title="GitHub Homepage of ${view.full_name}">\n                    ${view.name}\n                </a>\n            </h3>\n            <div class="github-stats">\n                <a class="watchers" style="background-image: url(${host.constructor.status})" title="See watchers" href="https://github.com/${view.full_name}/watchers">\n                    ${view.watchers}\n                </a>\n                <a class="forks" style="background-image: url(${host.constructor.status})" title="See forkers" href="https://github.com/${view.full_name}/forks">\n                    ${view.forks}\n                </a>\n            </div>\n        </div>\n        <div class="github-box-content">\n            <p class="description">\n                ${view.description} —\n                <a style="display: ${view.has_wiki ? \'\' : \'none\'}" href="https://github.com/${view.full_name}#readme">\n                    Read More\n                </a>\n            </p>\n            <p class="link">\n                <a target="_blank" href="${view.homepage}">\n                    ${view.homepage}\n                </a>\n            </p>\n        </div>\n        <div class="github-box-download">\n            <div class="updated">\n                Latest commit to the\n                <strong>${view.default_branch}</strong> branch on ${(new Date(\n                view.pushed_at )).toLocaleString()}\n            </div>\n            <a class="download" title="Get an archive of this repository" href="https://github.com/${view.full_name}/zipball/${view.default_branch}">\n                Download as zip\n            </a>\n        </div>\n    </div>\n</template>\n';
             exports.default = _default;
         }
     },
@@ -681,7 +707,15 @@ var _module_ = {
 
             var _index = _interopRequireDefault(require('./index.html'));
 
-            var _index2 = _interopRequireDefault(require('./index.css'));
+            var _index2 = _interopRequireDefault(require('./index.less'));
+
+            var _repository = _interopRequireDefault(
+                require('./repository.png')
+            );
+
+            var _watchFork = _interopRequireDefault(
+                require('./watch-fork.png')
+            );
 
             function _interopRequireDefault(obj) {
                 return obj && obj.__esModule
@@ -691,7 +725,7 @@ var _module_ = {
                       };
             }
 
-            var GithubProfile = _decorate(
+            var GithubRepository = _decorate(
                 [
                     (0, _webCell.component)({
                         template: _index.default,
@@ -699,19 +733,19 @@ var _module_ = {
                     })
                 ],
                 function(_initialize, _githubElement$defaul) {
-                    var GithubProfile =
+                    var GithubRepository =
                         /*#__PURE__*/
                         (function(_githubElement$defaul2) {
-                            _inherits(GithubProfile, _githubElement$defaul2);
+                            _inherits(GithubRepository, _githubElement$defaul2);
 
-                            function GithubProfile() {
+                            function GithubRepository() {
                                 var _this;
 
-                                _classCallCheck(this, GithubProfile);
+                                _classCallCheck(this, GithubRepository);
 
                                 _this = _possibleConstructorReturn(
                                     this,
-                                    _getPrototypeOf(GithubProfile).call(this)
+                                    _getPrototypeOf(GithubRepository).call(this)
                                 );
 
                                 _initialize(
@@ -723,11 +757,11 @@ var _module_ = {
                                 return _this;
                             }
 
-                            return GithubProfile;
+                            return GithubRepository;
                         })(_githubElement$defaul);
 
                     return {
-                        F: GithubProfile,
+                        F: GithubRepository,
                         d: [
                             {
                                 kind: 'get',
@@ -736,10 +770,10 @@ var _module_ = {
                                 key: 'observedAttributes',
                                 value: function value() {
                                     return _get(
-                                        _getPrototypeOf(GithubProfile),
+                                        _getPrototypeOf(GithubRepository),
                                         'observedAttributes',
                                         this
-                                    );
+                                    ).concat('repo');
                                 }
                             },
                             {
@@ -749,91 +783,21 @@ var _module_ = {
                                 value: function value() {}
                             },
                             {
-                                kind: 'method',
+                                kind: 'get',
+                                decorators: [_webCell.blobURI],
                                 static: true,
-                                key: 'filterRepo',
-                                value: function value(list) {
-                                    return (0, _webCell.multipleMap)(
-                                        list,
-                                        function(repo) {
-                                            if (
-                                                !repo.fork &&
-                                                repo.forks_count +
-                                                    repo.watchers_count +
-                                                    repo.stargazers_count
-                                            ) {
-                                                delete repo.owner;
-                                                return repo;
-                                            }
-                                        }
-                                    ).sort(function(A, B) {
-                                        return (
-                                            new Date(B.pushed_at) -
-                                                new Date(A.pushed_at) ||
-                                            B.stargazers_count -
-                                                A.stargazers_count ||
-                                            B.watchers_count -
-                                                A.watchers_count ||
-                                            B.forks_count - A.forks_count
-                                        );
-                                    });
+                                key: 'repository',
+                                value: function value() {
+                                    return _repository.default;
                                 }
                             },
                             {
-                                kind: 'method',
+                                kind: 'get',
+                                decorators: [_webCell.blobURI],
                                 static: true,
-                                key: 'filterTech',
-                                value: function value(list) {
-                                    var tech = {};
-                                    var _iteratorNormalCompletion = true;
-                                    var _didIteratorError = false;
-                                    var _iteratorError = undefined;
-
-                                    try {
-                                        for (
-                                            var _iterator = list[
-                                                    Symbol.iterator
-                                                ](),
-                                                _step;
-                                            !(_iteratorNormalCompletion = (_step = _iterator.next())
-                                                .done);
-                                            _iteratorNormalCompletion = true
-                                        ) {
-                                            var item = _step.value;
-
-                                            for (var name in item) {
-                                                tech[name] = tech[name] || {
-                                                    name: name,
-                                                    count: 0
-                                                };
-                                                tech[name].count += item[name];
-                                            }
-                                        }
-                                    } catch (err) {
-                                        _didIteratorError = true;
-                                        _iteratorError = err;
-                                    } finally {
-                                        try {
-                                            if (
-                                                !_iteratorNormalCompletion &&
-                                                _iterator.return != null
-                                            ) {
-                                                _iterator.return();
-                                            }
-                                        } finally {
-                                            if (_didIteratorError) {
-                                                throw _iteratorError;
-                                            }
-                                        }
-                                    }
-
-                                    return Object.keys(tech)
-                                        .map(function(name) {
-                                            return tech[name];
-                                        })
-                                        .sort(function(A, B) {
-                                            return B.count - A.count;
-                                        });
+                                key: 'status',
+                                value: function value() {
+                                    return _watchFork.default;
                                 }
                             },
                             {
@@ -843,157 +807,70 @@ var _module_ = {
                                     var _value = _asyncToGenerator(
                                         /*#__PURE__*/
                                         regeneratorRuntime.mark(
-                                            function _callee2(_ref) {
-                                                var _this2 = this;
-
-                                                var user,
-                                                    org,
-                                                    data,
-                                                    view,
-                                                    repos,
-                                                    languages;
+                                            function _callee(_ref) {
+                                                var user, org, repo, data;
                                                 return regeneratorRuntime.wrap(
-                                                    function _callee2$(
-                                                        _context2
+                                                    function _callee$(
+                                                        _context
                                                     ) {
                                                         while (1) {
                                                             switch (
-                                                                (_context2.prev =
-                                                                    _context2.next)
+                                                                (_context.prev =
+                                                                    _context.next)
                                                             ) {
                                                                 case 0:
                                                                     (user =
                                                                         _ref.user),
                                                                         (org =
-                                                                            _ref.org);
+                                                                            _ref.org),
+                                                                        (repo =
+                                                                            _ref.repo);
 
                                                                     if (
                                                                         !(
-                                                                            !user &&
-                                                                            !org
+                                                                            !(
+                                                                                user ||
+                                                                                org
+                                                                            ) ||
+                                                                            !repo
                                                                         )
                                                                     ) {
-                                                                        _context2.next = 3;
+                                                                        _context.next = 3;
                                                                         break;
                                                                     }
 
-                                                                    return _context2.abrupt(
+                                                                    return _context.abrupt(
                                                                         'return'
                                                                     );
 
                                                                 case 3:
-                                                                    _context2.next = 5;
+                                                                    _context.next = 5;
                                                                     return this.fetch(
-                                                                        user
-                                                                            ? 'users/'.concat(
-                                                                                  user
-                                                                              )
-                                                                            : 'orgs/'.concat(
-                                                                                  org
-                                                                              )
+                                                                        'repos/'
+                                                                            .concat(
+                                                                                user ||
+                                                                                    org,
+                                                                                '/'
+                                                                            )
+                                                                            .concat(
+                                                                                repo
+                                                                            )
                                                                     );
 
                                                                 case 5:
                                                                     data =
-                                                                        _context2.sent;
-                                                                    view = this
-                                                                        .view;
-                                                                    view.render(
+                                                                        _context.sent;
+                                                                    this.view.render(
                                                                         data
                                                                     );
-                                                                    _context2.t0 = GithubProfile;
-                                                                    _context2.next = 11;
-                                                                    return this.fetch(
-                                                                        ''.concat(
-                                                                            data.repos_url,
-                                                                            '?sort=updated'
-                                                                        )
-                                                                    );
 
-                                                                case 11:
-                                                                    _context2.t1 =
-                                                                        _context2.sent;
-                                                                    repos = _context2.t0.filterRepo.call(
-                                                                        _context2.t0,
-                                                                        _context2.t1
-                                                                    );
-                                                                    view.repositories.render(
-                                                                        repos
-                                                                    );
-                                                                    _context2.next = 16;
-                                                                    return Promise.all(
-                                                                        repos.map(
-                                                                            /*#__PURE__*/
-                                                                            (function() {
-                                                                                var _ref2 = _asyncToGenerator(
-                                                                                    /*#__PURE__*/
-                                                                                    regeneratorRuntime.mark(
-                                                                                        function _callee(
-                                                                                            repo
-                                                                                        ) {
-                                                                                            return regeneratorRuntime.wrap(
-                                                                                                function _callee$(
-                                                                                                    _context
-                                                                                                ) {
-                                                                                                    while (
-                                                                                                        1
-                                                                                                    ) {
-                                                                                                        switch (
-                                                                                                            (_context.prev =
-                                                                                                                _context.next)
-                                                                                                        ) {
-                                                                                                            case 0:
-                                                                                                                return _context.abrupt(
-                                                                                                                    'return',
-                                                                                                                    _this2.fetch(
-                                                                                                                        repo.languages_url
-                                                                                                                    )
-                                                                                                                );
-
-                                                                                                            case 1:
-                                                                                                            case 'end':
-                                                                                                                return _context.stop();
-                                                                                                        }
-                                                                                                    }
-                                                                                                },
-                                                                                                _callee,
-                                                                                                this
-                                                                                            );
-                                                                                        }
-                                                                                    )
-                                                                                );
-
-                                                                                return function(
-                                                                                    _x2
-                                                                                ) {
-                                                                                    return _ref2.apply(
-                                                                                        this,
-                                                                                        arguments
-                                                                                    );
-                                                                                };
-                                                                            })()
-                                                                        )
-                                                                    );
-
-                                                                case 16:
-                                                                    languages =
-                                                                        _context2.sent;
-                                                                    view.languages.render(
-                                                                        GithubProfile.filterTech(
-                                                                            languages
-                                                                        ).slice(
-                                                                            0,
-                                                                            8
-                                                                        )
-                                                                    );
-
-                                                                case 18:
+                                                                case 7:
                                                                 case 'end':
-                                                                    return _context2.stop();
+                                                                    return _context.stop();
                                                             }
                                                         }
                                                     },
-                                                    _callee2,
+                                                    _callee,
                                                     this
                                                 );
                                             }
@@ -1004,13 +881,6 @@ var _module_ = {
                                         return _value.apply(this, arguments);
                                     };
                                 })()
-                            },
-                            {
-                                kind: 'get',
-                                key: 'repoCount',
-                                value: function value() {
-                                    return this.view.repositories.length;
-                                }
                             }
                         ]
                     };
@@ -1018,7 +888,7 @@ var _module_ = {
                 _githubElement.default
             );
 
-            exports.default = GithubProfile;
+            exports.default = GithubRepository;
         }
     },
     'web-cell': {

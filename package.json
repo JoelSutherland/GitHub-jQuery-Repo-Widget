@@ -1,37 +1,67 @@
 {
-  "name": "github-web-widget",
-  "version": "2.0.0",
-  "description": "Web Component set for GitHub based on WebCell",
-  "keywords": [
-    "web-component",
-    "github",
-    "web-cell"
-  ],
-  "author": "shiy2008@gmail.com",
-  "license": "AGPL-3.0",
-  "homepage": "https://github.com/TechQuery/GitHub-Web-Widget#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/TechQuery/GitHub-Web-Widget.git"
-  },
-  "bugs": {
-    "url": "https://github.com/TechQuery/GitHub-Web-Widget/issues"
-  },
-  "main": "index.js",
-  "directories": {
-    "lib": "source/"
-  },
-  "scripts": {
-    "build": "web-cell pack",
-    "start": "web-cell preview",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "dependencies": {
-    "babel-polyfill": "^6.26.0",
-    "web-cell": "^0.9.4",
-    "whatwg-fetch": "^2.0.4"
-  },
-  "devDependencies": {
-    "web-cell-cli": "^0.4.2"
-  }
+    "name": "github-web-widget",
+    "version": "2.0.0",
+    "description": "Web Component set for GitHub based on WebCell",
+    "keywords": [
+        "github",
+        "web",
+        "component",
+        "web-cell",
+        "widget"
+    ],
+    "author": "shiy2008@gmail.com",
+    "license": "AGPL-3.0",
+    "homepage": "https://techquery.github.io/GitHub-Web-Widget/",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/TechQuery/GitHub-Web-Widget.git"
+    },
+    "bugs": {
+        "url": "https://github.com/TechQuery/GitHub-Web-Widget/issues"
+    },
+    "main": "index.js",
+    "directories": {
+        "lib": "source/",
+        "test": "test/"
+    },
+    "engines": {
+        "node": "^6.3.0"
+    },
+    "scripts": {
+        "dev": "web-cell preview",
+        "format": "prettier --write \"{,!(node_modules|.git|dist|docs)/**/}*.{html,md,css,less,js,json}\"",
+        "lint": "eslint . --ignore-pattern dist/ --fix",
+        "build": "npm run format  &&  npm run lint  &&  web-cell pack",
+        "test": "npm run build"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "npm test  &&  git add ."
+        }
+    },
+    "dependencies": {
+        "@babel/polyfill": "^7.0.0",
+        "web-cell": "^0.10.11",
+        "whatwg-fetch": "^3.0.0",
+        "@webcomponents/webcomponentsjs": "^2.2.1"
+    },
+    "devDependencies": {
+        "web-cell-cli": "^0.8.0",
+        "@babel/plugin-proposal-decorators": "^7.1.6",
+        "babel-eslint": "^10.0.1",
+        "eslint": "^5.9.0",
+        "husky": "^1.2.0",
+        "koapache": "^1.0.4",
+        "prettier": "^1.15.3"
+    },
+    "babel": {
+        "plugins": [
+            [
+                "@babel/plugin-proposal-decorators",
+                {
+                    "decoratorsBeforeExport": true
+                }
+            ]
+        ]
+    }
 }
