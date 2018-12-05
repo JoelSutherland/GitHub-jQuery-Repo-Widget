@@ -4,7 +4,7 @@ import GithubElement from 'github-element';
 
 import template from './index.html';
 
-import style from './index.css';
+import style from './index.less';
 
 const intersection = new WeakMap();
 

@@ -1,13 +1,13 @@
 <template>
     <ul data-array="events">
         <template>
-            <li>
+            <li class="table-row">
                 <a
                     target="_blank"
                     href="https://github.com/${view.actor.login}"
                     title="${view.actor.login}"
                 >
-                    <img src="${view.actor.avatar_url}" />
+                    <img class="logo big" src="${view.actor.avatar_url}" />
 
                     <div>${view.actor.display_login}</div>
                 </a>

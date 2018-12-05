@@ -1,0 +1,33 @@
+@import (reference, less) 'node_modules/bootstrap/dist/css/bootstrap.css';
+@import (less) 'source/common.css';
+
+.table-row > aside {
+    text-align: center;
+}
+.table-row > aside > a {
+    display: block;
+    margin: 0.25rem 0;
+}
+
+div > h1 {
+    margin-top: 0;
+}
+div > h1 > span:extend(.badge) {
+}
+.open {
+    .badge-success;
+}
+.closed {
+    .badge-danger;
+}
+.merged {
+    .badge-primary;
+}
+
+main > div {
+    padding-left: 1em;
+}
+
+details > summary > * {
+    vertical-align: middle;
+}

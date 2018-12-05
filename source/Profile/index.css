@@ -65,7 +65,7 @@
     top: -0.7em;
     background: #fff;
     padding-right: 5px;
-    content: "Top languages";
+    content: 'Top languages';
     font-style: italic;
     color: #555;
 }
@@ -76,12 +76,12 @@
     margin-left: 10px;
 }
 .gh-profile-card .languages li::after {
-    content: "\2022";
+    content: '\2022';
     margin-left: 10px;
     color: #999;
 }
 .gh-profile-card .languages li:last-child::after {
-    content: "";
+    content: '';
 }
 .gh-profile-card .followMe {
     margin-top: 3px;
@@ -119,7 +119,7 @@
     border-color: #bbb;
 }
 .gh-profile-card .followMe span::before {
-    content: "";
+    content: '';
     position: absolute;
     display: block;
     width: 5px;
@@ -185,7 +185,7 @@
     color: #888;
 }
 .gh-profile-card .repos .star::after {
-    content: "\a0\2605";
+    content: '\a0\2605';
     font-size: 1.1em;
     font-weight: bold;
 }

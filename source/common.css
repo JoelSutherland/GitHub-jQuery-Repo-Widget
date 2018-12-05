@@ -1,0 +1,31 @@
+a:link {
+    color: black;
+    text-decoration: none;
+}
+a:hover,
+a:active {
+    text-decoration: underline;
+}
+
+.logo {
+    max-width: 1.5em;
+    max-height: 1.5em;
+}
+.logo.big {
+    font-size: 3rem;
+}
+
+.table-row {
+    display: table;
+    width: 100%;
+}
+.table-row > * {
+    display: table-cell;
+    vertical-align: top;
+    padding: 0.5em;
+}
+
+:host {
+    display: inline-block;
+    outline: none;
+}

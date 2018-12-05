@@ -14,22 +14,26 @@
         <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
         <script src="../node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js"></script>
 
-        <script src="../node_modules/web-cell/dist/web-cell.min.js"></script>
+        <script src="../node_modules/web-cell/dist/web-cell.js"></script>
+        <script src="../node_modules/marked/marked.min.js"></script>
 
         <script src="../dist/github-element.js"></script>
         <script>
-            self["github-element"].default.token =
-                "39ff883676bf43c5723e92701487a020ad1abfb2";
+            self['github-element'].default.token =
+                '39ff883676bf43c5723e92701487a020ad1abfb2';
         </script>
+        <script src="../dist/mark-down.js"></script>
+
         <script src="../dist/Profile.js"></script>
         <script src="../dist/Repository.js"></script>
+        <script src="../dist/Issue.js"></script>
         <script src="../dist/EventFlow.js"></script>
     </head>
     <body>
         <h1>GitHub Web widgets</h1>
         <h2>Test &amp; Example</h2>
         <section>
-            <h3>User profile</h3>
+            <h3>User / Organization profile</h3>
             <github-profile org="EasyWebApp"></github-profile>
         </section>
         <section>
@@ -38,6 +42,14 @@
                 user="TechQuery"
                 repo="GitHub-Web-Widget"
             ></github-repository>
+        </section>
+        <section>
+            <h3>Issue / Pull request</h3>
+            <github-issue
+                org="jsdom"
+                repo="w3c-xmlserializer"
+                issue="2"
+            ></github-issue>
         </section>
         <section>
             <h3>Event flow</h3>

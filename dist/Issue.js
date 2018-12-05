@@ -4,11 +4,11 @@
 (function (factory) {
 
     if ((typeof define === 'function')  &&  define.amd)
-        define('EventFlow', ["web-cell","github-element"], factory);
+        define('Issue', ["web-cell","github-element"], factory);
     else if (typeof module === 'object')
         return  module.exports = factory.call(global,require('web-cell'),require('github-element'));
     else
-        return  this['EventFlow'] = factory.call(self,this['web-cell'],this['github-element']);
+        return  this['Issue'] = factory.call(self,this['web-cell'],this['github-element']);
 
 })(function (web_cell,github_element) {
 
@@ -84,6 +84,41 @@ function _typeof(obj) {
         };
     }
     return _typeof(obj);
+}
+
+function _slicedToArray(arr, i) {
+    return (
+        _arrayWithHoles(arr) ||
+        _iterableToArrayLimit(arr, i) ||
+        _nonIterableRest()
+    );
+}
+
+function _iterableToArrayLimit(arr, i) {
+    var _arr = [];
+    var _n = true;
+    var _d = false;
+    var _e = undefined;
+    try {
+        for (
+            var _i = arr[Symbol.iterator](), _s;
+            !(_n = (_s = _i.next()).done);
+            _n = true
+        ) {
+            _arr.push(_s.value);
+            if (i && _arr.length === i) break;
+        }
+    } catch (err) {
+        _d = true;
+        _e = err;
+    } finally {
+        try {
+            if (!_n && _i['return'] != null) _i['return']();
+        } finally {
+            if (_d) throw _e;
+        }
+    }
+    return _arr;
 }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
@@ -647,7 +682,7 @@ var _module_ = {
             });
             exports.default = void 0;
             var _default =
-                'a:link {\n  color: black;\n  text-decoration: none;\n}\na:hover,\na:active {\n  text-decoration: underline;\n}\n.logo {\n  max-width: 1.5em;\n  max-height: 1.5em;\n}\n.logo.big {\n  font-size: 3rem;\n}\n.table-row {\n  display: table;\n  width: 100%;\n}\n.table-row > * {\n  display: table-cell;\n  vertical-align: top;\n  padding: 0.5em;\n}\n:host {\n  display: inline-block;\n  outline: none;\n}\nul[data-array] {\n  list-style: none;\n  margin: 0;\n  padding: 0;\n}\nul[data-array] > li > * {\n  table-layout: fixed;\n  vertical-align: middle;\n}\nul[data-array] > li > *:first-child {\n  text-align: center;\n  width: 10em;\n}\n';
+                'div > h1 > span {\n  display: inline-block;padding: 0.25em 0.4em;font-size: 75%;font-weight: 700;line-height: 1;text-align: center;white-space: nowrap;vertical-align: baseline;border-radius: 0.25rem;\n}\n@media print {\n  div > h1 > span {\n    border: 1px solid #000;\n  }\n}\na:link {\n  color: black;\n  text-decoration: none;\n}\na:hover,\na:active {\n  text-decoration: underline;\n}\n.logo {\n  max-width: 1.5em;\n  max-height: 1.5em;\n}\n.logo.big {\n  font-size: 3rem;\n}\n.table-row {\n  display: table;\n  width: 100%;\n}\n.table-row > * {\n  display: table-cell;\n  vertical-align: top;\n  padding: 0.5em;\n}\n:host {\n  display: inline-block;\n  outline: none;\n}\n.table-row > aside {\n  text-align: center;\n}\n.table-row > aside > a {\n  display: block;\n  margin: 0.25rem 0;\n}\ndiv > h1 {\n  margin-top: 0;\n}\n.open {\n  color: #fff;\n  background-color: #28a745;\n}\n.closed {\n  color: #fff;\n  background-color: #dc3545;\n}\n.merged {\n  color: #fff;\n  background-color: #007bff;\n}\nmain > div {\n  padding-left: 1em;\n}\ndetails > summary > * {\n  vertical-align: middle;\n}\n';
             exports.default = _default;
         }
     },
@@ -660,7 +695,7 @@ var _module_ = {
             });
             exports.default = void 0;
             var _default =
-                '<template>\n    <ul data-array="events">\n        <template>\n            <li class="table-row">\n                <a target="_blank" href="https://github.com/${view.actor.login}" title="${view.actor.login}">\n                    <img class="logo big" src="${view.actor.avatar_url}">\n\n                    <div>${view.actor.display_login}</div>\n                </a>\n                <div>\n                    <h4>\n                        <a target="_blank" href="https://github.com/${view.repo.name}">\n                            ${view.repo.name}\n                        </a>\n                    </h4>\n                    <span title="${(new Date( view.created_at )).toLocaleString()}">\n                        ${view.createdTime}\n                    </span>\n\n                    ${host.methodMap[ view.payload.action ]} ${host.eventMap[\n                    view.type.replace(\'Event\', \'\') ]}\n\n                    <span data-object="payload">\n                        <a target="_blank" href="${host.detailURLOf( view )}">\n                            ${ (view.ref || view.master_branch) || (view.issue\n                            || view.pull_request || \'\').title || (view.release\n                            || \'\').name || (view.member || \'\').login }\n                        </a>\n                        <ol data-array="pages" style="display: ${scope.pages ? \'\' : \'none\'}">\n                            <template>\n                                <li>\n                                    ${scope.method[ view.action ]}\n                                    <a target="_blank" href="${view.html_url}" title="${view.summary || view.sha}">\n                                        ${view.title}\n                                    </a>\n                                </li>\n                            </template>\n                        </ol>\n                    </span>\n                </div>\n            </li>\n        </template>\n    </ul>\n</template>\n';
+                '<template>\n    <div class="table-row">\n        <aside data-object="owner">\n            <img class="logo big" src="${view.avatar_url}">\n\n            <a target="_blank" href="${view.html_url}">\n                <strong>${view.login}</strong>\n            </a>\n        </aside>\n\n        <div data-object="detail">\n            <h1>\n                <span class="${view.state}">${view.state}</span>\n                <a target="_blank" href="${view.html_url}">${view.title}</a>\n            </h1>\n            <main>\n                <details>\n                    <summary>\n                        <img class="logo" src="${view.user.avatar_url}">\n                        <a target="_blank" href="${view.html_url}">\n                            <strong>${view.user.login}</strong>\n                        </a>\n                        opened this at\n                        <time datetime="${view.created_at}">\n                            ${new Date(view.created_at).toLocaleString()}\n                        </time>\n                    </summary>\n                    <mark-down>${view.body}</mark-down>\n                </details>\n                <div data-array="comment">\n                    <template>\n                        <details>\n                            <summary>\n                                <img class="logo" src="${view.user.avatar_url}">\n                                <a target="_blank" href="${view.html_url}">\n                                    <strong>${view.user.login}</strong>\n                                </a>\n                                commented at\n                                <time datetime="${view.created_at}">\n                                    ${new\n                                    Date(view.created_at).toLocaleString()}\n                                </time>\n                            </summary>\n                            <mark-down>${view.body}</mark-down>\n                        </details>\n                    </template>\n                </div>\n            </main>\n        </div>\n    </div>\n</template>\n';
             exports.default = _default;
         }
     },
@@ -691,9 +726,7 @@ var _module_ = {
                       };
             }
 
-            var intersection = new WeakMap();
-
-            var GithubEventFlow = _decorate(
+            var GithubIssue = _decorate(
                 [
                     (0, _webCell.component)({
                         template: _index.default,
@@ -701,78 +734,35 @@ var _module_ = {
                     })
                 ],
                 function(_initialize, _githubElement$defaul) {
-                    var GithubEventFlow =
+                    var GithubIssue =
                         /*#__PURE__*/
                         (function(_githubElement$defaul2) {
-                            _inherits(GithubEventFlow, _githubElement$defaul2);
+                            _inherits(GithubIssue, _githubElement$defaul2);
 
-                            function GithubEventFlow() {
-                                var _temp, _this;
+                            function GithubIssue() {
+                                var _this;
 
-                                _classCallCheck(this, GithubEventFlow);
+                                _classCallCheck(this, GithubIssue);
 
-                                ((_temp = _this = _possibleConstructorReturn(
+                                _this = _possibleConstructorReturn(
                                     this,
-                                    _getPrototypeOf(GithubEventFlow).call(this)
-                                )),
+                                    _getPrototypeOf(GithubIssue).call(this)
+                                );
+
                                 _initialize(
                                     _assertThisInitialized(
                                         _assertThisInitialized(_this)
                                     )
-                                ),
-                                _temp).nextPage = 1;
-                                intersection.set(
-                                    _assertThisInitialized(
-                                        _assertThisInitialized(_this)
-                                    ),
-                                    new IntersectionObserver(function(entry) {
-                                        var _iteratorNormalCompletion = true;
-                                        var _didIteratorError = false;
-                                        var _iteratorError = undefined;
-
-                                        try {
-                                            for (
-                                                var _iterator = entry[
-                                                        Symbol.iterator
-                                                    ](),
-                                                    _step;
-                                                !(_iteratorNormalCompletion = (_step = _iterator.next())
-                                                    .done);
-                                                _iteratorNormalCompletion = true
-                                            ) {
-                                                var item = _step.value;
-                                                if (item.isIntersecting)
-                                                    return _this.viewChangedCallback(
-                                                        _this.view.data
-                                                    );
-                                            }
-                                        } catch (err) {
-                                            _didIteratorError = true;
-                                            _iteratorError = err;
-                                        } finally {
-                                            try {
-                                                if (
-                                                    !_iteratorNormalCompletion &&
-                                                    _iterator.return != null
-                                                ) {
-                                                    _iterator.return();
-                                                }
-                                            } finally {
-                                                if (_didIteratorError) {
-                                                    throw _iteratorError;
-                                                }
-                                            }
-                                        }
-                                    })
                                 );
+
                                 return _this;
                             }
 
-                            return GithubEventFlow;
+                            return GithubIssue;
                         })(_githubElement$defaul);
 
                     return {
-                        F: GithubEventFlow,
+                        F: GithubIssue,
                         d: [
                             {
                                 kind: 'get',
@@ -781,10 +771,10 @@ var _module_ = {
                                 key: 'observedAttributes',
                                 value: function value() {
                                     return _get(
-                                        _getPrototypeOf(GithubEventFlow),
+                                        _getPrototypeOf(GithubIssue),
                                         'observedAttributes',
                                         this
-                                    ).concat('repo');
+                                    ).concat('repo', 'issue', 'pull');
                                 }
                             },
                             {
@@ -792,40 +782,6 @@ var _module_ = {
                                 decorators: [_webCell.mapData],
                                 key: 'attributeChangedCallback',
                                 value: function value() {}
-                            },
-                            {
-                                kind: 'get',
-                                key: 'URL',
-                                value: function value() {
-                                    var user = this.user,
-                                        repo = this.repo,
-                                        org = this.org;
-                                    var path;
-
-                                    if (repo) {
-                                        path = 'repos/'
-                                            .concat(
-                                                user || org || 'TechQuery',
-                                                '/'
-                                            )
-                                            .concat(
-                                                repo || 'GitHub-Web-Widget',
-                                                '/events'
-                                            );
-                                    } else if (user) {
-                                        path = 'users/'.concat(
-                                            user,
-                                            '/events/public'
-                                        );
-                                    } else if (org) {
-                                        path = 'orgs/'.concat(org, '/events');
-                                    }
-
-                                    if (path)
-                                        return 'https://api.github.com/'
-                                            .concat(path, '?page=')
-                                            .concat(this.nextPage);
-                                }
                             },
                             {
                                 kind: 'method',
@@ -838,10 +794,13 @@ var _module_ = {
                                                 var user,
                                                     org,
                                                     repo,
-                                                    observer,
-                                                    events,
-                                                    content,
-                                                    list;
+                                                    issue,
+                                                    pull,
+                                                    _ref2,
+                                                    _ref3,
+                                                    detail,
+                                                    owner;
+
                                                 return regeneratorRuntime.wrap(
                                                     function _callee$(
                                                         _context
@@ -857,13 +816,23 @@ var _module_ = {
                                                                         (org =
                                                                             _ref.org),
                                                                         (repo =
-                                                                            _ref.repo);
+                                                                            _ref.repo),
+                                                                        (issue =
+                                                                            _ref.issue),
+                                                                        (pull =
+                                                                            _ref.pull);
 
                                                                     if (
                                                                         !(
-                                                                            !user &&
-                                                                            !org &&
-                                                                            !repo
+                                                                            !(
+                                                                                user ||
+                                                                                org
+                                                                            ) ||
+                                                                            !repo ||
+                                                                            !(
+                                                                                issue ||
+                                                                                pull
+                                                                            )
                                                                         )
                                                                     ) {
                                                                         _context.next = 3;
@@ -875,47 +844,79 @@ var _module_ = {
                                                                     );
 
                                                                 case 3:
-                                                                    (observer = intersection.get(
-                                                                        this
-                                                                    )),
-                                                                        (events = this
-                                                                            .view
-                                                                            .events);
-                                                                    content =
-                                                                        events.content;
-                                                                    if (
-                                                                        content.lastElementChild
-                                                                    )
-                                                                        observer.unobserve(
-                                                                            content.lastElementChild
-                                                                        );
-                                                                    _context.next = 8;
-                                                                    return this.getData();
+                                                                    _context.next = 5;
+                                                                    return Promise.all(
+                                                                        [
+                                                                            this.fetch(
+                                                                                'repos/'
+                                                                                    .concat(
+                                                                                        user ||
+                                                                                            org,
+                                                                                        '/'
+                                                                                    )
+                                                                                    .concat(
+                                                                                        repo,
+                                                                                        '/'
+                                                                                    )
+                                                                                    .concat(
+                                                                                        pull
+                                                                                            ? 'pull'
+                                                                                            : 'issue',
+                                                                                        's/'
+                                                                                    )
+                                                                                    .concat(
+                                                                                        pull ||
+                                                                                            issue
+                                                                                    )
+                                                                            ),
+                                                                            this.fetch(
+                                                                                ''
+                                                                                    .concat(
+                                                                                        org
+                                                                                            ? 'org'
+                                                                                            : 'user',
+                                                                                        's/'
+                                                                                    )
+                                                                                    .concat(
+                                                                                        org ||
+                                                                                            user
+                                                                                    )
+                                                                            )
+                                                                        ]
+                                                                    );
 
-                                                                case 8:
-                                                                    list =
+                                                                case 5:
+                                                                    _ref2 =
                                                                         _context.sent;
-
-                                                                    if (
-                                                                        list[0]
-                                                                    ) {
-                                                                        _context.next = 11;
-                                                                        break;
-                                                                    }
-
-                                                                    return _context.abrupt(
-                                                                        'return'
+                                                                    _ref3 = _slicedToArray(
+                                                                        _ref2,
+                                                                        2
+                                                                    );
+                                                                    detail =
+                                                                        _ref3[0];
+                                                                    owner =
+                                                                        _ref3[1];
+                                                                    _context.next = 11;
+                                                                    return this.fetch(
+                                                                        detail.comments_url
                                                                     );
 
                                                                 case 11:
-                                                                    events.render(
-                                                                        list
-                                                                    );
-                                                                    observer.observe(
-                                                                        content.lastElementChild
+                                                                    detail.comment =
+                                                                        _context.sent;
+                                                                    if (
+                                                                        detail.merged
+                                                                    )
+                                                                        detail.state =
+                                                                            'merged';
+                                                                    this.view.render(
+                                                                        {
+                                                                            owner: owner,
+                                                                            detail: detail
+                                                                        }
                                                                     );
 
-                                                                case 13:
+                                                                case 14:
                                                                 case 'end':
                                                                     return _context.stop();
                                                             }
@@ -932,118 +933,6 @@ var _module_ = {
                                         return _value.apply(this, arguments);
                                     };
                                 })()
-                            },
-                            {
-                                kind: 'method',
-                                key: 'getData',
-                                value: (function() {
-                                    var _value2 = _asyncToGenerator(
-                                        /*#__PURE__*/
-                                        regeneratorRuntime.mark(
-                                            function _callee2() {
-                                                var response, next;
-                                                return regeneratorRuntime.wrap(
-                                                    function _callee2$(
-                                                        _context2
-                                                    ) {
-                                                        while (1) {
-                                                            switch (
-                                                                (_context2.prev =
-                                                                    _context2.next)
-                                                            ) {
-                                                                case 0:
-                                                                    _context2.next = 2;
-                                                                    return fetch(
-                                                                        this.URL
-                                                                    );
-
-                                                                case 2:
-                                                                    response =
-                                                                        _context2.sent;
-                                                                    next = /page=(\d+)>; rel="next"/.exec(
-                                                                        response.headers.get(
-                                                                            'Link'
-                                                                        )
-                                                                    );
-                                                                    this.nextPage = next
-                                                                        ? +next[1]
-                                                                        : this
-                                                                              .nextPage +
-                                                                          1;
-                                                                    _context2.next = 7;
-                                                                    return response.json();
-
-                                                                case 7:
-                                                                    return _context2.abrupt(
-                                                                        'return',
-                                                                        _context2.sent
-                                                                    );
-
-                                                                case 8:
-                                                                case 'end':
-                                                                    return _context2.stop();
-                                                            }
-                                                        }
-                                                    },
-                                                    _callee2,
-                                                    this
-                                                );
-                                            }
-                                        )
-                                    );
-
-                                    return function value() {
-                                        return _value2.apply(this, arguments);
-                                    };
-                                })()
-                            },
-                            {
-                                kind: 'method',
-                                key: 'detailURLOf',
-                                value: function value(event) {
-                                    var model =
-                                        event.issue ||
-                                        event.pull_request ||
-                                        event.release ||
-                                        event.member;
-                                    return (model || '').html_url;
-                                }
-                            },
-                            {
-                                kind: 'get',
-                                key: 'methodMap',
-                                value: function value() {
-                                    return {
-                                        created: '创建',
-                                        edited: '编辑',
-                                        closed: '关闭',
-                                        opened: '开启',
-                                        started: '星标',
-                                        published: '发布',
-                                        added: '添加'
-                                    };
-                                }
-                            },
-                            {
-                                kind: 'get',
-                                key: 'eventMap',
-                                value: function value() {
-                                    return {
-                                        Create: '创建',
-                                        Delete: '删除',
-                                        Push: '推送',
-                                        Watch: '关注',
-                                        Issues: '问题',
-                                        IssueComment: '回复',
-                                        Fork: '衍生',
-                                        PullRequest: '请求拉取',
-                                        PullRequestReviewComment: '评审',
-                                        Release: '版本',
-                                        Member: '成员',
-                                        Gollum: '维基',
-                                        Public: '公开'
-                                    };
-                                }
                             }
                         ]
                     };
@@ -1051,7 +940,7 @@ var _module_ = {
                 _githubElement.default
             );
 
-            exports.default = GithubEventFlow;
+            exports.default = GithubIssue;
         }
     },
     'web-cell': {
