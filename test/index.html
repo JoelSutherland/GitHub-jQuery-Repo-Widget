@@ -28,13 +28,16 @@
         <script src="../dist/Repository.js"></script>
         <script src="../dist/Issue.js"></script>
         <script src="../dist/EventFlow.js"></script>
+        <script src="../dist/command-line.js"></script>
     </head>
     <body>
         <h1>GitHub Web widgets</h1>
         <h2>Test &amp; Example</h2>
         <section>
-            <h3>User / Organization profile</h3>
-            <github-profile org="EasyWebApp"></github-profile>
+            <h3>Command line</h3>
+            <command-line>
+                <code>npm init web-cell path/to/your_project</code>
+            </command-line>
         </section>
         <section>
             <h3>Repository</h3>
@@ -50,6 +53,10 @@
                 repo="w3c-xmlserializer"
                 issue="2"
             ></github-issue>
+        </section>
+        <section>
+            <h3>User / Organization profile</h3>
+            <github-profile org="EasyWebApp"></github-profile>
         </section>
         <section>
             <h3>Event flow</h3>

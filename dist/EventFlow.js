@@ -647,7 +647,7 @@ var _module_ = {
             });
             exports.default = void 0;
             var _default =
-                'a:link {\n  color: black;\n  text-decoration: none;\n}\na:hover,\na:active {\n  text-decoration: underline;\n}\n.logo {\n  max-width: 1.5em;\n  max-height: 1.5em;\n}\n.logo.big {\n  font-size: 3rem;\n}\n.table-row {\n  display: table;\n  width: 100%;\n}\n.table-row > * {\n  display: table-cell;\n  vertical-align: top;\n  padding: 0.5em;\n}\n:host {\n  display: inline-block;\n  outline: none;\n}\nul[data-array] {\n  list-style: none;\n  margin: 0;\n  padding: 0;\n}\nul[data-array] > li > * {\n  table-layout: fixed;\n  vertical-align: middle;\n}\nul[data-array] > li > *:first-child {\n  text-align: center;\n  width: 10em;\n}\n';
+                'a:link {\n  color: black;\n  text-decoration: none;\n}\na:hover,\na:active {\n  text-decoration: underline;\n}\n.logo {\n  max-width: 1.5em;\n  max-height: 1.5em;\n}\n.logo.big {\n  font-size: 3rem;\n}\n.no-select {\n  -moz-user-select: none;\n  -webkit-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n.table-row {\n  display: table;\n  width: 100%;\n}\n.table-row > * {\n  display: table-cell;\n  vertical-align: top;\n  padding: 0.5em;\n}\n:host {\n  display: inline-block;\n  outline: none;\n}\nul[data-array] {\n  list-style: none;\n  margin: 0;\n  padding: 0;\n}\nul[data-array] > li > * {\n  table-layout: fixed;\n  vertical-align: middle;\n}\nul[data-array] > li > *:first-child {\n  text-align: center;\n  width: 10em;\n}\n';
             exports.default = _default;
         }
     },

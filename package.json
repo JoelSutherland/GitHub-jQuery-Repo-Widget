@@ -1,6 +1,6 @@
 {
     "name": "github-web-widget",
-    "version": "2.2.0",
+    "version": "2.3.0",
     "description": "Web Component set for GitHub based on WebCell",
     "keywords": [
         "github",
@@ -32,7 +32,8 @@
         "format": "prettier --write \"{,!(node_modules|.git|dist|docs)/**/}*.{html,md,css,less,js,json}\"",
         "lint": "eslint . --ignore-pattern dist/ --fix",
         "build": "npm run format  &&  npm run lint  &&  web-cell pack",
-        "test": "npm run build"
+        "test": "npm run build",
+        "prepublishOnly": "npm test"
     },
     "husky": {
         "hooks": {
@@ -51,6 +52,7 @@
         "babel-eslint": "^10.0.1",
         "bootstrap": "^4.1.3",
         "eslint": "^5.9.0",
+        "github-markdown-css": "^2.10.0",
         "husky": "^1.2.0",
         "koapache": "^1.0.4",
         "prettier": "^1.15.3",

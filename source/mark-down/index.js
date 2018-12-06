@@ -18,6 +18,8 @@ export default class MarkDown extends HTMLElement {
     }
 
     set innerHTML(raw) {
+        raw = (raw + '').trim();
+
         MD_raw.set(this, raw);
 
         super.innerHTML = marked(raw);

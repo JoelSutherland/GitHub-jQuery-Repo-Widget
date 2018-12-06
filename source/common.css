@@ -15,6 +15,13 @@ a:active {
     font-size: 3rem;
 }
 
+.no-select {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
 .table-row {
     display: table;
     width: 100%;

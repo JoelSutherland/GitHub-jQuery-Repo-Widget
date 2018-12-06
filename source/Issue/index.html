@@ -25,7 +25,7 @@
                             ${new Date(view.created_at).toLocaleString()}
                         </time>
                     </summary>
-                    <mark-down>${view.body}</mark-down>
+                    <mark-down class="markdown-body">${view.body}</mark-down>
                 </details>
                 <div data-array="comment">
                     <template>
@@ -44,7 +44,9 @@
                                     Date(view.created_at).toLocaleString()}
                                 </time>
                             </summary>
-                            <mark-down>${view.body}</mark-down>
+                            <mark-down class="markdown-body">
+                                ${view.body}
+                            </mark-down>
                         </details>
                     </template>
                 </div>

@@ -4,13 +4,13 @@
 (function (factory) {
 
     if ((typeof define === 'function')  &&  define.amd)
-        define('mark-down', ["web-cell","marked"], factory);
+        define('command-line', ["web-cell"], factory);
     else if (typeof module === 'object')
-        return  module.exports = factory.call(global,require('web-cell'),require('marked'));
+        return  module.exports = factory.call(global,require('web-cell'));
     else
-        return  this['mark-down'] = factory.call(self,this['web-cell'],this['marked']);
+        return  this['command-line'] = factory.call(self,this['web-cell']);
 
-})(function (web_cell,marked) {
+})(function (web_cell) {
 
 function merge(base, path) {
   return (base + '/' + path).replace(/\/\//g, '/').replace(/[^/.]+\/\.\.\//g, '').replace(/\.\//g, function (match, index, input) {
@@ -86,6 +86,25 @@ function _typeof(obj) {
     return _typeof(obj);
 }
 
+function _toConsumableArray(arr) {
+    return (
+        _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread()
+    );
+}
+
+function _nonIterableSpread() {
+    throw new TypeError('Invalid attempt to spread non-iterable instance');
+}
+
+function _arrayWithoutHoles(arr) {
+    if (Array.isArray(arr)) {
+        for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) {
+            arr2[i] = arr[i];
+        }
+        return arr2;
+    }
+}
+
 function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
         throw new TypeError('Cannot call a class as a function');
@@ -97,6 +116,15 @@ function _possibleConstructorReturn(self, call) {
         return call;
     }
     return _assertThisInitialized(self);
+}
+
+function _getPrototypeOf(o) {
+    _getPrototypeOf = Object.setPrototypeOf
+        ? Object.getPrototypeOf
+        : function _getPrototypeOf(o) {
+              return o.__proto__ || Object.getPrototypeOf(o);
+          };
+    return _getPrototypeOf(o);
 }
 
 function _inherits(subClass, superClass) {
@@ -555,95 +583,20 @@ function _arrayWithHoles(arr) {
     if (Array.isArray(arr)) return arr;
 }
 
-function _get(target, property, receiver) {
-    if (typeof Reflect !== 'undefined' && Reflect.get) {
-        _get = Reflect.get;
-    } else {
-        _get = function _get(target, property, receiver) {
-            var base = _superPropBase(target, property);
-            if (!base) return;
-            var desc = Object.getOwnPropertyDescriptor(base, property);
-            if (desc.get) {
-                return desc.get.call(receiver);
-            }
-            return desc.value;
-        };
-    }
-    return _get(target, property, receiver || target);
-}
-
-function set(target, property, value, receiver) {
-    if (typeof Reflect !== 'undefined' && Reflect.set) {
-        set = Reflect.set;
-    } else {
-        set = function set(target, property, value, receiver) {
-            var base = _superPropBase(target, property);
-            var desc;
-            if (base) {
-                desc = Object.getOwnPropertyDescriptor(base, property);
-                if (desc.set) {
-                    desc.set.call(receiver, value);
-                    return true;
-                } else if (!desc.writable) {
-                    return false;
-                }
-            }
-            desc = Object.getOwnPropertyDescriptor(receiver, property);
-            if (desc) {
-                if (!desc.writable) {
-                    return false;
-                }
-                desc.value = value;
-                Object.defineProperty(receiver, property, desc);
-            } else {
-                _defineProperty(receiver, property, value);
-            }
-            return true;
-        };
-    }
-    return set(target, property, value, receiver);
-}
-
-function _set(target, property, value, receiver, isStrict) {
-    var s = set(target, property, value, receiver || target);
-    if (!s && isStrict) {
-        throw new Error('failed to set property');
-    }
-    return value;
-}
-
-function _defineProperty(obj, key, value) {
-    if (key in obj) {
-        Object.defineProperty(obj, key, {
-            value: value,
-            enumerable: true,
-            configurable: true,
-            writable: true
-        });
-    } else {
-        obj[key] = value;
-    }
-    return obj;
-}
-
-function _superPropBase(object, property) {
-    while (!Object.prototype.hasOwnProperty.call(object, property)) {
-        object = _getPrototypeOf(object);
-        if (object === null) break;
-    }
-    return object;
-}
-
-function _getPrototypeOf(o) {
-    _getPrototypeOf = Object.setPrototypeOf
-        ? Object.getPrototypeOf
-        : function _getPrototypeOf(o) {
-              return o.__proto__ || Object.getPrototypeOf(o);
-          };
-    return _getPrototypeOf(o);
-}
-
 var _module_ = {
+    './index.html': {
+        base: '.',
+        dependency: [],
+        factory: function factory(require, exports, module) {
+            Object.defineProperty(exports, '__esModule', {
+                value: true
+            });
+            exports.default = void 0;
+            var _default =
+                '<template>\n    <style>small {\n  display: inline-block;padding: 0.25em 0.4em;font-size: 75%;font-weight: 700;line-height: 1;text-align: center;white-space: nowrap;vertical-align: baseline;border-radius: 0.25rem;\n}\nsmall {\n  color: #fff;background-color: #28a745;\n}\n@media print {\n  small {\n    border: 1px solid #000;\n  }\n}\na:link {\n  color: black;\n  text-decoration: none;\n}\na:hover,\na:active {\n  text-decoration: underline;\n}\n.logo {\n  max-width: 1.5em;\n  max-height: 1.5em;\n}\n.logo.big {\n  font-size: 3rem;\n}\n.no-select,\n::slotted(*) {\n  -moz-user-select: none;\n  -webkit-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n.table-row {\n  display: table;\n  width: 100%;\n}\n.table-row > * {\n  display: table-cell;\n  vertical-align: top;\n  padding: 0.5em;\n}\n:host {\n  display: inline-block;\n  outline: none;\n}\n:host {\n  display: block;\n  position: relative;\n  padding: 1em;\n  border-radius: 5px;\n  background: black;\n  color: white;\n}\n::slotted(*) {\n  color: transparent;\n}\nkbd {\n  position: absolute;\n  left: 2.5em;\n  top: 1.4em;\n}\nsmall {\n  opacity: 0;\n  transition: 0.25s;\n}\n:host(:focus) small {\n  opacity: 1;\n}\n</style>\n\n    <span class="no-select">$</span> <slot></slot> <kbd></kbd>\n    <small>Copied !</small>\n</template>\n';
+            exports.default = _default;
+        }
+    },
     './index': {
         base: '.',
         dependency: [],
@@ -655,7 +608,7 @@ var _module_ = {
 
             var _webCell = require('web-cell');
 
-            var _marked = _interopRequireDefault(require('marked'));
+            var _index = _interopRequireDefault(require('./index.html'));
 
             function _interopRequireDefault(obj) {
                 return obj && obj.__esModule
@@ -665,30 +618,26 @@ var _module_ = {
                       };
             }
 
-            var MD_raw = new WeakMap();
-
-            var MarkDown = _decorate(
+            var CommandLine = _decorate(
                 [
                     (0, _webCell.component)({
-                        template: '<slot></slot>',
-                        style:
-                            '\n        :host {\n            display: block;\n            outline: none;\n        }'
+                        template: _index.default
                     })
                 ],
                 function(_initialize, _HTMLElement) {
-                    var MarkDown =
+                    var CommandLine =
                         /*#__PURE__*/
                         (function(_HTMLElement2) {
-                            _inherits(MarkDown, _HTMLElement2);
+                            _inherits(CommandLine, _HTMLElement2);
 
-                            function MarkDown() {
+                            function CommandLine() {
                                 var _temp, _this;
 
-                                _classCallCheck(this, MarkDown);
+                                _classCallCheck(this, CommandLine);
 
                                 ((_temp = _this = _possibleConstructorReturn(
                                     this,
-                                    _getPrototypeOf(MarkDown).call(this)
+                                    _getPrototypeOf(CommandLine).call(this)
                                 )),
                                 _initialize(
                                     _assertThisInitialized(
@@ -698,61 +647,68 @@ var _module_ = {
                                 _temp).buildDOM();
                                 return _this;
                             }
+                            /**
+                             * @param {String}                       raw
+                             * @param {function(char: String): void} renderer
+                             * @param {Number}                       [interval=250]
+                             *
+                             * @return {Promise}
+                             */
 
-                            return MarkDown;
+                            return CommandLine;
                         })(_HTMLElement);
 
                     return {
-                        F: MarkDown,
+                        F: CommandLine,
                         d: [
                             {
-                                kind: 'set',
-                                key: 'innerHTML',
-                                value: function value(raw) {
-                                    raw = (raw + '').trim();
-                                    MD_raw.set(this, raw);
-
-                                    _set(
-                                        _getPrototypeOf(MarkDown.prototype),
-                                        'innerHTML',
-                                        (0, _marked.default)(raw),
-                                        this,
-                                        true
+                                kind: 'method',
+                                static: true,
+                                key: 'keyType',
+                                value: function value(raw, renderer) {
+                                    var interval =
+                                        arguments.length > 2 &&
+                                        arguments[2] !== undefined
+                                            ? arguments[2]
+                                            : 100;
+                                    raw = _toConsumableArray(raw);
+                                    return new Promise(function(resolve) {
+                                        var timer = setInterval(function() {
+                                            renderer(raw.shift());
+                                            if (!raw[0])
+                                                clearInterval(timer) ||
+                                                    resolve();
+                                        }, interval);
+                                    });
+                                }
+                            },
+                            {
+                                kind: 'method',
+                                key: 'slotChangedCallback',
+                                value: function value(assigned) {
+                                    var code = assigned.find(function(node) {
+                                            return node.tagName === 'CODE';
+                                        }),
+                                        line = this.$('kbd')[0];
+                                    CommandLine.keyType(
+                                        code.textContent.trim(),
+                                        function(char) {
+                                            return (line.textContent += char);
+                                        }
                                     );
                                 }
                             },
                             {
-                                kind: 'get',
-                                key: 'innerHTML',
-                                value: function value() {
-                                    return _get(
-                                        _getPrototypeOf(MarkDown.prototype),
-                                        'innerHTML',
-                                        this
-                                    );
-                                }
-                            },
-                            {
-                                kind: 'get',
-                                key: 'textContent',
-                                value: function value() {
-                                    return MD_raw.get(this);
-                                }
-                            },
-                            {
-                                kind: 'set',
-                                key: 'textContent',
-                                value: function value(raw) {
-                                    MD_raw.set(
-                                        this,
-                                        _set(
-                                            _getPrototypeOf(MarkDown.prototype),
-                                            'textContent',
-                                            raw,
-                                            this,
-                                            true
-                                        )
-                                    );
+                                kind: 'method',
+                                decorators: [
+                                    (0, _webCell.on)('click', ':host kbd')
+                                ],
+                                key: 'autoCopy',
+                                value: function value(_, target) {
+                                    self.getSelection()
+                                        .getRangeAt(0)
+                                        .selectNode(target);
+                                    document.execCommand('copy');
                                 }
                             }
                         ]
@@ -761,14 +717,11 @@ var _module_ = {
                 HTMLElement
             );
 
-            exports.default = MarkDown;
+            exports.default = CommandLine;
         }
     },
     'web-cell': {
         exports: web_cell
-    },
-    marked: {
-        exports: marked
     }
 };
 
