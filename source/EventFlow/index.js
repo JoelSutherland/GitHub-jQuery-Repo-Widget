@@ -1,4 +1,4 @@
-import { component, mapProperty, mapData } from 'web-cell';
+import { component, mapProperty, mapData, request } from 'web-cell';
 
 import GithubElement from 'github-element';
 
@@ -6,20 +6,17 @@ import template from './index.html';
 
 import style from './index.less';
 
-const intersection = new WeakMap();
-
 @component({ template, style })
 export default class GithubEventFlow extends GithubElement {
     constructor() {
         super().nextPage = 1;
 
-        intersection.set(
-            this,
+        this.ready.then(() =>
             new IntersectionObserver(entry => {
                 for (let item of entry)
                     if (item.isIntersecting)
                         return this.viewChangedCallback(this.view.data);
-            })
+            }).observe(this.view.root.lastElementChild)
         );
     }
 
@@ -51,33 +48,22 @@ export default class GithubEventFlow extends GithubElement {
     async viewChangedCallback({ user, org, repo }) {
         if (!user && !org && !repo) return;
 
-        const observer = intersection.get(this),
-            { events } = this.view;
-
-        const content = events.content;
-
-        if (content.lastElementChild)
-            observer.unobserve(content.lastElementChild);
-
         const list = await this.getData();
 
-        if (!list[0]) return;
-
-        events.render(list);
-
-        observer.observe(content.lastElementChild);
+        if (list[0]) this.view.events = list;
     }
 
     async getData() {
-        const response = await fetch(this.URL);
+        const {
+            headers: { Link },
+            body
+        } = await request(this.URL);
 
-        const next = /page=(\d+)>; rel="next"/.exec(
-            response.headers.get('Link')
-        );
+        const { next } = Link || '';
 
         this.nextPage = next ? +next[1] : this.nextPage + 1;
 
-        return await response.json();
+        return body;
     }
 
     detailURLOf(event) {

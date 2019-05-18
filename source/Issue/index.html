@@ -1,6 +1,6 @@
 <template>
     <div class="table-row">
-        <aside data-object="owner">
+        <aside data-view="owner">
             <img class="logo big" src="${view.avatar_url}" />
 
             <a target="_blank" href="${view.html_url}">
@@ -8,7 +8,7 @@
             </a>
         </aside>
 
-        <div data-object="detail">
+        <div data-view="detail">
             <h1>
                 <span class="${view.state}">${view.state}</span>
                 <a target="_blank" href="${view.html_url}">${view.title}</a>
@@ -27,7 +27,7 @@
                     </summary>
                     <mark-down class="markdown-body">${view.body}</mark-down>
                 </details>
-                <div data-array="comment">
+                <div data-view="comment">
                     <template>
                         <details>
                             <summary>

@@ -2,7 +2,7 @@ import { request } from 'web-cell';
 
 export default class GithubElement extends HTMLElement {
     constructor(option) {
-        super().buildDOM(option);
+        super().construct(option);
     }
 
     static get observedAttributes() {
@@ -11,16 +11,19 @@ export default class GithubElement extends HTMLElement {
 
     attributeChangedCallback() {}
 
-    fetch(URI, method, body, headers, option) {
-        return request(
+    async fetch(URI, method, body, headers, option) {
+        headers = headers || {};
+
+        const token = this.token || GithubElement.token;
+
+        if (token) headers.Authorization = `token ${token}`;
+
+        return (await request(
             new URL(URI, 'https://api.github.com/'),
             method,
             body,
-            {
-                Authorization: `token ${this.token || GithubElement.token}`,
-                ...headers
-            },
+            headers,
             option
-        );
+        )).body;
     }
 }

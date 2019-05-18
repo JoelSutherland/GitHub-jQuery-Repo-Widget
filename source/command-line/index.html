@@ -13,7 +13,7 @@
             color: white;
         }
         ::slotted(*):extend(.no-select) {
-            color: transparent;
+            color: transparent !important;
         }
         kbd {
             position: absolute;
@@ -29,6 +29,6 @@
         }
     </style>
 
-    <span class="no-select">$</span> <slot></slot> <kbd></kbd>
+    <span class="no-select">$</span><slot></slot><kbd></kbd>
     <small>Copied !</small>
 </template>

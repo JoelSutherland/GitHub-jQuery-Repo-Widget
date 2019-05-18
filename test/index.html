@@ -9,19 +9,21 @@
             }
         </style>
         <script src="../node_modules/@babel/polyfill/dist/polyfill.min.js"></script>
-        <script src="https://cdn.polyfill.io/v2/polyfill.js?features=Element.prototype.append,DocumentFragment.prototype.append"></script>
-        <script src="../node_modules/whatwg-fetch/dist/fetch.umd.js"></script>
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=default%2CDocumentFragment.prototype.append%2CElement.prototype.append"></script>
         <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
         <script src="../node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js"></script>
 
+        <script src="../node_modules/dom-renderer/dist/dom-renderer.js"></script>
         <script src="../node_modules/web-cell/dist/web-cell.js"></script>
         <script src="../node_modules/marked/marked.min.js"></script>
 
         <script src="../dist/github-element.js"></script>
         <script>
-            self['github-element'].default.token =
-                '39ff883676bf43c5723e92701487a020ad1abfb2';
+            self['github-element'].default.token = new URLSearchParams(
+                self.location.search
+            ).get('token');
         </script>
+        <script src="../dist/code-parser.js"></script>
         <script src="../dist/mark-down.js"></script>
 
         <script src="../dist/Profile.js"></script>

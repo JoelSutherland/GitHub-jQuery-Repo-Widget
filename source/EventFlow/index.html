@@ -1,5 +1,5 @@
 <template>
-    <ul data-array="events">
+    <ul data-view="events">
         <template>
             <li class="table-row">
                 <a
@@ -29,16 +29,13 @@
                     ${host.methodMap[ view.payload.action ]} ${host.eventMap[
                     view.type.replace('Event', '') ]}
 
-                    <span data-object="payload">
+                    <span data-view="payload">
                         <a target="_blank" href="${host.detailURLOf( view )}">
                             ${ (view.ref || view.master_branch) || (view.issue
                             || view.pull_request || '').title || (view.release
                             || '').name || (view.member || '').login }
                         </a>
-                        <ol
-                            data-array="pages"
-                            style="display: ${scope.pages ? '' : 'none'}"
-                        >
+                        <ol data-view="pages">
                             <template>
                                 <li>
                                     ${scope.method[ view.action ]}
@@ -57,4 +54,5 @@
             </li>
         </template>
     </ul>
+    <div></div>
 </template>

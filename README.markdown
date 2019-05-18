@@ -1,14 +1,14 @@
 # GitHub Web Widget
 
-**Web Component** set for GitHub based on [WebCell](https://web-cell.tk/)
+**Web Component** set for GitHub based on [WebCell](https://web-cell.dev/)
 
 
 
 ## What does it look like?
 
-[![Repository ScreenShot](test/Repository.png?raw=true "EWA Repository Widget Screenshot")](https://techquery.github.io/GitHub-Web-Widget/)
+[![Repository ScreenShot](test/Repository.png?raw=true "EWA Repository Widget Screenshot")](https://tech-query.me/GitHub-Web-Widget/)
 
-[![Profile ScreenShot](test/Profile.png?raw=true "EWA Profile Widget Screenshot")](https://techquery.github.io/GitHub-Web-Widget/)
+[![Profile ScreenShot](test/Profile.png?raw=true "EWA Profile Widget Screenshot")](https://tech-query.me/GitHub-Web-Widget/)
 
 
 

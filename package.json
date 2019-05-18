@@ -1,6 +1,6 @@
 {
     "name": "github-web-widget",
-    "version": "2.3.0",
+    "version": "2.4.0",
     "description": "Web Component set for GitHub based on WebCell",
     "keywords": [
         "github",
@@ -11,7 +11,7 @@
     ],
     "author": "shiy2008@gmail.com",
     "license": "AGPL-3.0",
-    "homepage": "https://techquery.github.io/GitHub-Web-Widget/",
+    "homepage": "https://tech-query.me/GitHub-Web-Widget/",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/TechQuery/GitHub-Web-Widget.git"
@@ -19,7 +19,7 @@
     "bugs": {
         "url": "https://github.com/TechQuery/GitHub-Web-Widget/issues"
     },
-    "main": "index.js",
+    "module": "dist/index.js",
     "directories": {
         "lib": "source/",
         "test": "test/"
@@ -41,22 +41,27 @@
         }
     },
     "dependencies": {
-        "@babel/polyfill": "^7.0.0",
-        "@webcomponents/webcomponentsjs": "^2.2.1",
-        "marked": "^0.5.2",
-        "web-cell": "^0.10.11",
-        "whatwg-fetch": "^3.0.0"
+        "dom-renderer": "^0.9.0",
+        "highlight.js": "^9.15.6",
+        "marked": "^0.6.2",
+        "web-cell": "^1.1.0"
+    },
+    "peerDependencies": {
+        "@babel/polyfill": "^7.4.4",
+        "@webcomponents/webcomponentsjs": "^2.2.10"
     },
     "devDependencies": {
-        "@babel/plugin-proposal-decorators": "^7.1.6",
+        "@babel/plugin-proposal-decorators": "^7.4.4",
+        "@babel/polyfill": "^7.4.4",
+        "@webcomponents/webcomponentsjs": "^2.2.10",
         "babel-eslint": "^10.0.1",
-        "bootstrap": "^4.1.3",
-        "eslint": "^5.9.0",
-        "github-markdown-css": "^2.10.0",
-        "husky": "^1.2.0",
-        "koapache": "^1.0.4",
-        "prettier": "^1.15.3",
-        "web-cell-cli": "^0.8.0"
+        "bootstrap": "4.2.1",
+        "eslint": "^5.16.0",
+        "github-markdown-css": "^3.0.1",
+        "husky": "^2.3.0",
+        "koapache": "^1.0.6",
+        "prettier": "^1.17.1",
+        "web-cell-cli": "^1.0.0-beta"
     },
     "babel": {
         "plugins": [
@@ -67,6 +72,11 @@
                 }
             ]
         ]
+    },
+    "amd-bundle": {
+        "moduleMap": {
+            "highlight.js": "hljs"
+        }
     },
     "prettier": {
         "tabWidth": 4,

@@ -60,7 +60,7 @@ export default class GithubProfile extends GithubElement {
         if (!user && !org) return;
 
         const data = await this.fetch(user ? `users/${user}` : `orgs/${org}`),
-            view = this.view;
+            { view } = this;
 
         view.render(data);
 
@@ -68,16 +68,16 @@ export default class GithubProfile extends GithubElement {
             await this.fetch(`${data.repos_url}?sort=updated`)
         );
 
-        view.repositories.render(repos);
+        view.repositories = repos;
 
         const languages = await Promise.all(
             repos.map(async repo => this.fetch(repo.languages_url))
         );
 
-        view.languages.render(GithubProfile.filterTech(languages).slice(0, 8));
+        view.languages = GithubProfile.filterTech(languages).slice(0, 8);
     }
 
     get repoCount() {
-        return this.view.repositories.length;
+        return (this.view.repositories || '').length || 0;
     }
 }

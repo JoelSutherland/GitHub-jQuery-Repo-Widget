@@ -5,7 +5,7 @@ import template from './index.html';
 @component({ template })
 export default class CommandLine extends HTMLElement {
     constructor() {
-        super().buildDOM();
+        super().construct();
     }
 
     /**

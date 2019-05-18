@@ -43,7 +43,7 @@
             <p class="description">
                 ${view.description} &mdash;
                 <a
-                    style="display: ${view.has_wiki ? '' : 'none'}"
+                    hidden="${! view.has_wiki}"
                     href="https://github.com/${view.full_name}#readme"
                 >
                     Read More
