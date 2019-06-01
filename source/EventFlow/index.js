@@ -9,15 +9,7 @@ import style from './index.less';
 @component({ template, style })
 export default class GithubEventFlow extends GithubElement {
     constructor() {
-        super().nextPage = 1;
-
-        this.ready.then(() =>
-            new IntersectionObserver(entry => {
-                for (let item of entry)
-                    if (item.isIntersecting)
-                        return this.viewChangedCallback(this.view.data);
-            }).observe(this.view.root.lastElementChild)
-        );
+        super().nextPage = '';
     }
 
     @mapProperty
@@ -42,28 +34,38 @@ export default class GithubEventFlow extends GithubElement {
             path = `orgs/${org}/events`;
         }
 
-        if (path) return `https://api.github.com/${path}?page=${this.nextPage}`;
+        return path && 'https://api.github.com/' + path;
+    }
+
+    async showMore() {
+        const {
+            headers: { Link = {} },
+            body
+        } = await request(this.nextPage);
+
+        this.nextPage = (Link.next || '').URI;
+
+        if (!body[0]) throw RangeError('No more event');
+
+        await this.view.render({ events: body });
     }
 
     async viewChangedCallback({ user, org, repo }) {
         if (!user && !org && !repo) return;
 
-        const list = await this.getData();
+        this.nextPage = this.URL;
 
-        if (list[0]) this.view.events = list;
-    }
+        await this.showMore();
 
-    async getData() {
-        const {
-            headers: { Link },
-            body
-        } = await request(this.URL);
-
-        const { next } = Link || '';
-
-        this.nextPage = next ? +next[1] : this.nextPage + 1;
-
-        return body;
+        new IntersectionObserver((entry, observer) => {
+            for (let item of entry)
+                if (item.isIntersecting)
+                    try {
+                        return this.nextPage && this.showMore();
+                    } catch (error) {
+                        return observer.disconnect();
+                    }
+        }).observe(this.view.root.lastElementChild);
     }
 
     detailURLOf(event) {

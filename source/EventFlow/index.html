@@ -30,25 +30,31 @@
                     view.type.replace('Event', '') ]}
 
                     <span data-view="payload">
-                        <a target="_blank" href="${host.detailURLOf( view )}">
-                            ${ (view.ref || view.master_branch) || (view.issue
-                            || view.pull_request || '').title || (view.release
-                            || '').name || (view.member || '').login }
-                        </a>
-                        <ol data-view="pages">
-                            <template>
-                                <li>
-                                    ${scope.method[ view.action ]}
-                                    <a
-                                        target="_blank"
-                                        href="${view.html_url}"
-                                        title="${view.summary || view.sha}"
-                                    >
-                                        ${view.title}
-                                    </a>
-                                </li>
-                            </template>
-                        </ol>
+                        <template>
+                            <a
+                                target="_blank"
+                                href="${host.detailURLOf( view )}"
+                            >
+                                ${ (view.ref || view.master_branch) ||
+                                (view.issue || view.pull_request || '').title ||
+                                (view.release || '').name || (view.member ||
+                                '').login }
+                            </a>
+                            <ol data-view="pages">
+                                <template>
+                                    <li>
+                                        ${scope.method[ view.action ]}
+                                        <a
+                                            target="_blank"
+                                            href="${view.html_url}"
+                                            title="${view.summary || view.sha}"
+                                        >
+                                            ${view.title}
+                                        </a>
+                                    </li>
+                                </template>
+                            </ol>
+                        </template>
                     </span>
                 </div>
             </li>

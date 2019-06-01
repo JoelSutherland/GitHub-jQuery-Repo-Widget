@@ -21,6 +21,8 @@ export default class GithubIssue extends GithubElement {
     attributeChangedCallback() {}
 
     async viewChangedCallback({ user, org, repo, issue, pull }) {
+        (issue = parseInt(issue)), (pull = parseInt(pull));
+
         if (!(user || org) || !repo || !(issue || pull)) return;
 
         const [detail, owner] = await Promise.all([
@@ -36,6 +38,6 @@ export default class GithubIssue extends GithubElement {
 
         if (detail.merged) detail.state = 'merged';
 
-        this.view.render({ owner, detail });
+        await this.view.render({ owner, detail });
     }
 }

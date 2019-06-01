@@ -62,7 +62,7 @@ export default class GithubProfile extends GithubElement {
         const data = await this.fetch(user ? `users/${user}` : `orgs/${org}`),
             { view } = this;
 
-        view.render(data);
+        await view.render(data);
 
         const repos = GithubProfile.filterRepo(
             await this.fetch(`${data.repos_url}?sort=updated`)

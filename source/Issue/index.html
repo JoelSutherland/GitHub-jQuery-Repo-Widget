@@ -1,56 +1,62 @@
 <template>
     <div class="table-row">
         <aside data-view="owner">
-            <img class="logo big" src="${view.avatar_url}" />
+            <template>
+                <img class="logo big" src="${view.avatar_url}" />
 
-            <a target="_blank" href="${view.html_url}">
-                <strong>${view.login}</strong>
-            </a>
+                <a target="_blank" href="${view.html_url}">
+                    <strong>${view.login}</strong>
+                </a>
+            </template>
         </aside>
 
         <div data-view="detail">
-            <h1>
-                <span class="${view.state}">${view.state}</span>
-                <a target="_blank" href="${view.html_url}">${view.title}</a>
-            </h1>
-            <main>
-                <details>
-                    <summary>
-                        <img class="logo" src="${view.user.avatar_url}" />
-                        <a target="_blank" href="${view.html_url}">
-                            <strong>${view.user.login}</strong>
-                        </a>
-                        opened this at
-                        <time datetime="${view.created_at}">
-                            ${new Date(view.created_at).toLocaleString()}
-                        </time>
-                    </summary>
-                    <mark-down class="markdown-body">${view.body}</mark-down>
-                </details>
-                <div data-view="comment">
-                    <template>
-                        <details>
-                            <summary>
-                                <img
-                                    class="logo"
-                                    src="${view.user.avatar_url}"
-                                />
-                                <a target="_blank" href="${view.html_url}">
-                                    <strong>${view.user.login}</strong>
-                                </a>
-                                commented at
-                                <time datetime="${view.created_at}">
-                                    ${new
-                                    Date(view.created_at).toLocaleString()}
-                                </time>
-                            </summary>
-                            <mark-down class="markdown-body">
-                                ${view.body}
-                            </mark-down>
-                        </details>
-                    </template>
-                </div>
-            </main>
+            <template>
+                <h1>
+                    <span class="${view.state}">${view.state}</span>
+                    <a target="_blank" href="${view.html_url}">${view.title}</a>
+                </h1>
+                <main>
+                    <details>
+                        <summary>
+                            <img class="logo" src="${view.user.avatar_url}" />
+                            <a target="_blank" href="${view.html_url}">
+                                <strong>${view.user.login}</strong>
+                            </a>
+                            opened this at
+                            <time datetime="${view.created_at}">
+                                ${new Date(view.created_at).toLocaleString()}
+                            </time>
+                        </summary>
+                        <mark-down class="markdown-body"
+                            >${view.body}</mark-down
+                        >
+                    </details>
+                    <div data-view="comment">
+                        <template>
+                            <details>
+                                <summary>
+                                    <img
+                                        class="logo"
+                                        src="${view.user.avatar_url}"
+                                    />
+                                    <a target="_blank" href="${view.html_url}">
+                                        <strong>${view.user.login}</strong>
+                                    </a>
+                                    commented at
+                                    <time datetime="${view.created_at}">
+                                        ${new
+                                        Date(view.created_at).toLocaleString()}
+                                    </time>
+                                </summary>
+                                <mark-down class="markdown-body">
+                                    ${view.body}
+                                </mark-down>
+                            </details>
+                        </template>
+                    </div>
+                </main>
+            </template>
         </div>
     </div>
 </template>

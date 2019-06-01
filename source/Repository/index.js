@@ -35,6 +35,6 @@ export default class GithubRepository extends GithubElement {
 
         const data = await this.fetch(`repos/${user || org}/${repo}`);
 
-        this.view.render(data);
+        await this.view.render(data);
     }
 }

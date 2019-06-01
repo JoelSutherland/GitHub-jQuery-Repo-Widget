@@ -2,6 +2,10 @@
 
 **Web Component** set for GitHub based on [WebCell](https://web-cell.dev/)
 
+[![NPM Dependency](https://david-dm.org/TechQuery/GitHub-Web-Widget.svg)](https://david-dm.org/TechQuery/GitHub-Web-Widget)
+[![](https://data.jsdelivr.com/v1/package/npm/github-web-widget/badge?style=rounded)](https://www.jsdelivr.com/package/npm/github-web-widget)
+
+[![NPM](https://nodei.co/npm/github-web-widget.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/github-web-widget/)
 
 
 ## What does it look like?
