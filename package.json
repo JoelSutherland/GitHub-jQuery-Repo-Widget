@@ -1,6 +1,6 @@
 {
     "name": "github-web-widget",
-    "version": "2.4.1",
+    "version": "3.0.0-alpha.0",
     "description": "Web Component set for GitHub based on WebCell",
     "keywords": [
         "github",
@@ -20,66 +20,45 @@
         "url": "https://github.com/TechQuery/GitHub-Web-Widget/issues"
     },
     "module": "dist/index.js",
-    "directories": {
-        "lib": "source/",
-        "test": "test/"
-    },
-    "engines": {
-        "node": "^6.3.0"
-    },
     "scripts": {
-        "dev": "web-cell preview",
-        "format": "prettier --write \"{,!(node_modules|.git|dist|docs)/**/}*.{html,md,css,less,js,json}\"",
+        "start": "parcel test/main.html",
         "lint": "eslint . --ignore-pattern dist/ --fix",
         "build": "npm run format  &&  npm run lint  &&  web-cell pack",
-        "test": "npm run build",
+        "test": "lint-staged",
         "prepublishOnly": "npm test"
     },
     "husky": {
         "hooks": {
-            "pre-commit": "npm test  &&  git add ."
+            "pre-commit": "npm test"
         }
     },
     "dependencies": {
-        "dom-renderer": "^1.0.2",
-        "highlight.js": "^9.15.8",
-        "marked": "^0.6.2",
-        "web-cell": "^1.2.0"
-    },
-    "peerDependencies": {
-        "@babel/polyfill": "^7.4.4",
-        "@webcomponents/webcomponentsjs": "^2.2.10"
+        "dom-renderer": "^1.0.3",
+        "highlight.js": "^9.16.2",
+        "marked": "^0.6.3",
+        "web-cell": "^2.0.0-rc.2"
     },
     "devDependencies": {
-        "@babel/plugin-proposal-decorators": "^7.4.4",
-        "@babel/polyfill": "^7.4.4",
-        "@webcomponents/webcomponentsjs": "^2.2.10",
-        "babel-eslint": "^10.0.1",
+        "@webcomponents/webcomponentsjs": "^2.4.0",
+        "babel-eslint": "^10.0.3",
         "bootstrap": "4.2.1",
         "eslint": "^5.16.0",
         "github-markdown-css": "^3.0.1",
-        "husky": "^2.3.0",
+        "husky": "^3.1.0",
         "koapache": "^1.0.6",
-        "prettier": "^1.17.1",
-        "web-cell-cli": "^1.0.0-beta"
-    },
-    "babel": {
-        "plugins": [
-            [
-                "@babel/plugin-proposal-decorators",
-                {
-                    "decoratorsBeforeExport": true
-                }
-            ]
-        ]
-    },
-    "amd-bundle": {
-        "moduleMap": {
-            "highlight.js": "hljs"
-        }
+        "lint-staged": "^9.4.3",
+        "parcel-bundler": "^1.12.4",
+        "prettier": "^1.19.1",
+        "typescript": "^3.7.2"
     },
     "prettier": {
         "tabWidth": 4,
         "singleQuote": true
+    },
+    "lint-staged": {
+        "*.{html,md,json,ts,tsx}": [
+            "prettier --write",
+            "git add"
+        ]
     }
 }

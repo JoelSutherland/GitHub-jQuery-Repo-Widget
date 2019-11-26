@@ -15,7 +15,10 @@ Desktop.ini
 # Node.JS & NPM
 node_modules/
 package-lock.json
+
+# Bundle
 dist/
+.cache/
 
 # IDE
 .vscode/
