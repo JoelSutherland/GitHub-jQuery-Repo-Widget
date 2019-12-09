@@ -1,6 +1,6 @@
 import { render, createCell } from 'web-cell';
 
-import CommandLine from '../source/CommandLine';
+import { CommandLine, GithubRepository } from '../source';
 
 render(
     <main className="container">
@@ -9,6 +9,11 @@ render(
         <section>
             <h2>Command Line</h2>
             <CommandLine>npm install github-web-widget</CommandLine>
+        </section>
+
+        <section>
+            <h2>Repository</h2>
+            <GithubRepository />
         </section>
     </main>
 );

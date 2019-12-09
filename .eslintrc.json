@@ -4,38 +4,15 @@
         "browser": true,
         "node": true
     },
-    "parser": "babel-eslint",
+    "parser": "@typescript-eslint/parser",
     "parserOptions": {
-        "ecmaVersion": 9,
         "sourceType": "module",
         "ecmaFeatures": {
-            "legacyDecorators": true
+            "jsx": true
         }
     },
-    "extends": "eslint:recommended",
+    "extends": ["eslint:recommended", "plugin:prettier/recommended"],
     "rules": {
-        "indent": ["error", 4, { "SwitchCase": 1 }],
-        "linebreak-style": ["error", "unix"],
-        "quotes": ["error", "single"],
-        "semi": ["error", "always"],
-        "no-cond-assign": "off",
-        "getter-return": "warn",
-        "no-console": [
-            "error",
-            {
-                "allow": ["info", "warn", "error", "time", "timeEnd"]
-            }
-        ],
-        "valid-jsdoc": [
-            "error",
-            {
-                "prefer": {
-                    "returns": "return"
-                },
-                "requireParamDescription": false,
-                "requireReturn": false,
-                "requireReturnDescription": false
-            }
-        ]
+        "no-unused-vars": "warn"
     }
 }

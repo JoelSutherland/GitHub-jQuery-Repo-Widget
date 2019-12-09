@@ -1,15 +1,17 @@
-import { component, mixin, watch, createCell } from 'web-cell';
+import { component, mixin, createCell } from 'web-cell';
 
 @component({
     tagName: 'command-line',
     renderTarget: 'children'
 })
-export default class CommandLine extends mixin() {
-    @watch
-    active = false;
-
-    @watch
-    shownIndex = 0;
+export class CommandLine extends mixin<
+    {},
+    { active?: boolean; shownIndex?: number }
+>() {
+    state = {
+        active: false,
+        shownIndex: 0
+    };
 
     get text() {
         return this.defaultSlot.join('').trim();
@@ -18,9 +20,16 @@ export default class CommandLine extends mixin() {
     connectedCallback() {
         super.connectedCallback();
 
-        const timer = setInterval(() => {
-            if (this.text && ++this.shownIndex >= this.text.length)
-                clearInterval(timer);
+        const timer = setInterval(async () => {
+            const { text } = this;
+
+            if (!text) return;
+
+            let { shownIndex } = this.state;
+
+            await this.setState({ shownIndex: ++shownIndex });
+
+            if (shownIndex >= text.length) clearInterval(timer);
         }, 100);
     }
 
@@ -35,15 +44,16 @@ export default class CommandLine extends mixin() {
     };
 
     render() {
-        const { autoCopy, text, shownIndex, active } = this;
+        const { autoCopy, text } = this,
+            { shownIndex, active } = this.state;
 
         return (
             <div
                 className="rounded p-3 bg-dark text-white"
                 tabIndex={-1}
                 onClick={autoCopy}
-                onFocus={() => (this.active = true)}
-                onBlur={() => (this.active = false)}
+                onFocus={() => this.setState({ active: true })}
+                onBlur={() => this.setState({ active: false })}
             >
                 <span style={{ userSelect: 'none' }}>$</span>
 

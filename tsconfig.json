@@ -1,8 +1,10 @@
 {
     "compilerOptions": {
+        "esModuleInterop": true,
         "experimentalDecorators": true,
         "jsx": "react",
         "jsxFactory": "createCell",
-        "target": "es5"
+        "target": "es5",
+        "sourceMap": true
     }
 }
