@@ -1,2 +1,3 @@
 export * from './CommandLine';
 export * from './Repository';
+export * from './Issue';

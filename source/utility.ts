@@ -8,4 +8,5 @@ export interface Resource {
 
 export interface Owner extends Resource {
     login: string;
+    avatar_url: string;
 }
