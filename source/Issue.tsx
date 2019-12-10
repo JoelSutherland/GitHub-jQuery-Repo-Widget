@@ -9,9 +9,9 @@ import {
     Comment,
     getIssue,
     getRepository
-} from '../service';
+} from './service';
 
-import style from './index.less';
+import style from './common.less';
 
 @component({
     tagName: 'github-issue',

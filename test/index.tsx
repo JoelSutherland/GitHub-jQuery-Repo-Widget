@@ -4,7 +4,8 @@ import {
     CommandLine,
     GithubRepository,
     GithubIssue,
-    GithubProfile
+    GithubProfile,
+    GithubEvents
 } from '../source';
 
 render(
@@ -33,6 +34,11 @@ render(
         <section>
             <h2>Profile</h2>
             <GithubProfile user="TechQuery" />
+        </section>
+
+        <section>
+            <h2>Event Flow</h2>
+            <GithubEvents />
         </section>
     </main>
 );

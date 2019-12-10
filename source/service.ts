@@ -23,6 +23,7 @@ export enum OwnerType {
 
 export interface Owner extends Resource {
     login: string;
+    display_login?: string;
     name: string;
     description?: string;
     avatar_url: string;
@@ -102,4 +103,54 @@ export async function getIssue(
         { body: comments } = await client.get<Comment[]>(`${path}/comments`);
 
     return { ...issue, comments };
+}
+
+export interface Release extends Resource {
+    name: string;
+}
+
+export interface Action extends Resource {
+    action: string;
+    sha?: string;
+    title: string;
+    summary?: string;
+}
+
+export interface Event extends Resource {
+    type: string;
+    actor: Owner;
+    repo: Repository;
+    org?: Owner;
+    payload: {
+        action?: string;
+        description?: string;
+        ref?: string;
+        master_branch?: string;
+        issue?: Issue;
+        pull_request?: Issue;
+        release?: Release;
+        member?: Owner;
+        pages?: Action[];
+        forkee?: Repository;
+    };
+}
+
+export async function getEvents({
+    user,
+    organization,
+    repository
+}: {
+    user?: string;
+    organization?: string;
+    repository?: string;
+}) {
+    const path = repository
+        ? `repos/${user || organization}/${repository}`
+        : user
+        ? `${OwnerType.user}/${user}`
+        : `${OwnerType.organization}/${organization}`;
+
+    const { body } = await client.get<Event[]>(`${path}/events`);
+
+    return body;
 }
