@@ -1,40 +1,29 @@
 import { component, mixin, watch, attribute, createCell } from 'web-cell';
 import marked from 'marked';
 
-import { Owner, Resource, client } from '../utility';
-import { Repository } from '../Repository';
+import {
+    Issue,
+    Repository,
+    IssueState,
+    Owner,
+    Comment,
+    getIssue,
+    getRepository
+} from '../service';
+
 import style from './index.less';
-
-export interface Comment {
-    body: string;
-    created_at: string;
-    user: Owner;
-}
-
-enum IssueState {
-    open = 'success',
-    closed = 'danger',
-    merged = 'primary'
-}
-
-export interface Issue extends Comment, Resource {
-    state: keyof typeof IssueState;
-    title: string;
-    comments: Comment[];
-    repository: Repository;
-}
 
 @component({
     tagName: 'github-issue',
     renderTarget: 'children'
 })
 export class GithubIssue extends mixin<
-    { namespace: string; repository: string; code: number },
-    Issue
+    { owner: string; repository: string; code: number },
+    Issue & { repository: Repository }
 >() {
     @attribute
     @watch
-    namespace = '';
+    owner = '';
 
     @attribute
     @watch
@@ -42,10 +31,14 @@ export class GithubIssue extends mixin<
 
     @attribute
     @watch
-    code = 0;
+    issue = 0;
+
+    @attribute
+    @watch
+    pull = 0;
 
     state = {
-        state: 'open' as keyof typeof IssueState,
+        state: 'open' as Issue['state'],
         title: '',
         body: '',
         created_at: '',
@@ -58,19 +51,15 @@ export class GithubIssue extends mixin<
     async connectedCallback() {
         super.connectedCallback();
 
-        const meta = {
-            owner: this.namespace,
-            repo: this.repository,
-            issue_number: this.code
-        };
-        const { data: issue } = await client.issues.get(meta),
-            { data: comments } = await client.issues.listComments(meta),
-            { data: repository } = await client.repos.get({
-                owner: this.namespace,
-                repo: this.repository
-            });
+        const issue = await getIssue(
+                this.owner,
+                this.repository,
+                this.pull ? 'pullRequest' : 'issue',
+                this.pull || this.issue
+            ),
+            repository = await getRepository(this.owner, this.repository);
 
-        this.setState({ ...issue, comments, repository });
+        this.setState({ ...issue, repository });
     }
 
     renderComment({ user, created_at, body }: Comment, top?: boolean) {

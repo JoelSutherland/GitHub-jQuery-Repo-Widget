@@ -1,6 +1,11 @@
 import { render, createCell } from 'web-cell';
 
-import { CommandLine, GithubRepository, GithubIssue } from '../source';
+import {
+    CommandLine,
+    GithubRepository,
+    GithubIssue,
+    GithubProfile
+} from '../source';
 
 render(
     <main className="container">
@@ -13,16 +18,21 @@ render(
 
         <section>
             <h2>Repository</h2>
-            <GithubRepository />
+            <GithubRepository owner="EasyWebApp" repository="WebCell" />
         </section>
 
         <section>
             <h2>Issue</h2>
             <GithubIssue
-                namespace="jsdom"
+                owner="jsdom"
                 repository="w3c-xmlserializer"
-                code="2"
+                issue="2"
             />
+        </section>
+
+        <section>
+            <h2>Profile</h2>
+            <GithubProfile user="TechQuery" />
         </section>
     </main>
 );

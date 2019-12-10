@@ -1,23 +1,10 @@
 import { component, mixin, watch, attribute, createCell } from 'web-cell';
 
-import { Resource, Owner, client } from '../utility';
+import { Repository, Owner, getRepository } from '../service';
 
 import style from './index.less';
 import icon_repo from './repository.png';
 import icon_status from './watch-fork.png';
-
-export interface Repository extends Resource {
-    owner: Owner;
-    name: string;
-    full_name: string;
-    description: string;
-    homepage: string;
-    default_branch: string;
-    pushed_at: string;
-    has_wiki: boolean;
-    watchers?: number;
-    forks?: number;
-}
 
 @component({
     tagName: 'github-repository',
@@ -33,12 +20,12 @@ export class GithubRepository extends mixin<
 
     @attribute
     @watch
-    name = 'GitHub-Web-Widget';
+    repository = 'GitHub-Web-Widget';
 
     state = {
         owner: {} as Owner,
-        name: this.name,
-        full_name: `${this.owner}/${this.name}`,
+        name: this.repository,
+        full_name: `${this.owner}/${this.repository}`,
         description: '',
         homepage: '',
         default_branch: 'master',
@@ -52,10 +39,7 @@ export class GithubRepository extends mixin<
     async connectedCallback() {
         super.connectedCallback();
 
-        const { data } = await client.repos.get({
-            owner: this.owner,
-            repo: this.name
-        });
+        const data = await getRepository(this.owner, this.repository);
 
         this.setState(data);
     }

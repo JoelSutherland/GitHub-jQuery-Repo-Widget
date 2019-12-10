@@ -1,5 +1,3 @@
-@import (less) 'source/common.css';
-
 /** GitHub Profile Card - v2.0.1 **/
 /**
  * Github widget styles
@@ -16,97 +14,80 @@
     border-style: solid;
     border-color: #ddd;
     overflow: hidden;
+    a {
+        text-decoration: none;
+        color: #444;
+        &:hover {
+            color: #4183c4;
+        }
+    }
+    & > header {
+        background: #fff;
+        overflow: hidden;
+        padding: 15px 10px;
+        padding-bottom: 0;
+    }
 }
-.gh-profile-card a {
-    text-decoration: none;
-    color: #444;
-}
-.gh-profile-card a:hover {
-    color: #4183c4;
-}
-.gh-profile-card .name {
+.profile-name {
     display: block;
     font-size: 1.2em;
     font-weight: bold;
     color: #222;
 }
-.gh-profile-card .error {
-    font-size: 0.8em;
-    color: #444;
-    padding: 10px;
-}
-.gh-profile-card .error span {
-    display: block;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 5px;
-    margin-bottom: 5px;
-}
-.gh-profile-card .error span.remain {
-    text-align: center;
-    font-weight: bold;
-}
-.gh-profile-card .profile {
-    background: #fff;
-    overflow: hidden;
-    padding: 15px 10px;
-    padding-bottom: 0;
-}
-.gh-profile-card .stats {
-    padding: 5px;
-}
-.gh-profile-card .languages {
+
+.profile-languages {
     position: relative;
     clear: both;
     margin: 0 -10px;
     padding: 10px;
     border-top: 1px solid #dedede;
     font-size: 0.8em;
+
+    &::before {
+        position: absolute;
+        top: -0.7em;
+        background: #fff;
+        padding-right: 5px;
+        content: 'Top languages';
+        font-style: italic;
+        color: #555;
+    }
+    & > li {
+        display: inline-block;
+        color: #444;
+        font-weight: bold;
+        margin-left: 10px;
+
+        &::after {
+            content: '\2022';
+            margin-left: 10px;
+            color: #999;
+        }
+        &:last-child::after {
+            content: '';
+        }
+    }
 }
-.gh-profile-card .languages::before {
-    position: absolute;
-    top: -0.7em;
-    background: #fff;
-    padding-right: 5px;
-    content: 'Top languages';
-    font-style: italic;
-    color: #555;
-}
-.gh-profile-card .languages li {
-    display: inline-block;
-    color: #444;
-    font-weight: bold;
-    margin-left: 10px;
-}
-.gh-profile-card .languages li::after {
-    content: '\2022';
-    margin-left: 10px;
-    color: #999;
-}
-.gh-profile-card .languages li:last-child::after {
-    content: '';
-}
-.gh-profile-card .followMe {
-    margin-top: 3px;
-}
-.gh-profile-card .follow-button {
+
+.profile-follow {
     font-size: 0.8em;
     color: #333;
-    float: left;
     padding: 0 10px;
     line-height: 1.5em;
+    white-space: nowrap;
     border: 1px solid #d5d5d5;
     border-radius: 3px;
     font-weight: bold;
-    background: #eaeaea;
-    background-image: linear-gradient(#fafafa, #eaeaea);
+    background: linear-gradient(#fafafa, #eaeaea);
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
+    user-select: none;
+
+    &:hover {
+        color: inherit;
+        background: linear-gradient(#eee, #ddd);
+    }
 }
-.gh-profile-card .follow-button:hover {
-    color: inherit;
-    background: #ddd;
-    background-image: linear-gradient(#eee, #ddd);
-}
-.gh-profile-card .followMe span {
+.profile-followers {
     position: relative;
     background: #fff;
     margin-left: 8px;
@@ -115,75 +96,64 @@
     font-size: 0.8em;
     border: 1px solid;
     border-color: #bbb;
+
+    &::before {
+        content: '';
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        left: -4px;
+        top: 30%;
+        background: inherit;
+        border-left: 1px solid;
+        border-top: 1px solid;
+        border-color: inherit;
+        transform: rotate(-45deg);
+    }
 }
-.gh-profile-card .followMe span::before {
-    content: '';
-    position: absolute;
-    display: block;
-    width: 5px;
-    height: 5px;
-    left: -4px;
-    top: 30%;
-    background: inherit;
-    border-left: 1px solid;
-    border-top: 1px solid;
-    border-color: inherit;
-    transform: rotate(-45deg);
-}
-.gh-profile-card .avatar {
+.profile-avatar {
     width: 64px;
     height: 64px;
-    float: left;
     margin: 0 10px 15px 0;
     margin-left: 0;
     border-radius: 5px;
     box-shadow: 0 0 2px 0 #ddd;
 }
-.gh-profile-card .repos {
-    clear: both;
-}
-.gh-profile-card .repos .header {
-    display: block;
-    width: 100%;
+
+.repos-header {
     font-weight: bold;
-    background: #eaeaea;
-    background-image: linear-gradient(#fafafa, #eaeaea);
+    background: linear-gradient(#fafafa, #eaeaea);
     border: solid #d5d5d5;
     border-width: 1px 0;
     color: #555;
     font-size: 0.8em;
     padding: 5px 10px;
 }
-.gh-profile-card .repos a {
-    position: relative;
+.profile-repos {
     display: block;
     padding: 7px 10px;
     font-size: 0.9em;
     border-top: 1px solid #ddd;
+    &:first-of-type {
+        border: none;
+    }
 }
-.gh-profile-card .repos a:first-of-type {
-    border: none;
-}
-.gh-profile-card .repos .repo-name {
+.repos-name {
     max-width: 280px;
     font-weight: bold;
     text-overflow: ellipsis;
 }
-.gh-profile-card .repos .updated {
-    display: block;
+.repos-updated {
     font-size: 0.75em;
     font-style: italic;
     color: #777;
 }
-.gh-profile-card .repos .star {
-    position: absolute;
+.repos-star {
     font-size: 0.9em;
-    right: 0.5em;
-    top: 1.1em;
     color: #888;
-}
-.gh-profile-card .repos .star::after {
-    content: '\a0\2605';
-    font-size: 1.1em;
-    font-weight: bold;
+    &::after {
+        content: '\a0\2605';
+        font-size: 1.1em;
+        font-weight: bold;
+    }
 }
