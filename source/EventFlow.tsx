@@ -6,8 +6,9 @@ import {
     createCell,
     Fragment
 } from 'web-cell';
+import { LinkHeader } from 'koajax';
 
-import { Event, getEvents } from './service';
+import { Event, getEvents, client } from './service';
 
 import style from './common.less';
 
@@ -31,15 +32,37 @@ export class GithubEvents extends mixin<
     @watch
     repository = '';
 
+    @watch
+    end = false;
+
     state = { list: [] as Event[] };
 
-    async connectedCallback() {
-        super.connectedCallback();
+    private loading = false;
+    private nextPage = '';
 
-        const list = await getEvents(this);
+    async loadPage() {
+        this.loading = true;
 
-        this.setState({ list });
+        const { headers, body } = await (!this.nextPage
+            ? getEvents(this)
+            : client.get(this.nextPage));
+
+        const { next } = headers.Link as LinkHeader;
+
+        if (next) this.nextPage = next.URI;
+        else this.end = true;
+
+        await this.setState({ list: this.state.list.concat(body) });
+
+        this.loading = false;
     }
+
+    loadMore = (bottom: HTMLElement) =>
+        new IntersectionObserver((_, observer) => {
+            if (!this.end) {
+                if (!this.loading) this.loadPage();
+            } else observer.disconnect();
+        }).observe(bottom);
 
     renderPayload({
         ref,
@@ -122,10 +145,13 @@ export class GithubEvents extends mixin<
         const { list } = this.state;
 
         return (
-            <Fragment>
+            <div>
                 <ul className="list-unstyled">{list.map(this.renderEvent)}</ul>
-                <div></div>
-            </Fragment>
+
+                <p className="text-center" ref={this.loadMore}>
+                    {this.end ? 'No more' : 'Loading'}
+                </p>
+            </div>
         );
     }
 }

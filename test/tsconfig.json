@@ -8,9 +8,7 @@
         "jsx": "react",
         "jsxFactory": "createCell",
         "target": "es5",
-        "sourceMap": true,
-        "declaration": true,
-        "outDir": "dist/"
+        "sourceMap": true
     },
-    "include": ["source/**/*"]
+    "include": ["."]
 }

@@ -1,71 +1,23 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>GitHub Web widgets - Test &amp; Example</title>
-        <style>
-            body > section {
-                display: inline-block;
-                vertical-align: top;
-            }
-        </style>
-        <script src="../node_modules/@babel/polyfill/dist/polyfill.min.js"></script>
-        <script src="https://polyfill.io/v3/polyfill.min.js?features=default%2CDocumentFragment.prototype.append%2CElement.prototype.append"></script>
+        <title>GitHub Web Widget</title>
+        <link
+            rel="stylesheet"
+            href="../node_modules/bootstrap/dist/css/bootstrap.min.css"
+        />
+        <link
+            rel="stylesheet"
+            href="../node_modules/github-markdown-css/github-markdown.css"
+        />
+        <link
+            rel="stylesheet"
+            href="../node_modules/highlight.js/styles/atom-one-light.css"
+        />
         <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
         <script src="../node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js"></script>
-
-        <script src="../node_modules/dom-renderer/dist/dom-renderer.js"></script>
-        <script src="../node_modules/web-cell/dist/web-cell.js"></script>
-        <script src="../node_modules/marked/marked.min.js"></script>
-
-        <script src="../dist/github-element.js"></script>
-        <script>
-            self['github-element'].default.token = new URLSearchParams(
-                self.location.search
-            ).get('token');
-        </script>
-        <script src="../dist/code-parser.js"></script>
-        <script src="../dist/mark-down.js"></script>
-
-        <script src="../dist/Profile.js"></script>
-        <script src="../dist/Repository.js"></script>
-        <script src="../dist/Issue.js"></script>
-        <script src="../dist/EventFlow.js"></script>
-        <script src="../dist/command-line.js"></script>
     </head>
     <body>
-        <h1>GitHub Web widgets</h1>
-        <h2>Test &amp; Example</h2>
-        <section>
-            <h3>Command line</h3>
-            <command-line>
-                <code>npm init web-cell path/to/your_project</code>
-            </command-line>
-        </section>
-        <section>
-            <h3>Repository</h3>
-            <github-repository
-                user="TechQuery"
-                repo="GitHub-Web-Widget"
-            ></github-repository>
-        </section>
-        <section>
-            <h3>Issue / Pull request</h3>
-            <github-issue
-                org="jsdom"
-                repo="w3c-xmlserializer"
-                issue="2"
-            ></github-issue>
-        </section>
-        <section>
-            <h3>User / Organization profile</h3>
-            <github-profile org="EasyWebApp"></github-profile>
-        </section>
-        <section>
-            <h3>Event flow</h3>
-            <github-event-flow
-                org="EasyWebApp"
-                repo="WebCell"
-            ></github-event-flow>
-        </section>
+        <script src="index.tsx"></script>
     </body>
 </html>

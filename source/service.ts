@@ -135,7 +135,7 @@ export interface Event extends Resource {
     };
 }
 
-export async function getEvents({
+export function getEvents({
     user,
     organization,
     repository
@@ -150,7 +150,5 @@ export async function getEvents({
         ? `${OwnerType.user}/${user}`
         : `${OwnerType.organization}/${organization}`;
 
-    const { body } = await client.get<Event[]>(`${path}/events`);
-
-    return body;
+    return client.get<Event[]>(`${path}/events`);
 }

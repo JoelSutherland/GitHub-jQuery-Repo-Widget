@@ -19,6 +19,7 @@ package-lock.json
 # Bundle
 dist/
 .cache/
+docs/
 
 # IDE
 .vscode/

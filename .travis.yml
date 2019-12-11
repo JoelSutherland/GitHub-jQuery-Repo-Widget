@@ -1,0 +1,23 @@
+branches:
+    only:
+        - master
+
+language: node_js
+node_js:
+    - lts/*
+cache:
+    directories:
+        - node_modules
+
+install:
+    - npm install
+script:
+    - npm run build
+    - npm run pack-demo
+deploy:
+    provider: pages
+    on:
+        branch: master
+    skip_cleanup: true
+    local_dir: ${FOLDER}
+    token: ${TOKEN}
