@@ -1,7 +1,6 @@
 .editorconfig
 .eslintrc.json
 test/
-dist/
 .cache/
 docs/
 .vscode/

@@ -1,3 +1,7 @@
+interface SymbolConstructor {
+    observable: symbol;
+}
+
 declare module '*.less' {
     const content: any;
 

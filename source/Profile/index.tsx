@@ -41,15 +41,19 @@ export class GithubProfile extends mixin<
                 : getOwner('organization', organization)),
             sort = 'updated';
 
-        const list = await (user
+        let list = await (user
             ? getRepositories('user', user, { sort })
             : getRepositories('organization', organization, { sort }));
 
-        const languages = [...new Set(list.map(({ language }) => language))],
-            repositories = list
+        list = list.filter(({ fork }) => !fork);
+
+        const repositories = list
                 .filter(({ stargazers_count }) => stargazers_count)
                 .sort((A, B) => B.stargazers_count - A.stargazers_count)
-                .slice(0, 5);
+                .slice(0, 5),
+            languages = [
+                ...new Set(list.map(({ language }) => language))
+            ].filter(Boolean);
 
         this.setState({ ...owner, languages, repositories });
     }

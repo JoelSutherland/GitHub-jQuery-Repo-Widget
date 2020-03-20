@@ -13,11 +13,13 @@ install:
     - npm install
 script:
     - npm run build
+    - npm run pack-docs
     - npm run pack-demo
+    - echo '' > docs/.nojekyll
 deploy:
     provider: pages
     on:
         branch: master
     skip_cleanup: true
-    local_dir: ${FOLDER}
+    local_dir: docs/
     token: ${TOKEN}

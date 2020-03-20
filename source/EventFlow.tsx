@@ -45,7 +45,7 @@ export class GithubEvents extends mixin<
 
         const { headers, body } = await (!this.nextPage
             ? getEvents(this)
-            : client.get(this.nextPage));
+            : client.get<Event[]>(this.nextPage));
 
         const { next } = headers.Link as LinkHeader;
 
@@ -115,7 +115,7 @@ export class GithubEvents extends mixin<
                     title={actor.login}
                 >
                     <img
-                        className={`${style['logo']} ${style['big']}`}
+                        className={`${style.logo} ${style.big}`}
                         src={actor.avatar_url}
                     />
                     <div>{actor.display_login}</div>

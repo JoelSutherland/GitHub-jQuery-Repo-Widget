@@ -1,6 +1,6 @@
 import { component, mixin, watch, attribute, createCell } from 'web-cell';
-import marked from 'marked';
 
+import { parseMarkDown } from './utility';
 import {
     Issue,
     Repository,
@@ -65,22 +65,25 @@ export class GithubIssue extends mixin<
     renderComment({ user, created_at, body }: Comment, top?: boolean) {
         return (
             <details>
-                <summary className="d-flex justify-content-between">
-                    <div>
-                        <img className={style['logo']} src={user.avatar_url} />
-
-                        <a target="_blank" href={user.html_url}>
-                            <strong>{user.login}</strong>
-                        </a>
-                    </div>
-                    <div>
+                <summary className="d-flex align-items-center my-3">
+                    <img
+                        className={`px-1 ${style.logo}`}
+                        src={user.avatar_url}
+                    />
+                    <a className="px-1" target="_blank" href={user.html_url}>
+                        <strong>{user.login}</strong>
+                    </a>
+                    <span className="px-1">
                         {top ? 'opened this' : 'commented'} at
-                        <time datetime={created_at}>
-                            {new Date(created_at).toLocaleString()}
-                        </time>
-                    </div>
+                    </span>
+                    <time className="px-1" datetime={created_at}>
+                        {new Date(created_at).toLocaleString()}
+                    </time>
                 </summary>
-                <div className="markdown-body" innerHTML={marked(body)} />
+                <div
+                    className="markdown-body my-3"
+                    innerHTML={parseMarkDown(body)}
+                />
             </details>
         );
     }
@@ -98,18 +101,18 @@ export class GithubIssue extends mixin<
         } = this.state;
 
         return (
-            <div className="d-flex justify-content-around">
-                <aside className="d-flex flex-column align-items-center px-3">
+            <div className="d-flex my-4">
+                <aside className="d-flex flex-column align-items-center px-3 w-25">
                     <img
-                        className={`${style['logo']} ${style['big']}`}
+                        className={`${style.logo} ${style.big}`}
                         src={owner?.avatar_url}
                     />
                     <a target="_blank" href={owner?.html_url}>
                         <strong>{owner?.login}</strong>
                     </a>
                 </aside>
-                <div>
-                    <h1>
+                <div className="flex-grow-1">
+                    <h3>
                         <span
                             className={`badge badge-${IssueState[state]} mr-3`}
                         >
@@ -118,12 +121,12 @@ export class GithubIssue extends mixin<
                         <a target="_blank" href={html_url}>
                             {title}
                         </a>
-                    </h1>
-                    <main>
+                    </h3>
+                    <div>
                         {this.renderComment({ user, created_at, body }, true)}
 
                         {comments.map(item => this.renderComment(item))}
-                    </main>
+                    </div>
                 </div>
             </div>
         );

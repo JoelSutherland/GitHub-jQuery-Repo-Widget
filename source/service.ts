@@ -44,6 +44,7 @@ export interface Repository extends Resource {
     homepage: string;
     default_branch: string;
     pushed_at: string;
+    fork?: boolean;
     has_wiki: boolean;
     language?: string;
     watchers?: number;

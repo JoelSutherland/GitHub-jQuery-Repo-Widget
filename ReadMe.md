@@ -22,9 +22,8 @@ https://tech-query.me/GitHub-Web-Widget/demo/
 ## Usage
 
 ```shell
-npm install web-cell@next github-web-widget \
-    bootstrap github-markdown-css highlight.js \
-    @webcomponents/webcomponentsjs marked koajax
+npm install web-cell github-web-widget \
+    prismjs marked core-js koajax
 ```
 
 [`source/index.html`][12]
@@ -36,18 +35,19 @@ npm install web-cell@next github-web-widget \
         <title>Your Blog</title>
         <link
             rel="stylesheet"
-            href="../node_modules/bootstrap/dist/css/bootstrap.min.css"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
         />
         <link
             rel="stylesheet"
-            href="../node_modules/github-markdown-css/github-markdown.css"
+            href="https://cdn.jsdelivr.net/npm/github-markdown-css@3.0.1/github-markdown.min.css"
         />
         <link
             rel="stylesheet"
-            href="../node_modules/highlight.js/styles/atom-one-light.css"
+            href="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/themes/prism-okaidia.css"
         />
-        <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
-        <script src="../node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js"></script>
+        <script src="https://polyfill.io/v3/polyfill.min.js?flags=gated&features=Object.fromEntries%2CArray.prototype.flat%2CIntersectionObserver%2CIntersectionObserverEntry"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.3/custom-elements-es5-adapter.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.3/webcomponents-bundle.js"></script>
     </head>
     <body>
         <script src="index.tsx"></script>
@@ -58,6 +58,7 @@ npm install web-cell@next github-web-widget \
 [`source/index.tsx`][13]
 
 ```javascript
+import 'core-js/es/string/match-all';
 import { render, createCell } from 'web-cell';
 import {
     CommandLine,
