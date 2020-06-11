@@ -1,11 +1,11 @@
-import { component, mixin, createCell } from 'web-cell';
+import { WebCellProps, component, mixin, createCell } from 'web-cell';
 
 @component({
     tagName: 'command-line',
     renderTarget: 'children'
 })
 export class CommandLine extends mixin<
-    {},
+    WebCellProps,
     { active?: boolean; shownIndex?: number }
 >() {
     state = {
@@ -36,9 +36,7 @@ export class CommandLine extends mixin<
     autoCopy = () => {
         const target = this.querySelector('kbd')!;
 
-        self.getSelection()
-            .getRangeAt(0)
-            .selectNode(target);
+        self.getSelection().getRangeAt(0).selectNode(target);
 
         document.execCommand('copy');
     };

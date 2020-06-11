@@ -1,4 +1,11 @@
-import { component, mixin, watch, attribute, createCell } from 'web-cell';
+import {
+    WebCellProps,
+    component,
+    mixin,
+    watch,
+    attribute,
+    createCell
+} from 'web-cell';
 
 import { Repository, Owner, getRepository } from '../service';
 
@@ -6,12 +13,17 @@ import style from './index.less';
 import icon_repo from './repository.png';
 import icon_status from './watch-fork.png';
 
+export interface GithubRepositoryProps extends WebCellProps {
+    owner: string;
+    repository: string;
+}
+
 @component({
     tagName: 'github-repository',
     renderTarget: 'children'
 })
 export class GithubRepository extends mixin<
-    { owner: string; name: string },
+    GithubRepositoryProps,
     Repository
 >() {
     @attribute

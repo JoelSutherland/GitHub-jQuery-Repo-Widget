@@ -1,4 +1,5 @@
 import {
+    WebCellProps,
     component,
     mixin,
     watch,
@@ -12,12 +13,18 @@ import { Event, getEvents, client } from './service';
 
 import style from './common.less';
 
+export interface GithubEventsProps extends WebCellProps {
+    user?: string;
+    organization?: string;
+    repository?: string;
+}
+
 @component({
     tagName: 'github-events',
     renderTarget: 'children'
 })
 export class GithubEvents extends mixin<
-    { user: string; organization: string; repository: string },
+    GithubEventsProps,
     { list: Event[] }
 >() {
     @attribute

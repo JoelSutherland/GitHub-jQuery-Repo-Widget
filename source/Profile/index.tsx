@@ -1,15 +1,27 @@
-import { component, mixin, watch, attribute, createCell } from 'web-cell';
+import {
+    WebCellProps,
+    component,
+    mixin,
+    watch,
+    attribute,
+    createCell
+} from 'web-cell';
 
 import { Owner, Repository, getOwner, getRepositories } from '../service';
 
 import style from './index.less';
+
+export interface GithubProfileProps extends WebCellProps {
+    user?: string;
+    organization?: string;
+}
 
 @component({
     tagName: 'github-profile',
     renderTarget: 'children'
 })
 export class GithubProfile extends mixin<
-    {},
+    GithubProfileProps,
     Owner & { languages: string[]; repositories: Repository[] }
 >() {
     @attribute

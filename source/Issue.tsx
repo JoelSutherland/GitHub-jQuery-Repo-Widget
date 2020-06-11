@@ -1,4 +1,11 @@
-import { component, mixin, watch, attribute, createCell } from 'web-cell';
+import {
+    WebCellProps,
+    component,
+    mixin,
+    watch,
+    attribute,
+    createCell
+} from 'web-cell';
 
 import { parseMarkDown } from './utility';
 import {
@@ -13,12 +20,18 @@ import {
 
 import style from './common.less';
 
+export interface GithubIssueProps extends WebCellProps {
+    owner: string;
+    repository: string;
+    issue: number;
+}
+
 @component({
     tagName: 'github-issue',
     renderTarget: 'children'
 })
 export class GithubIssue extends mixin<
-    { owner: string; repository: string; code: number },
+    GithubIssueProps,
     Issue & { repository: Repository }
 >() {
     @attribute

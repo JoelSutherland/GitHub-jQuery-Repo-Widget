@@ -28,7 +28,7 @@ render(
             <GithubIssue
                 owner="jsdom"
                 repository="w3c-xmlserializer"
-                issue="2"
+                issue={2}
             />
         </section>
 

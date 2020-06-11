@@ -4,7 +4,7 @@ import { highlight, languages } from 'prismjs';
 const renderer = new marked.Renderer();
 
 renderer.code = (code, language) => {
-    language = language.toLowerCase();
+    language = language?.toLowerCase() || 'none';
 
     const Class = `class="language-${language}"`,
         grammer = languages[language];

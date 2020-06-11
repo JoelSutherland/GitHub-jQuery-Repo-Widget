@@ -3,7 +3,7 @@
 [Web Components][1] library for GitHub based on [WebCell][2]
 
 [![NPM Dependency](https://david-dm.org/TechQuery/GitHub-Web-Widget.svg)][3]
-[![](https://data.jsdelivr.com/v1/package/npm/github-web-widget/badge?style=rounded)][4]
+[![Build Status](https://travis-ci.com/TechQuery/GitHub-Web-Widget.svg?branch=master)][4]
 
 [![NPM](https://nodei.co/npm/github-web-widget.png?downloads=true&downloadRank=true&stars=true)][5]
 
@@ -107,7 +107,7 @@ render(
 [1]: https://www.webcomponents.org/
 [2]: https://web-cell.dev/
 [3]: https://david-dm.org/TechQuery/GitHub-Web-Widget
-[4]: https://www.jsdelivr.com/package/npm/github-web-widget
+[4]: https://travis-ci.com/TechQuery/GitHub-Web-Widget
 [5]: https://nodei.co/npm/github-web-widget/
 [6]: https://tech-query.me/GitHub-Web-Widget/classes/_commandline_.commandline.html
 [7]: https://tech-query.me/GitHub-Web-Widget/classes/_profile_index_.githubprofile.html
