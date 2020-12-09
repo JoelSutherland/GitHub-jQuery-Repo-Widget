@@ -15,6 +15,7 @@ Desktop.ini
 # Node.JS & NPM
 node_modules/
 package-lock.json
+yarn.lock
 
 # Bundle
 dist/
@@ -24,6 +25,3 @@ docs/
 # IDE
 .vscode/
 .idea/
-
-# Online platform
-.github/

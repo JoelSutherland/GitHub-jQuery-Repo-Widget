@@ -1,4 +1,4 @@
-import { WebCellProps, component, mixin, createCell } from 'web-cell';
+import { WebCellProps, component, mixin, createCell, Fragment } from 'web-cell';
 
 @component({
     tagName: 'command-line',
@@ -18,9 +18,26 @@ export class CommandLine extends mixin<
     }
 
     connectedCallback() {
-        super.connectedCallback();
+        this.classList.add(
+            'd-block',
+            'rounded',
+            'p-3',
+            'bg-dark',
+            'text-white'
+        );
+        this.tabIndex = -1;
+        this.addEventListener('click', this.autoCopy);
+        this.addEventListener('focus', () => this.setState({ active: true }));
+        this.addEventListener('blur', () => this.setState({ active: false }));
 
-        const timer = setInterval(async () => {
+        super.connectedCallback();
+        this.boot();
+    }
+
+    private timer: number;
+
+    protected boot() {
+        this.timer = self.setInterval(async () => {
             const { text } = this;
 
             if (!text) return;
@@ -29,8 +46,12 @@ export class CommandLine extends mixin<
 
             await this.setState({ shownIndex: ++shownIndex });
 
-            if (shownIndex >= text.length) clearInterval(timer);
+            if (shownIndex >= text.length) self.clearInterval(this.timer);
         }, 100);
+    }
+
+    disconnectedCallback() {
+        self.clearInterval(this.timer);
     }
 
     autoCopy = () => {
@@ -42,17 +63,11 @@ export class CommandLine extends mixin<
     };
 
     render() {
-        const { autoCopy, text } = this,
+        const { text } = this,
             { shownIndex, active } = this.state;
 
         return (
-            <div
-                className="rounded p-3 bg-dark text-white"
-                tabIndex={-1}
-                onClick={autoCopy}
-                onFocus={() => this.setState({ active: true })}
-                onBlur={() => this.setState({ active: false })}
-            >
+            <Fragment>
                 <span style={{ userSelect: 'none' }}>$</span>
 
                 <kbd className="bg-dark">{text.slice(0, shownIndex)}</kbd>
@@ -66,7 +81,7 @@ export class CommandLine extends mixin<
                 >
                     Copied !
                 </small>
-            </div>
+            </Fragment>
         );
     }
 }

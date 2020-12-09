@@ -1,0 +1,10 @@
+{
+    "env": {
+        "build": {
+            "plugins": [
+                "@babel/plugin-transform-typescript",
+                "@babel/plugin-proposal-optional-chaining"
+            ]
+        }
+    }
+}

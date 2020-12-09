@@ -22,8 +22,7 @@ https://tech-query.me/GitHub-Web-Widget/demo/
 ## Usage
 
 ```shell
-npm install web-cell github-web-widget \
-    prismjs marked core-js koajax
+npm install github-web-widget
 ```
 
 [`source/index.html`][12]
@@ -35,19 +34,23 @@ npm install web-cell github-web-widget \
         <title>Your Blog</title>
         <link
             rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
         />
         <link
             rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/github-markdown-css@3.0.1/github-markdown.min.css"
+            href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css"
         />
         <link
             rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/themes/prism-okaidia.css"
+            href="https://cdn.jsdelivr.net/npm/prismjs@1.22.0/themes/prism-okaidia.css"
         />
-        <script src="https://polyfill.io/v3/polyfill.min.js?flags=gated&features=Object.fromEntries%2CArray.prototype.flat%2CIntersectionObserver%2CIntersectionObserverEntry"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.3/custom-elements-es5-adapter.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.3/webcomponents-bundle.js"></script>
+        <script
+            crossorigin
+            src="https://polyfill.app/api/polyfill?features=es.string.match-all,es.array.flat,es.object.from-entries,intersection-observer"
+        ></script>
+        <script src="https://cdn.jsdelivr.net/npm/details-element-polyfill@2.4.0/dist/details-element-polyfill.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.5.0/custom-elements-es5-adapter.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.5.0/webcomponents-bundle.js"></script>
     </head>
     <body>
         <script src="index.tsx"></script>
@@ -57,8 +60,7 @@ npm install web-cell github-web-widget \
 
 [`source/index.tsx`][13]
 
-```javascript
-import 'core-js/es/string/match-all';
+```JavaScript
 import { render, createCell } from 'web-cell';
 import {
     CommandLine,

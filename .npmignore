@@ -4,4 +4,4 @@ test/
 .cache/
 docs/
 .vscode/
-.travis.yml
+.github/

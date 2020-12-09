@@ -1,15 +1,8 @@
 {
+    "extends": "../tsconfig.json",
     "compilerOptions": {
-        "module": "ES6",
-        "moduleResolution": "node",
-        "esModuleInterop": true,
-        "downlevelIteration": true,
-        "experimentalDecorators": true,
         "jsx": "react",
-        "jsxFactory": "createCell",
-        "lib": ["ES2019", "DOM"],
-        "target": "es5",
-        "sourceMap": true
+        "jsxFactory": "createCell"
     },
     "include": ["."]
 }

@@ -1,4 +1,3 @@
-import 'core-js/es/string/match-all';
 import { render, createCell } from 'web-cell';
 
 import {
