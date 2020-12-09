@@ -7,7 +7,7 @@ import {
     createCell
 } from 'web-cell';
 
-import { Repository, Owner, getRepository } from '../service';
+import { Repository, getRepository } from '../service';
 
 import style from './index.less';
 import icon_repo from './repository.png';
@@ -24,7 +24,7 @@ export interface GithubRepositoryProps extends WebCellProps {
 })
 export class GithubRepository extends mixin<
     GithubRepositoryProps,
-    Repository
+    Partial<Repository>
 >() {
     @attribute
     @watch
@@ -35,7 +35,7 @@ export class GithubRepository extends mixin<
     repository = 'GitHub-Web-Widget';
 
     state = {
-        owner: {} as Owner,
+        owner: {} as Repository['owner'],
         name: this.repository,
         full_name: `${this.owner}/${this.repository}`,
         description: '',

@@ -22,7 +22,7 @@ export interface GithubProfileProps extends WebCellProps {
 })
 export class GithubProfile extends mixin<
     GithubProfileProps,
-    Owner & { languages: string[]; repositories: Repository[] }
+    Partial<Owner & { languages: string[]; repositories: Repository[] }>
 >() {
     @attribute
     @watch

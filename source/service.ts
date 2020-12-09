@@ -1,4 +1,5 @@
 import { HTTPClient } from 'koajax';
+import { components } from '@octokit/openapi-types';
 
 export const client = new HTTPClient({
     baseURI: 'https://api.github.com/',
@@ -10,25 +11,14 @@ interface QueryOption {
     [key: string]: string;
 }
 
-export interface Resource {
-    html_url?: string;
-    created_at?: string;
-    updated_at?: string;
-}
-
 export enum OwnerType {
     user = 'users',
     organization = 'orgs'
 }
 
-export interface Owner extends Resource {
-    login: string;
-    display_login?: string;
-    name: string;
-    description?: string;
-    avatar_url: string;
-    followers: number;
-}
+export type Owner =
+    | components['schemas']['public-user']
+    | components['schemas']['organization-full'];
 
 export async function getOwner(type: keyof typeof OwnerType, name: string) {
     const { body } = await client.get<Owner>(`${OwnerType[type]}/${name}`);
@@ -36,21 +26,7 @@ export async function getOwner(type: keyof typeof OwnerType, name: string) {
     return body;
 }
 
-export interface Repository extends Resource {
-    owner: Owner;
-    name: string;
-    full_name: string;
-    description: string;
-    homepage: string;
-    default_branch: string;
-    pushed_at: string;
-    fork?: boolean;
-    has_wiki: boolean;
-    language?: string;
-    watchers?: number;
-    forks?: number;
-    stargazers_count?: number;
-}
+export type Repository = components['schemas']['repository'];
 
 export async function getRepository(owner: string, name: string) {
     const { body } = await client.get<Repository>(`repos/${owner}/${name}`);
@@ -66,7 +42,6 @@ export async function getRepositories(
     const { body } = await client.get<Repository[]>(
         `${OwnerType[type]}/${owner}/repos?${new URLSearchParams(options)}`
     );
-
     return body;
 }
 
@@ -75,10 +50,7 @@ export enum IssueType {
     pullRequest = 'pulls'
 }
 
-export interface Comment extends Resource {
-    body: string;
-    user: Owner;
-}
+export type Comment = components['schemas']['issue-comment'];
 
 export enum IssueState {
     open = 'success',
@@ -86,11 +58,9 @@ export enum IssueState {
     merged = 'primary'
 }
 
-export interface Issue extends Comment {
-    state: keyof typeof IssueState;
-    title: string;
-    comments: Comment[];
-}
+export type Issue = components['schemas']['issue'] & {
+    comment_list: Comment[];
+};
 
 export async function getIssue(
     owner: string,
@@ -101,40 +71,25 @@ export async function getIssue(
     const path = `repos/${owner}/${repository}/${IssueType[type]}/${code}`;
 
     const { body: issue } = await client.get<Issue>(path),
-        { body: comments } = await client.get<Comment[]>(`${path}/comments`);
-
-    return { ...issue, comments };
+        { body: comment_list } = await client.get<Comment[]>(
+            `${path}/comments`
+        );
+    return { ...issue, comment_list };
 }
 
-export interface Release extends Resource {
-    name: string;
-}
+export type Release = components['schemas']['release'];
 
-export interface Action extends Resource {
-    action: string;
-    sha?: string;
-    title: string;
-    summary?: string;
-}
-
-export interface Event extends Resource {
-    type: string;
-    actor: Owner;
-    repo: Repository;
-    org?: Owner;
+export type Event = components['schemas']['event'] & {
     payload: {
-        action?: string;
         description?: string;
         ref?: string;
         master_branch?: string;
-        issue?: Issue;
         pull_request?: Issue;
         release?: Release;
         member?: Owner;
-        pages?: Action[];
         forkee?: Repository;
     };
-}
+};
 
 export function getEvents({
     user,

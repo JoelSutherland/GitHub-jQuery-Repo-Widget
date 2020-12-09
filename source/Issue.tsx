@@ -12,7 +12,6 @@ import {
     Issue,
     Repository,
     IssueState,
-    Owner,
     Comment,
     getIssue,
     getRepository
@@ -32,7 +31,7 @@ export interface GithubIssueProps extends WebCellProps {
 })
 export class GithubIssue extends mixin<
     GithubIssueProps,
-    Issue & { repository: Repository }
+    Partial<Issue & { repository: Repository }>
 >() {
     @attribute
     @watch
@@ -55,9 +54,9 @@ export class GithubIssue extends mixin<
         title: '',
         body: '',
         created_at: '',
-        user: {} as Owner,
+        user: {} as Issue['user'],
         html_url: '',
-        comments: [] as Comment[],
+        comment_list: [] as Comment[],
         repository: {} as Repository
     };
 
@@ -75,7 +74,7 @@ export class GithubIssue extends mixin<
         this.setState({ ...issue, repository });
     }
 
-    renderComment({ user, created_at, body }: Comment, top?: boolean) {
+    renderComment({ user, created_at, body }: Partial<Comment>, top?: boolean) {
         return (
             <details>
                 <summary className="d-flex align-items-center my-3">
@@ -109,7 +108,7 @@ export class GithubIssue extends mixin<
             title,
             created_at,
             body,
-            comments,
+            comment_list,
             repository: { owner }
         } = this.state;
 
@@ -138,7 +137,7 @@ export class GithubIssue extends mixin<
                     <div>
                         {this.renderComment({ user, created_at, body }, true)}
 
-                        {comments.map(item => this.renderComment(item))}
+                        {comment_list.map(item => this.renderComment(item))}
                     </div>
                 </div>
             </div>
