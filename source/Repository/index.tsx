@@ -139,7 +139,7 @@ export class GithubRepository extends mixin<
                             {default_branch}
                         </strong>
                         branch on
-                        <time datetime={pushed_at} className="p-1">
+                        <time dateTime={pushed_at} className="p-1">
                             {new Date(pushed_at).toLocaleString()}
                         </time>
                     </div>

@@ -3,7 +3,7 @@
 [Web Components][1] library for GitHub based on [WebCell][2]
 
 [![NPM Dependency](https://david-dm.org/TechQuery/GitHub-Web-Widget.svg)][3]
-[![Build Status](https://travis-ci.com/TechQuery/GitHub-Web-Widget.svg?branch=master)][4]
+[![CI & CD](https://github.com/EasyWebApp/GitHub-Web-Widget/workflows/CI%20&%20CD/badge.svg)][4]
 
 [![NPM](https://nodei.co/npm/github-web-widget.png?downloads=true&downloadRank=true&stars=true)][5]
 
@@ -42,7 +42,7 @@ npm install github-web-widget
         />
         <link
             rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/prismjs@1.22.0/themes/prism-okaidia.css"
+            href="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/themes/prism-okaidia.css"
         />
         <script
             crossorigin
@@ -109,13 +109,13 @@ render(
 [1]: https://www.webcomponents.org/
 [2]: https://web-cell.dev/
 [3]: https://david-dm.org/TechQuery/GitHub-Web-Widget
-[4]: https://travis-ci.com/TechQuery/GitHub-Web-Widget
+[4]: https://github.com/EasyWebApp/WebCell/actions
 [5]: https://nodei.co/npm/github-web-widget/
-[6]: https://tech-query.me/GitHub-Web-Widget/classes/_commandline_.commandline.html
-[7]: https://tech-query.me/GitHub-Web-Widget/classes/_profile_index_.githubprofile.html
-[8]: https://tech-query.me/GitHub-Web-Widget/classes/_repository_index_.githubrepository.html
+[6]: https://tech-query.me/GitHub-Web-Widget/classes/commandline.commandline-1.html
+[7]: https://tech-query.me/GitHub-Web-Widget/interfaces/profile.githubprofileprops.html
+[8]: https://tech-query.me/GitHub-Web-Widget/interfaces/repository.githubrepositoryprops.html
 [9]: http://www.newmediacampaigns.com/blog/a-beautiful-jquery-github-widget
-[10]: https://tech-query.me/GitHub-Web-Widget/classes/_issue_.githubissue.html
-[11]: https://tech-query.me/GitHub-Web-Widget/classes/_eventflow_.githubevents.html
+[10]: https://tech-query.me/GitHub-Web-Widget/interfaces/issue.githubissueprops.html
+[11]: https://tech-query.me/GitHub-Web-Widget/interfaces/eventflow.githubeventsprops.html
 [12]: https://github.com/TechQuery/GitHub-Web-Widget/blob/master/test/index.html
 [13]: https://github.com/TechQuery/GitHub-Web-Widget/blob/master/test/index.tsx

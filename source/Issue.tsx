@@ -23,6 +23,7 @@ export interface GithubIssueProps extends WebCellProps {
     owner: string;
     repository: string;
     issue: number;
+    pull: number;
 }
 
 @component({
@@ -88,7 +89,7 @@ export class GithubIssue extends mixin<
                     <span className="px-1">
                         {top ? 'opened this' : 'commented'} at
                     </span>
-                    <time className="px-1" datetime={created_at}>
+                    <time className="px-1" dateTime={created_at}>
                         {new Date(created_at).toLocaleString()}
                     </time>
                 </summary>

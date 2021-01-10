@@ -136,7 +136,7 @@ export class GithubEvents extends mixin<
                             {repo.name}
                         </a>
                     </h4>
-                    <time className="pr-1" datetime={created_at}>
+                    <time className="pr-1" dateTime={created_at}>
                         {new Date(created_at).toLocaleString()}
                     </time>
                     <strong className="pr-1">

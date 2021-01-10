@@ -1,6 +1,6 @@
 {
     "name": "github-web-widget",
-    "version": "3.0.0-beta.7",
+    "version": "3.0.0-beta.9",
     "description": "Web Components library for GitHub based on WebCell",
     "keywords": [
         "github",
@@ -24,7 +24,7 @@
     "main": "dist/index.umd.js",
     "module": "dist/index.js",
     "scripts": {
-        "start": "cd test/  &&  parcel index.html -d ../docs/demo/",
+        "start": "cd test/  &&  parcel index.html -d ../docs/demo/ --open",
         "pack-demo": "cd test/  &&  parcel build index.html --public-url . -d ../docs/demo/",
         "test": "lint-staged",
         "pack-dist": "cross-env NODE_ENV=build  microbundle --external web-cell,classnames,marked,koajax,prismjs,.+\\.png --globals web-cell=WebCell,classnames=classNames,koajax=KoAJAX,prismjs=Prism --name GithubWebWidget --css-modules true",
@@ -41,42 +41,43 @@
     },
     "dependencies": {
         "koajax": "^0.6.4",
-        "marked": "^1.2.5",
-        "prismjs": "^1.22.0",
-        "web-cell": "^2.2.0"
+        "marked": "^1.2.7",
+        "prismjs": "^1.23.0",
+        "web-cell": "^2.3.0-rc.1"
     },
     "peerDependencies": {
         "bootstrap": "^4.5.3",
         "github-markdown-css": "^4.0.0"
     },
     "devDependencies": {
-        "@babel/core": "^7.12.9",
+        "@babel/core": "^7.12.10",
         "@babel/plugin-proposal-optional-chaining": "^7.12.7",
         "@babel/plugin-transform-typescript": "^7.12.1",
-        "@octokit/openapi-types": "^2.0.0",
+        "@octokit/openapi-types": "^2.2.0",
         "@types/core-js": "^2.5.4",
         "@types/marked": "^1.2.1",
         "@types/prismjs": "^1.16.2",
-        "@typescript-eslint/parser": "^4.9.1",
+        "@typescript-eslint/parser": "^4.12.0",
         "autoprefixer": "^9.8.6",
-        "core-js": "^3.8.1",
+        "core-js": "^3.8.2",
         "cross-env": "^7.0.3",
-        "eslint": "^7.15.0",
-        "eslint-config-prettier": "^7.0.0",
-        "eslint-plugin-prettier": "^3.2.0",
-        "husky": "^4.3.5",
+        "element-internals-polyfill": "^0.1.1",
+        "eslint": "^7.17.0",
+        "eslint-config-prettier": "^7.1.0",
+        "eslint-plugin-prettier": "^3.3.1",
+        "husky": "^4.3.7",
         "iterable-observer": "^1.0.0-beta.5",
-        "less": "^3.12.2",
+        "less": "^4.1.0",
         "lint-staged": "^10.5.3",
         "microbundle": "^0.12.4",
         "open-cli": "^6.0.1",
         "parcel-bundler": "^1.12.4",
         "postcss-modules": "^3.2.2",
         "prettier": "^2.2.1",
-        "snabbdom": "^1.0.1",
-        "typedoc": "^0.19.2",
-        "typescript": "^4.1.2",
-        "web-utility": "^2.0.0"
+        "snabbdom": "^2.1.0",
+        "typedoc": "^0.20.14",
+        "typescript": "^4.1.3",
+        "web-utility": "^2.4.3"
     },
     "prettier": {
         "tabWidth": 4,

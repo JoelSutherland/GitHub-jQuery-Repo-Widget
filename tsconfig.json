@@ -16,9 +16,8 @@
     "include": ["source/**/*"],
     "typedocOptions": {
         "name": "GitHub Web Widget",
-        "mode": "file",
         "excludeExternals": true,
-        "excludeNotExported": true,
+        "excludePrivate": true,
         "readme": "./ReadMe.md",
         "out": "docs/"
     }

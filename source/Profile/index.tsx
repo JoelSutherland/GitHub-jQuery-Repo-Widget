@@ -146,7 +146,7 @@ export class GithubProfile extends mixin<
                                 </span>
                                 <time
                                     className={style['repos-updated']}
-                                    datetime={updated_at}
+                                    dateTime={updated_at}
                                 >
                                     Updated:
                                     {new Date(updated_at).toLocaleString()}
