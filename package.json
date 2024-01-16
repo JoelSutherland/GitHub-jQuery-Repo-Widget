@@ -24,6 +24,7 @@
     "main": "dist/index.umd.js",
     "module": "dist/index.js",
     "scripts": {
+        "prepare": "husky install",
         "start": "cd test/  &&  parcel index.html -d ../docs/demo/ --open",
         "pack-demo": "cd test/  &&  parcel build index.html --public-url . -d ../docs/demo/",
         "test": "lint-staged",
@@ -33,51 +34,35 @@
         "help": "npm run pack-docs  &&  open-cli docs/index.html",
         "prepublishOnly": "npm test  &&  npm run build"
     },
-    "husky": {
-        "hooks": {
-            "pre-commit": "npm test",
-            "pre-push": "npm run build"
-        }
-    },
     "dependencies": {
-        "koajax": "^0.6.4",
-        "marked": "^1.2.7",
-        "prismjs": "^1.23.0",
-        "web-cell": "^2.3.0-rc.1"
+        "dom-renderer": "^2.0.6",
+        "koajax": "^0.9.6",
+        "marked": "^11.1.1",
+        "mobx": "^6.12.0",
+        "prismjs": "^1.29.0",
+        "web-cell": "^3.0.0-rc.7"
     },
     "peerDependencies": {
-        "bootstrap": "^4.5.3",
-        "github-markdown-css": "^4.0.0"
+        "bootstrap": "^5",
+        "github-markdown-css": "^5"
     },
     "devDependencies": {
-        "@babel/core": "^7.12.10",
-        "@babel/plugin-proposal-optional-chaining": "^7.12.7",
-        "@babel/plugin-transform-typescript": "^7.12.1",
-        "@octokit/openapi-types": "^2.2.0",
-        "@types/core-js": "^2.5.4",
-        "@types/marked": "^1.2.1",
-        "@types/prismjs": "^1.16.2",
-        "@typescript-eslint/parser": "^4.12.0",
-        "autoprefixer": "^9.8.6",
-        "core-js": "^3.8.2",
+        "@octokit/openapi-types": "^19.1.0",
+        "@types/prismjs": "^1.26.3",
+        "@typescript-eslint/parser": "^6.19.0",
         "cross-env": "^7.0.3",
-        "element-internals-polyfill": "^0.1.1",
-        "eslint": "^7.17.0",
-        "eslint-config-prettier": "^7.1.0",
-        "eslint-plugin-prettier": "^3.3.1",
-        "husky": "^4.3.7",
-        "iterable-observer": "^1.0.0-beta.5",
-        "less": "^4.1.0",
-        "lint-staged": "^10.5.3",
-        "microbundle": "^0.12.4",
-        "open-cli": "^6.0.1",
-        "parcel-bundler": "^1.12.4",
-        "postcss-modules": "^3.2.2",
-        "prettier": "^2.2.1",
-        "snabbdom": "^2.1.0",
-        "typedoc": "^0.20.14",
-        "typescript": "^4.1.3",
-        "web-utility": "^2.4.3"
+        "element-internals-polyfill": "^1.3.10",
+        "eslint": "^8.56.0",
+        "eslint-config-prettier": "^9.1.0",
+        "husky": "^8.0.3",
+        "iterable-observer": "^1.0.1",
+        "lint-staged": "^15.2.0",
+        "open-cli": "^8.0.0",
+        "parcel": "^2.11.0",
+        "prettier": "^3.2.2",
+        "typedoc": "^0.25.7",
+        "typescript": "~5.3.3",
+        "web-utility": "^4.1.3"
     },
     "prettier": {
         "tabWidth": 4,
@@ -87,9 +72,6 @@
     },
     "lint-staged": {
         "*.{html,md,less,json,yml,ts,tsx}": "prettier --write",
-        "*.{ts,tsx}": [
-            "prettier --write",
-            "eslint --fix"
-        ]
+        "*.{ts,tsx}": "eslint --fix"
     }
 }

@@ -1,4 +1,4 @@
-import marked from 'marked';
+import { marked } from 'marked';
 import { highlight, languages } from 'prismjs';
 
 const renderer = new marked.Renderer();
@@ -14,6 +14,5 @@ renderer.code = (code, language) => {
     }</code></pre>`;
 };
 
-export function parseMarkDown(raw: string) {
-    return marked(raw, { renderer });
-}
+export const parseMarkDown = (raw: string) =>
+    marked(raw, { renderer }) as string;

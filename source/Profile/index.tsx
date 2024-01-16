@@ -1,14 +1,7 @@
-import {
-    WebCellProps,
-    component,
-    mixin,
-    watch,
-    attribute,
-    createCell
-} from 'web-cell';
+import { observable } from 'mobx';
+import { WebCellProps, attribute, component, observer } from 'web-cell';
 
 import { Owner, Repository, getOwner, getRepositories } from '../service';
-
 import style from './index.less';
 
 export interface GithubProfileProps extends WebCellProps {
@@ -17,22 +10,22 @@ export interface GithubProfileProps extends WebCellProps {
 }
 
 @component({
-    tagName: 'github-profile',
-    renderTarget: 'children'
+    tagName: 'github-profile'
 })
-export class GithubProfile extends mixin<
-    GithubProfileProps,
-    Partial<Owner & { languages: string[]; repositories: Repository[] }>
->() {
-    @attribute
-    @watch
-    user = '';
+@observer
+export class GithubProfile extends HTMLElement {
+    declare props: GithubProfileProps;
 
     @attribute
-    @watch
-    organization = '';
+    @observable
+    accessor user = '';
 
-    state = {
+    @attribute
+    @observable
+    accessor organization = '';
+
+    @observable
+    currentOwner = {
         login: '',
         name: '',
         avatar_url: '',
@@ -41,11 +34,9 @@ export class GithubProfile extends mixin<
         updated_at: '',
         languages: [],
         repositories: [] as Repository[]
-    };
+    } as Partial<Owner & { languages: string[]; repositories: Repository[] }>;
 
     async connectedCallback() {
-        super.connectedCallback();
-
         const { user, organization } = this;
 
         const owner = await (user
@@ -67,8 +58,33 @@ export class GithubProfile extends mixin<
                 ...new Set(list.map(({ language }) => language))
             ].filter(Boolean);
 
-        this.setState({ ...owner, languages, repositories });
+        this.currentOwner = { ...owner, languages, repositories };
     }
+
+    renderRepository = ({
+        html_url,
+        description,
+        name,
+        updated_at,
+        stargazers_count
+    }) => (
+        <a
+            key={html_url}
+            className={style['profile-repos']}
+            target="_blank"
+            href={html_url}
+            title={description}
+        >
+            <span className="d-flex justify-content-between">
+                <span className={style['repos-name']}>{name}</span>
+                <span className={style['repos-star']}>{stargazers_count}</span>
+            </span>
+            <time className={style['repos-updated']} dateTime={updated_at}>
+                Updated:
+                {new Date(updated_at).toLocaleString()}
+            </time>
+        </a>
+    );
 
     render() {
         const {
@@ -79,7 +95,7 @@ export class GithubProfile extends mixin<
             followers,
             languages,
             repositories
-        } = this.state;
+        } = this.currentOwner;
 
         return (
             <div className={style['gh-profile-card']}>
@@ -113,7 +129,7 @@ export class GithubProfile extends mixin<
                     </header>
                     <ul className={style['profile-languages']}>
                         {languages.map(name => (
-                            <li>{name}</li>
+                            <li key={name}>{name}</li>
                         ))}
                     </ul>
                 </header>
@@ -122,38 +138,7 @@ export class GithubProfile extends mixin<
                         Most popular original repositories
                     </header>
 
-                    {repositories.map(
-                        ({
-                            html_url,
-                            description,
-                            name,
-                            updated_at,
-                            stargazers_count
-                        }) => (
-                            <a
-                                className={style['profile-repos']}
-                                target="_blank"
-                                href={html_url}
-                                title={description}
-                            >
-                                <span className="d-flex justify-content-between">
-                                    <span className={style['repos-name']}>
-                                        {name}
-                                    </span>
-                                    <span className={style['repos-star']}>
-                                        {stargazers_count}
-                                    </span>
-                                </span>
-                                <time
-                                    className={style['repos-updated']}
-                                    dateTime={updated_at}
-                                >
-                                    Updated:
-                                    {new Date(updated_at).toLocaleString()}
-                                </time>
-                            </a>
-                        )
-                    )}
+                    {repositories.map(this.renderRepository)}
                 </section>
             </div>
         );

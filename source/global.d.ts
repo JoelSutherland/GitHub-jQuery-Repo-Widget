@@ -1,5 +1,5 @@
 interface SymbolConstructor {
-    observable: symbol;
+    readonly observable: unique symbol;
 }
 
 declare module '*.less' {

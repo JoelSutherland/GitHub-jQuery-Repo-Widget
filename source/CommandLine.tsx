@@ -1,20 +1,23 @@
-import { WebCellProps, component, mixin, createCell, Fragment } from 'web-cell';
+import { observable } from 'mobx';
+import { WebCellProps, attribute, component, observer } from 'web-cell';
 
 @component({
-    tagName: 'command-line',
-    renderTarget: 'children'
+    tagName: 'command-line'
 })
-export class CommandLine extends mixin<
-    WebCellProps,
-    { active?: boolean; shownIndex?: number }
->() {
-    state = {
-        active: false,
-        shownIndex: 0
-    };
+@observer
+export class CommandLine extends HTMLElement {
+    declare props: WebCellProps;
+
+    @attribute
+    @observable
+    accessor active = false;
+
+    @attribute
+    @observable
+    accessor shownIndex = 0;
 
     get text() {
-        return this.defaultSlot.join('').trim();
+        return this.children.join('').trim();
     }
 
     connectedCallback() {
@@ -27,10 +30,9 @@ export class CommandLine extends mixin<
         );
         this.tabIndex = -1;
         this.addEventListener('click', this.autoCopy);
-        this.addEventListener('focus', () => this.setState({ active: true }));
-        this.addEventListener('blur', () => this.setState({ active: false }));
+        this.addEventListener('focus', () => (this.active = true));
+        this.addEventListener('blur', () => (this.active = false));
 
-        super.connectedCallback();
         this.boot();
     }
 
@@ -42,9 +44,9 @@ export class CommandLine extends mixin<
 
             if (!text) return;
 
-            let { shownIndex } = this.state;
+            let { shownIndex } = this;
 
-            await this.setState({ shownIndex: ++shownIndex });
+            this.shownIndex++;
 
             if (shownIndex >= text.length) self.clearInterval(this.timer);
         }, 100);
@@ -64,10 +66,10 @@ export class CommandLine extends mixin<
 
     render() {
         const { text } = this,
-            { shownIndex, active } = this.state;
+            { shownIndex, active } = this;
 
         return (
-            <Fragment>
+            <>
                 <span style={{ userSelect: 'none' }}>$</span>
 
                 <kbd className="bg-dark">{text.slice(0, shownIndex)}</kbd>
@@ -81,7 +83,7 @@ export class CommandLine extends mixin<
                 >
                     Copied !
                 </small>
-            </Fragment>
+            </>
         );
     }
 }

@@ -1,14 +1,7 @@
-import {
-    WebCellProps,
-    component,
-    mixin,
-    watch,
-    attribute,
-    createCell
-} from 'web-cell';
+import { observable } from 'mobx';
+import { WebCellProps, attribute, component, observer } from 'web-cell';
 
 import { Repository, getRepository } from '../service';
-
 import style from './index.less';
 import icon_repo from './repository.png';
 import icon_status from './watch-fork.png';
@@ -19,22 +12,22 @@ export interface GithubRepositoryProps extends WebCellProps {
 }
 
 @component({
-    tagName: 'github-repository',
-    renderTarget: 'children'
+    tagName: 'github-repository'
 })
-export class GithubRepository extends mixin<
-    GithubRepositoryProps,
-    Partial<Repository>
->() {
-    @attribute
-    @watch
-    owner = 'TechQuery';
+@observer
+export class GithubRepository extends HTMLElement {
+    declare props: GithubRepositoryProps;
 
     @attribute
-    @watch
-    repository = 'GitHub-Web-Widget';
+    @observable
+    accessor owner = 'TechQuery';
 
-    state = {
+    @attribute
+    @observable
+    accessor repository = 'GitHub-Web-Widget';
+
+    @observable
+    currentRepository = {
         owner: {} as Repository['owner'],
         name: this.repository,
         full_name: `${this.owner}/${this.repository}`,
@@ -46,14 +39,13 @@ export class GithubRepository extends mixin<
         watchers: 0,
         forks: 0,
         html_url: ''
-    };
+    } as Partial<Repository>;
 
     async connectedCallback() {
-        super.connectedCallback();
-
-        const data = await getRepository(this.owner, this.repository);
-
-        this.setState(data);
+        this.currentRepository = await getRepository(
+            this.owner,
+            this.repository
+        );
     }
 
     render() {
@@ -69,7 +61,7 @@ export class GithubRepository extends mixin<
             homepage,
             default_branch,
             pushed_at
-        } = this.state;
+        } = this.currentRepository;
 
         return (
             <main className={style['github-box']}>
